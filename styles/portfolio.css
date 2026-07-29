@@ -861,7 +861,7 @@ button {
 
 .document-pages.is-comparison {
   width: min(1320px, 100%);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   align-items: start;
   gap: clamp(20px, 3vw, 48px);
 }
@@ -909,6 +909,97 @@ button {
 .document-column-pages {
   display: grid;
   gap: 30px;
+}
+
+.document-text-column {
+  padding-right: 0 !important;
+}
+
+.document-text-content {
+  padding: 0 4px 24px 2px;
+  color: rgba(255, 246, 224, 0.86);
+}
+
+.document-text-section {
+  padding: 0 0 22px;
+  border-bottom: 1px solid rgba(241, 240, 235, 0.18);
+}
+
+.document-text-section + .document-text-section {
+  padding-top: 20px;
+}
+
+.document-text-section:last-child {
+  border-bottom: 0;
+}
+
+.document-text-section h3 {
+  margin: 0 0 10px;
+  color: #fff6e0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.document-text-section p {
+  margin: 0 0 11px;
+  color: rgba(255, 246, 224, 0.78);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.document-text-section p:last-child {
+  margin-bottom: 0;
+}
+
+.document-text-list {
+  margin: 0;
+  padding: 0 0 0 19px;
+}
+
+.document-text-list li {
+  margin: 0 0 12px;
+  padding-left: 3px;
+  color: rgba(255, 246, 224, 0.76);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.document-text-list li::marker {
+  color: #efb45f;
+  font-size: 11px;
+}
+
+.document-text-list li:last-child {
+  margin-bottom: 0;
+}
+
+.document-text-list strong,
+.document-text-list span {
+  display: block;
+}
+
+.document-text-list strong {
+  margin-bottom: 2px;
+  color: #fff6e0;
+  font-weight: 700;
+}
+
+.document-text-subsection {
+  margin-top: 17px;
+  padding-top: 17px !important;
+  border-top: 1px solid rgba(241, 240, 235, 0.16);
+  border-bottom: 0;
+}
+
+.document-text-subsection h3 {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+}
+
+.document-text-note {
+  color: rgba(255, 246, 224, 0.48) !important;
+  font-size: 11px !important;
 }
 
 .document-page {
@@ -1104,6 +1195,16 @@ button {
 
   .document-column-pages {
     gap: 18px;
+  }
+
+  .document-text-content {
+    padding-inline: 0;
+  }
+
+  .document-text-section p,
+  .document-text-list li {
+    font-size: 13px;
+    line-height: 1.75;
   }
 
 }

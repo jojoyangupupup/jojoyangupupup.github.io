@@ -259,10 +259,40 @@ function renderedDocumentPage(documentEntry, pageNumber) {
   return `${basePath}/page-${String(pageNumber).padStart(2, "0")}.${extension}`;
 }
 
+function renderDocumentText(documentEntry) {
+  const renderItems = (items) => items?.length
+    ? `<ol class="document-text-list">${items.map((item) => `
+        <li><strong>${item.title}</strong><span>${item.text}</span></li>
+      `).join("")}</ol>`
+    : "";
+  const renderSection = (section, nested = false) => `
+    <section class="document-text-section${nested ? " document-text-subsection" : ""}">
+      <h3>${section.heading}</h3>
+      ${(section.paragraphs || []).map((paragraph) => `<p>${paragraph}</p>`).join("")}
+      ${renderItems(section.items)}
+      ${(section.paragraphsAfter || []).map((paragraph) => `<p>${paragraph}</p>`).join("")}
+      ${(section.subsections || []).map((subsection) => renderSection(subsection, true)).join("")}
+      ${section.note ? `<p class="document-text-note">${section.note}</p>` : ""}
+    </section>
+  `;
+  return (documentEntry.textSections || []).map((section) => renderSection(section)).join("");
+}
+
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
   documentPages.classList.toggle("is-comparison", comparison);
   documentPages.innerHTML = documents.map((documentEntry) => {
+    const heading = comparison
+      ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
+      : "";
+    if (documentEntry.contentType === "text") {
+      return `
+        <article class="document-column document-text-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
+          ${heading}
+          <div class="document-text-content">${renderDocumentText(documentEntry)}</div>
+        </article>
+      `;
+    }
     const { width, height } = documentEntry.renderedPages;
     const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
       const pageNumber = index + 1;
@@ -280,9 +310,6 @@ function renderDocumentPages(documents) {
         </div>
       `;
     }).join("");
-    const heading = comparison
-      ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
-      : "";
     return `
       <article class="document-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
