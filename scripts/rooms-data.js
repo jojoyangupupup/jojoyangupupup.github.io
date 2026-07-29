@@ -77,6 +77,7 @@ export const ROOMS = [
       {
         id: "heartprint-marketing",
         title: "心相印营销策划",
+        columnLabel: "策划案",
         format: "PDF",
         pages: 33,
         file: "/assets/works/kitchen-heartprint-campaign/heartprint-marketing.pdf",
@@ -87,13 +88,27 @@ export const ROOMS = [
           height: 1080,
         },
       },
+      {
+        id: "heartprint-introduction",
+        title: "心相印「这张纸巾记得」作品介绍",
+        columnLabel: "作品介绍",
+        format: "PDF",
+        pages: 3,
+        file: "/assets/works/kitchen-heartprint-introduction/heartprint-introduction.pdf",
+        renderedPages: {
+          basePath: "/assets/works/kitchen-heartprint-introduction/pages",
+          extension: "jpg",
+          width: 1192,
+          height: 1684,
+        },
+      },
     ],
     objectHotspots: [
       {
         id: "kitchen-book",
         number: "01",
         label: "心相印营销策划",
-        documentId: "heartprint-marketing",
+        documentIds: ["heartprint-marketing", "heartprint-introduction"],
         path: "M 1078.8 1292.0 1027.6 1299.3 1008.9 1312.9 987.9 1313.4 957.0 1327.4 943.2 1327.9 946.4 1332.8 922.5 1341.5 912.0 1351.7 949.2 1408.5 978.9 1445.9 1164.9 1372.1 1091.5 1295.9 1080.4 1292.0 Z",
         glowImage: {
           file: "/assets/rooms/objects/kitchen-book.png",

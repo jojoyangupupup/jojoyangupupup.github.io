@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=16";
+} from "/scripts/rooms-data.js?v=17";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -101,7 +101,7 @@ app.innerHTML = `
                     role="button"
                     data-room-id="${room.id}"
                     data-object-id="${object.id}"
-                    aria-label="Open ${object.label} document"
+                    aria-label="Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}"
                     d="${object.path}"
                   ></path>
                   ${object.glowImage ? `
@@ -212,6 +212,13 @@ function warmRoomImage(id) {
   if (room) preloadImage(room.image);
 }
 
+function warmRoomDocuments(id) {
+  const room = ROOMS.find((item) => item.id === id);
+  (room?.documents || []).forEach((documentEntry) => {
+    if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+  });
+}
+
 function renderDetail(room) {
   detail.innerHTML = `
     <p class="detail-kicker">${room.number} / Category</p>
@@ -240,8 +247,11 @@ function renderDetail(room) {
 function getRoomObject(roomId, objectId) {
   const room = ROOMS.find((item) => item.id === roomId);
   const object = room?.objectHotspots?.find((item) => item.id === objectId);
-  const documentEntry = room?.documents?.find((item) => item.id === object?.documentId);
-  return { room, object, documentEntry };
+  const documentIds = object?.documentIds || (object?.documentId ? [object.documentId] : []);
+  const documents = documentIds
+    .map((id) => room?.documents?.find((item) => item.id === id))
+    .filter(Boolean);
+  return { room, object, documents, documentEntry: documents[0] };
 }
 
 function renderedDocumentPage(documentEntry, pageNumber) {
@@ -249,35 +259,49 @@ function renderedDocumentPage(documentEntry, pageNumber) {
   return `${basePath}/page-${String(pageNumber).padStart(2, "0")}.${extension}`;
 }
 
-function renderDocumentPages(documentEntry) {
-  const { width, height } = documentEntry.renderedPages;
-  documentPages.innerHTML = Array.from({ length: documentEntry.pages }, (_, index) => {
-    const pageNumber = index + 1;
+function renderDocumentPages(documents) {
+  const comparison = documents.length > 1;
+  documentPages.classList.toggle("is-comparison", comparison);
+  documentPages.innerHTML = documents.map((documentEntry) => {
+    const { width, height } = documentEntry.renderedPages;
+    const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
+      const pageNumber = index + 1;
+      return `
+        <div class="document-page">
+          <img
+            src="${renderedDocumentPage(documentEntry, pageNumber)}"
+            width="${width}"
+            height="${height}"
+            loading="${pageNumber === 1 ? "eager" : "lazy"}"
+            decoding="async"
+            ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
+            alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
+          >
+        </div>
+      `;
+    }).join("");
+    const heading = comparison
+      ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
+      : "";
     return `
-      <div class="document-page">
-        <img
-          src="${renderedDocumentPage(documentEntry, pageNumber)}"
-          width="${width}"
-          height="${height}"
-          loading="${pageNumber === 1 ? "eager" : "lazy"}"
-          decoding="async"
-          ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
-          alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
-        >
-      </div>
+      <article class="document-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
+        ${heading}
+        <div class="document-column-pages">${pages}</div>
+      </article>
     `;
   }).join("");
 }
 
-function openDocumentModal(room, object, documentEntry, trigger) {
+function openDocumentModal(room, object, documents, trigger) {
   syncBranding();
   documentReturnFocus = trigger || document.activeElement;
-  renderDocumentPages(documentEntry);
-  documentModalDialog.setAttribute("aria-label", documentEntry.title);
+  renderDocumentPages(documents);
+  documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
   documentModal.hidden = false;
   documentModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("is-document-open");
   documentModalScroll.scrollTop = 0;
+  documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
   documentModalClose.focus({ preventScroll: true });
 }
 
@@ -293,9 +317,9 @@ function closeDocumentModal(restoreFocus = true) {
 
 function openRoomObject(roomId, objectId, trigger) {
   if (transitioning || currentPageId !== roomId) return;
-  const { room, object, documentEntry } = getRoomObject(roomId, objectId);
-  if (!room || !object || !documentEntry) return;
-  openDocumentModal(room, object, documentEntry, trigger);
+  const { room, object, documents } = getRoomObject(roomId, objectId);
+  if (!room || !object || !documents.length) return;
+  openDocumentModal(room, object, documents, trigger);
 }
 
 function showRoomCaption(room) {
@@ -611,8 +635,10 @@ roomObjectHotspots.forEach((hotspot) => {
   const objectId = hotspot.dataset.objectId;
   const activate = () => openRoomObject(roomId, objectId, hotspot);
   const warmDocument = () => {
-    const { documentEntry } = getRoomObject(roomId, objectId);
-    if (documentEntry?.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+    const { documents } = getRoomObject(roomId, objectId);
+    documents.forEach((documentEntry) => {
+      if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+    });
   };
   hotspot.addEventListener("click", activate);
   hotspot.addEventListener("pointerenter", warmDocument);
@@ -635,7 +661,10 @@ document.addEventListener("keydown", (event) => {
 
 const preloadAllRoomImages = () => PAGE_NAVIGATION
   .filter((page) => page.type === "room")
-  .forEach((page) => warmRoomImage(page.roomId));
+  .forEach((page) => {
+    warmRoomImage(page.roomId);
+    warmRoomDocuments(page.roomId);
+  });
 if ("requestIdleCallback" in window) window.requestIdleCallback(preloadAllRoomImages, { timeout: 1800 });
 else window.setTimeout(preloadAllRoomImages, 700);
 
