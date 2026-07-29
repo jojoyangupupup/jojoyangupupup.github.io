@@ -471,9 +471,22 @@ button {
   transition: opacity 180ms ease;
 }
 
-.visual-stage[data-view="room"][data-room-id="study"] .room-object-map {
+.visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"]) .room-object-map {
   opacity: 1;
   pointer-events: auto;
+}
+
+.room-object-group {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.visual-stage[data-room-id="study"] .room-object-group[data-room-id="study"],
+.visual-stage[data-room-id="kitchen"] .room-object-group[data-room-id="kitchen"] {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
 }
 
 .room-object-hotspot {

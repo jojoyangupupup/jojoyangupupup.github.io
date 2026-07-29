@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=15";
+} from "/scripts/rooms-data.js?v=16";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -94,28 +94,30 @@ app.innerHTML = `
                 </filter>
               </defs>
               ${ROOMS.flatMap((room) => (room.objectHotspots || []).map((object) => `
-                <path
-                  class="room-object-hotspot"
-                  tabindex="0"
-                  role="button"
-                  data-room-id="${room.id}"
-                  data-object-id="${object.id}"
-                  aria-label="Open ${object.label} document"
-                  d="${object.path}"
-                ></path>
-                ${object.glowImage ? `
-                  <image
-                    class="room-object-glow"
+                <g class="room-object-group" data-room-id="${room.id}">
+                  <path
+                    class="room-object-hotspot"
+                    tabindex="0"
+                    role="button"
                     data-room-id="${room.id}"
-                    href="${object.glowImage.file}"
-                    x="${object.glowImage.x}"
-                    y="${object.glowImage.y}"
-                    width="${object.glowImage.width}"
-                    height="${object.glowImage.height}"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  ></image>
-                ` : ""}
+                    data-object-id="${object.id}"
+                    aria-label="Open ${object.label} document"
+                    d="${object.path}"
+                  ></path>
+                  ${object.glowImage ? `
+                    <image
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      href="${object.glowImage.file}"
+                      x="${object.glowImage.x}"
+                      y="${object.glowImage.y}"
+                      width="${object.glowImage.width}"
+                      height="${object.glowImage.height}"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></image>
+                  ` : ""}
+                </g>
               `)).join("")}
             </svg>
           </div>

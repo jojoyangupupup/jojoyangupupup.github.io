@@ -73,6 +73,37 @@ export const ROOMS = [
       { id: "project-01", title: "Project placeholder 01", type: "Design system", year: "2026" },
       { id: "project-02", title: "Project placeholder 02", type: "Visual identity", year: "2025" },
     ],
+    documents: [
+      {
+        id: "heartprint-marketing",
+        title: "心相印营销策划",
+        format: "PDF",
+        pages: 33,
+        file: "/assets/works/kitchen-heartprint-campaign/heartprint-marketing.pdf",
+        renderedPages: {
+          basePath: "/assets/works/kitchen-heartprint-campaign/pages",
+          extension: "jpg",
+          width: 1560,
+          height: 1080,
+        },
+      },
+    ],
+    objectHotspots: [
+      {
+        id: "kitchen-book",
+        number: "01",
+        label: "心相印营销策划",
+        documentId: "heartprint-marketing",
+        path: "M 1078.8 1292.0 1027.6 1299.3 1008.9 1312.9 987.9 1313.4 957.0 1327.4 943.2 1327.9 946.4 1332.8 922.5 1341.5 912.0 1351.7 949.2 1408.5 978.9 1445.9 1164.9 1372.1 1091.5 1295.9 1080.4 1292.0 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/kitchen-book.png",
+          x: 909.81,
+          y: 1289.82,
+          width: 257.38,
+          height: 158.37,
+        },
+      },
+    ],
     hotspotPath: "M744 498 L946 615 L946 790 L744 907 L540 790 L540 617 Z",
     hotspotCenter: { x: 744, y: 700 },
     transition: {
