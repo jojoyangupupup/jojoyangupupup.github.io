@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=21";
+} from "/scripts/rooms-data.js?v=22";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -280,20 +280,27 @@ function renderDocumentText(documentEntry) {
 
 function renderDocumentPageLinks(documentEntry, pageNumber) {
   const { width, height } = documentEntry.renderedPages;
+  const positionFor = (box) => `--link-x:${(box.x / width * 100).toFixed(4)}%;--link-y:${(box.y / height * 100).toFixed(4)}%;--link-width:${(box.width / width * 100).toFixed(4)}%;--link-height:${(box.height / height * 100).toFixed(4)}%`;
   return (documentEntry.links || [])
     .filter((link) => link.page === pageNumber)
     .map((link) => {
-      const position = `--link-x:${(link.x / width * 100).toFixed(4)}%;--link-y:${(link.y / height * 100).toFixed(4)}%;--link-width:${(link.width / width * 100).toFixed(4)}%;--link-height:${(link.height / height * 100).toFixed(4)}%`;
+      const position = positionFor(link);
       if (link.targetPage) {
+        const surfaceClass = link.surface === "tinted" ? " is-tinted" : "";
+        const labelClass = link.repaintLabel ? " is-labeled" : "";
+        const cover = link.cover
+          ? `<span class="document-page-cover${surfaceClass}" aria-hidden="true" style="${positionFor(link.cover)}"></span>`
+          : "";
         return `
+          ${cover}
           <a
-            class="document-page-jump"
+            class="document-page-jump${labelClass}${surfaceClass}"
             href="#document-${documentEntry.id}-page-${link.targetPage}"
             data-document-page-jump="${link.targetPage}"
             data-document-id="${documentEntry.id}"
             aria-label="${link.ariaLabel || link.label}"
             style="${position}"
-          ></a>
+          >${link.repaintLabel ? link.displayLabel || link.label : ""}</a>
         `;
       }
       return `
