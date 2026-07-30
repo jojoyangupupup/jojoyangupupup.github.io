@@ -1004,12 +1004,77 @@ button {
 
 .document-page {
   position: relative;
+  container-type: inline-size;
   width: 100%;
   background: #fff;
   box-shadow:
     0 0 0 1px rgba(255, 247, 232, 0.74),
     0 0 34px rgba(255, 229, 191, 0.38),
     0 24px 64px rgba(31, 38, 31, 0.34);
+}
+
+.document-page-link {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  left: var(--link-x);
+  top: var(--link-y);
+  display: inline-flex;
+  width: var(--link-width);
+  height: var(--link-height);
+  align-items: center;
+  padding: 0 min(4px, 0.4167cqw);
+  background: #fff;
+  color: #2767c9;
+  font-size: min(14px, 1.4583cqw);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.document-page-link::before {
+  position: absolute;
+  inset: -8px;
+  content: "";
+}
+
+.document-page-link:hover {
+  color: #174f9f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.document-page-link:focus-visible {
+  outline: 2px solid #2767c9;
+  outline-offset: 3px;
+}
+
+.document-page-jump {
+  position: absolute;
+  z-index: 2;
+  left: var(--link-x);
+  top: var(--link-y);
+  width: var(--link-width);
+  height: var(--link-height);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.document-page-jump::before {
+  position: absolute;
+  inset: -5px;
+  content: "";
+}
+
+.document-page-jump:hover {
+  background: rgba(39, 103, 201, 0.1);
+}
+
+.document-page-jump:focus-visible {
+  outline: 2px solid #2767c9;
+  outline-offset: 3px;
 }
 
 .document-page img {

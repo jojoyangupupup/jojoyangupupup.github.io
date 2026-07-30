@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=19";
+} from "/scripts/rooms-data.js?v=21";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -278,6 +278,36 @@ function renderDocumentText(documentEntry) {
   return (documentEntry.textSections || []).map((section) => renderSection(section)).join("");
 }
 
+function renderDocumentPageLinks(documentEntry, pageNumber) {
+  const { width, height } = documentEntry.renderedPages;
+  return (documentEntry.links || [])
+    .filter((link) => link.page === pageNumber)
+    .map((link) => {
+      const position = `--link-x:${(link.x / width * 100).toFixed(4)}%;--link-y:${(link.y / height * 100).toFixed(4)}%;--link-width:${(link.width / width * 100).toFixed(4)}%;--link-height:${(link.height / height * 100).toFixed(4)}%`;
+      if (link.targetPage) {
+        return `
+          <a
+            class="document-page-jump"
+            href="#document-${documentEntry.id}-page-${link.targetPage}"
+            data-document-page-jump="${link.targetPage}"
+            data-document-id="${documentEntry.id}"
+            aria-label="${link.ariaLabel || link.label}"
+            style="${position}"
+          ></a>
+        `;
+      }
+      return `
+        <a
+          class="document-page-link"
+          href="#document-${link.targetDocumentId}"
+          data-document-link="${link.targetDocumentId}"
+          aria-label="${link.ariaLabel || link.label}"
+          style="${position}"
+        >${link.label}</a>
+      `;
+    }).join("");
+}
+
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
   documentPages.classList.toggle("is-comparison", comparison);
@@ -297,18 +327,19 @@ function renderDocumentPages(documents) {
     const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
       const pageNumber = index + 1;
       return `
-        <div class="document-page">
+        <div class="document-page" id="document-${documentEntry.id}-page-${pageNumber}">
           <img
             src="${renderedDocumentPage(documentEntry, pageNumber)}"
             width="${width}"
             height="${height}"
             loading="${pageNumber === 1 ? "eager" : "lazy"}"
             decoding="async"
-            ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
-            alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
-          >
-        </div>
-      `;
+          ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
+          alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
+        >
+        ${renderDocumentPageLinks(documentEntry, pageNumber)}
+      </div>
+    `;
     }).join("");
     return `
       <article class="document-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
@@ -675,6 +706,74 @@ roomObjectHotspots.forEach((hotspot) => {
     event.preventDefault();
     activate();
   });
+});
+
+function linkedDocument(link) {
+  const room = ROOMS.find((item) => item.id === currentPageId);
+  const documentEntry = room?.documents?.find((item) => item.id === link.dataset.documentLink);
+  return { room, documentEntry };
+}
+
+function warmLinkedDocument(link) {
+  const { documentEntry } = linkedDocument(link);
+  if (documentEntry?.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+}
+
+async function openLinkedDocument(link) {
+  const { room, documentEntry } = linkedDocument(link);
+  if (!room || !documentEntry) return;
+  if (documentEntry.renderedPages) {
+    const ready = await preloadImage(renderedDocumentPage(documentEntry, 1));
+    if (!ready || documentModal.hidden) return;
+  }
+  openDocumentModal(room, null, [documentEntry], documentReturnFocus);
+}
+
+documentPages.addEventListener("pointerover", (event) => {
+  const link = event.target.closest("[data-document-link]");
+  if (link) warmLinkedDocument(link);
+});
+
+documentPages.addEventListener("focusin", (event) => {
+  const link = event.target.closest("[data-document-link]");
+  if (link) warmLinkedDocument(link);
+});
+
+function jumpToDocumentPage(pageJump) {
+  const target = document.getElementById(`document-${pageJump.dataset.documentId}-page-${pageJump.dataset.documentPageJump}`);
+  if (!target) return;
+  const targetTop = documentModalScroll.scrollTop
+    + target.getBoundingClientRect().top
+    - documentModalScroll.getBoundingClientRect().top;
+  documentModalScroll.scrollTo({ top: targetTop, behavior: "auto" });
+}
+
+documentPages.addEventListener("keydown", async (event) => {
+  if (event.key !== "Enter") return;
+  const pageJump = event.target.closest("[data-document-page-jump]");
+  if (pageJump) {
+    event.preventDefault();
+    jumpToDocumentPage(pageJump);
+    return;
+  }
+  const documentLink = event.target.closest("[data-document-link]");
+  if (documentLink) {
+    event.preventDefault();
+    await openLinkedDocument(documentLink);
+  }
+});
+
+documentPages.addEventListener("click", async (event) => {
+  const pageJump = event.target.closest("[data-document-page-jump]");
+  if (pageJump) {
+    event.preventDefault();
+    jumpToDocumentPage(pageJump);
+    return;
+  }
+  const link = event.target.closest("[data-document-link]");
+  if (!link) return;
+  event.preventDefault();
+  await openLinkedDocument(link);
 });
 
 documentModal.addEventListener("click", (event) => {
