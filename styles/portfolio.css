@@ -792,6 +792,10 @@ button {
   background: rgba(67, 76, 65, 0.9);
 }
 
+.document-modal.is-transparent-document .document-modal-backdrop {
+  background: #434c41;
+}
+
 .document-modal-dialog {
   position: absolute;
   z-index: 1;
@@ -1013,6 +1017,11 @@ button {
     0 24px 64px rgba(31, 38, 31, 0.34);
 }
 
+.document-page.is-transparent {
+  background: transparent;
+  box-shadow: none;
+}
+
 .document-page-link {
   position: absolute;
   z-index: 2;
@@ -1033,6 +1042,12 @@ button {
   white-space: nowrap;
   cursor: pointer;
   animation: document-text-beacon 1.8s ease-in-out infinite;
+}
+
+.document-page.is-transparent .document-page-link,
+.document-page.is-transparent .document-page-cover:not(.is-tinted),
+.document-page.is-transparent .document-page-jump.is-labeled:not(.is-tinted) {
+  background: #434c41;
 }
 
 .document-page-link::before {
@@ -1109,6 +1124,10 @@ button {
   color: #174f9f;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.document-page.is-transparent .document-page-jump.is-labeled:not(.is-tinted):hover {
+  background: #4d594c;
 }
 
 .document-page-jump.is-labeled.is-tinted:hover {

@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=22";
+} from "/scripts/rooms-data.js?v=23";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -183,6 +183,8 @@ let currentPageId = "overview";
 let transitioning = false;
 let historySyncPending = false;
 let documentReturnFocus = null;
+let activeModalDocuments = [];
+let documentModalHistory = [];
 
 function syncBranding() {
   if (wordmarkName.textContent !== PORTFOLIO.authorName) wordmarkName.textContent = PORTFOLIO.authorName;
@@ -334,7 +336,7 @@ function renderDocumentPages(documents) {
     const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
       const pageNumber = index + 1;
       return `
-        <div class="document-page" id="document-${documentEntry.id}-page-${pageNumber}">
+        <div class="document-page${documentEntry.transparentPages ? " is-transparent" : ""}" id="document-${documentEntry.id}-page-${pageNumber}">
           <img
             src="${renderedDocumentPage(documentEntry, pageNumber)}"
             width="${width}"
@@ -357,16 +359,53 @@ function renderDocumentPages(documents) {
   }).join("");
 }
 
-function openDocumentModal(room, object, documents, trigger) {
-  syncBranding();
-  documentReturnFocus = trigger || document.activeElement;
+function updateDocumentCloseAction() {
+  const previousView = documentModalHistory.at(-1);
+  const label = previousView
+    ? `返回${previousView.documents.map((documentEntry) => documentEntry.title).join(" / ")}`
+    : "关闭文档";
+  documentModalClose.setAttribute("aria-label", label);
+}
+
+function renderDocumentModalView(documents, scrollTop = 0) {
+  activeModalDocuments = documents;
   renderDocumentPages(documents);
+  documentModal.classList.toggle(
+    "is-transparent-document",
+    documents.length > 0 && documents.every((documentEntry) => documentEntry.transparentPages),
+  );
   documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
+  documentModalScroll.scrollTop = scrollTop;
+  documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
+  updateDocumentCloseAction();
+}
+
+function openDocumentModal(room, object, documents, trigger, { pushCurrent = false } = {}) {
+  syncBranding();
+  const openingModal = documentModal.hidden;
+  if (openingModal) {
+    documentReturnFocus = trigger || document.activeElement;
+    documentModalHistory = [];
+  } else if (pushCurrent && activeModalDocuments.length) {
+    documentModalHistory.push({
+      documents: activeModalDocuments,
+      scrollTop: documentModalScroll.scrollTop,
+    });
+  }
+  renderDocumentModalView(documents);
   documentModal.hidden = false;
   documentModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("is-document-open");
-  documentModalScroll.scrollTop = 0;
-  documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
+  documentModalClose.focus({ preventScroll: true });
+}
+
+function closeOrReturnDocument() {
+  const previousView = documentModalHistory.pop();
+  if (!previousView) {
+    closeDocumentModal();
+    return;
+  }
+  renderDocumentModalView(previousView.documents, previousView.scrollTop);
   documentModalClose.focus({ preventScroll: true });
 }
 
@@ -375,9 +414,13 @@ function closeDocumentModal(restoreFocus = true) {
   documentModal.hidden = true;
   documentModal.setAttribute("aria-hidden", "true");
   documentPages.replaceChildren();
+  documentModal.classList.remove("is-transparent-document");
   document.body.classList.remove("is-document-open");
   if (restoreFocus) documentReturnFocus?.focus({ preventScroll: true });
   documentReturnFocus = null;
+  activeModalDocuments = [];
+  documentModalHistory = [];
+  updateDocumentCloseAction();
 }
 
 function openRoomObject(roomId, objectId, trigger) {
@@ -733,7 +776,7 @@ async function openLinkedDocument(link) {
     const ready = await preloadImage(renderedDocumentPage(documentEntry, 1));
     if (!ready || documentModal.hidden) return;
   }
-  openDocumentModal(room, null, [documentEntry], documentReturnFocus);
+  openDocumentModal(room, null, [documentEntry], documentReturnFocus, { pushCurrent: true });
 }
 
 documentPages.addEventListener("pointerover", (event) => {
@@ -785,11 +828,11 @@ documentPages.addEventListener("click", async (event) => {
 
 documentModal.addEventListener("click", (event) => {
   if (!event.target.closest("[data-document-close]")) return;
-  closeDocumentModal();
+  closeOrReturnDocument();
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !documentModal.hidden) closeDocumentModal();
+  if (event.key === "Escape" && !documentModal.hidden) closeOrReturnDocument();
 });
 
 const preloadAllRoomImages = () => PAGE_NAVIGATION
