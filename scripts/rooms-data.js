@@ -1,3 +1,5 @@
+import { MODEL_EXPERIENCE_USAGE_REPORT_PAGES } from "/scripts/study-report-content.js?v=1";
+
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
@@ -232,6 +234,13 @@ export const ROOMS = [
           height: 15274,
         },
       },
+      {
+        id: "model-experience-usage-analysis",
+        title: "模型体验台使用情况分析报告",
+        columnLabel: "使用情况分析",
+        contentType: "text",
+        textPages: MODEL_EXPERIENCE_USAGE_REPORT_PAGES,
+      },
     ],
     objectHotspots: [
       {
@@ -246,6 +255,20 @@ export const ROOMS = [
           y: 1160,
           width: 325.45,
           height: 167.44,
+        },
+      },
+      {
+        id: "study-lamp",
+        number: "02",
+        label: "模型体验台使用情况分析报告",
+        documentId: "model-experience-usage-analysis",
+        path: "M1060 589 C1060 575 1072 573 1088 573 C1105 573 1116 578 1116 590 C1116 602 1107 608 1089 610 C1072 608 1061 601 1060 589 Z M1086 608 L1090 608 L1090 753 L1086 753 Z M1088 754 C1110 754 1135 761 1147 774 L1179 867 C1183 885 1170 899 1148 908 C1129 916 1107 920 1087 921 C1064 920 1040 916 1017 908 C997 900 990 885 995 868 L1027 773 C1042 761 1065 754 1088 754 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/study-lamp.png",
+          x: 992.5,
+          y: 572.7,
+          width: 190,
+          height: 349.6,
         },
       },
     ],
