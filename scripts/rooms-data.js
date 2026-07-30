@@ -1,5 +1,3 @@
-import { MODEL_EXPERIENCE_USAGE_REPORT_PAGES } from "/scripts/study-report-content.js?v=1";
-
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
@@ -237,9 +235,14 @@ export const ROOMS = [
       {
         id: "model-experience-usage-analysis",
         title: "模型体验台使用情况分析报告",
-        columnLabel: "使用情况分析",
-        contentType: "text",
-        textPages: MODEL_EXPERIENCE_USAGE_REPORT_PAGES,
+        format: "PDF",
+        pages: 26,
+        renderedPages: {
+          basePath: "/assets/works/study-model-usage-analysis/pages",
+          extension: "jpg",
+          width: 1190,
+          height: 1684,
+        },
       },
     ],
     objectHotspots: [

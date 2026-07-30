@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=18";
+} from "/scripts/rooms-data.js?v=19";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -259,29 +259,7 @@ function renderedDocumentPage(documentEntry, pageNumber) {
   return `${basePath}/page-${String(pageNumber).padStart(2, "0")}.${extension}`;
 }
 
-function escapeDocumentText(value) {
-  return String(value).replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  })[character]);
-}
-
 function renderDocumentText(documentEntry) {
-  if (documentEntry.textPages?.length) {
-    return `
-      <div class="document-text-report-pages">
-        ${documentEntry.textPages.map((page, index) => `
-          <section class="document-text-report-page" aria-labelledby="document-page-${index + 1}">
-            <p class="document-text-page-number" id="document-page-${index + 1}">${String(index + 1).padStart(2, "0")} / ${documentEntry.textPages.length}</p>
-            <div class="document-text-page-copy">${escapeDocumentText(page)}</div>
-          </section>
-        `).join("")}
-      </div>
-    `;
-  }
   const renderItems = (items) => items?.length
     ? `<ol class="document-text-list">${items.map((item) => `
         <li><strong>${item.title}</strong><span>${item.text}</span></li>
@@ -303,9 +281,8 @@ function renderDocumentText(documentEntry) {
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
   documentPages.classList.toggle("is-comparison", comparison);
-  documentPages.classList.toggle("is-text-only", documents.length === 1 && documents[0].contentType === "text");
   documentPages.innerHTML = documents.map((documentEntry) => {
-    const heading = (comparison || documentEntry.contentType === "text")
+    const heading = comparison
       ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
       : "";
     if (documentEntry.contentType === "text") {

@@ -866,10 +866,6 @@ button {
   gap: clamp(20px, 3vw, 48px);
 }
 
-.document-pages.is-text-only {
-  width: min(960px, 100%);
-}
-
 .document-column {
   min-width: 0;
 }
@@ -1004,42 +1000,6 @@ button {
 .document-text-note {
   color: rgba(255, 246, 224, 0.48) !important;
   font-size: 11px !important;
-}
-
-.document-pages.is-text-only .document-column-heading {
-  position: relative;
-  margin-bottom: 0;
-  padding: 0 0 18px;
-  background: transparent;
-}
-
-.document-text-report-pages {
-  display: grid;
-}
-
-.document-text-report-page {
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  gap: 22px;
-  padding: 26px 0 28px;
-  border-top: 1px solid rgba(241, 240, 235, 0.2);
-}
-
-.document-text-page-number {
-  margin: 3px 0 0;
-  color: #efb45f;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.document-text-page-copy {
-  min-width: 0;
-  color: rgba(255, 246, 224, 0.84);
-  font-size: 13px;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-  white-space: pre-line;
 }
 
 .document-page {
@@ -1245,20 +1205,6 @@ button {
   .document-text-list li {
     font-size: 13px;
     line-height: 1.75;
-  }
-
-  .document-text-report-page {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding-block: 21px 24px;
-  }
-
-  .document-text-page-number {
-    margin-top: 0;
-  }
-
-  .document-text-page-copy {
-    font-size: 13px;
   }
 
 }
