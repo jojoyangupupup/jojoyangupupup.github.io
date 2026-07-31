@@ -236,15 +236,15 @@ export const ROOMS = [
         id: "model-experience-usage-analysis",
         title: "模型体验台使用情况分析报告",
         format: "PDF",
-        pages: 26,
+        pages: 25,
         transparentPages: true,
         renderedPages: {
           basePath: "/assets/works/study-model-usage-analysis/transparent-pages",
           extension: "webp",
-          version: "20260731-3",
+          version: "20260731-4",
           width: 1190,
           height: 1684,
-          pageHeights: [1285, 1166, 1532, 1103, 1444, 1489, 1247, 1568, 1362, 1512, 1481, 1474, 1504, 1435, 1535, 1505, 1525, 908, 1535, 1408, 1507, 1248, 1270, 1506, 1490, 459],
+          pageHeights: [1285, 1166, 1532, 1103, 1444, 1489, 1247, 1568, 1676, 1553, 953, 1649, 1212, 1435, 1535, 1505, 1525, 908, 1535, 1408, 1507, 1248, 1270, 1506, 1833],
         },
         links: [
           {
