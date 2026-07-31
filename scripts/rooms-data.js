@@ -241,6 +241,7 @@ export const ROOMS = [
         renderedPages: {
           basePath: "/assets/works/study-model-usage-analysis/transparent-pages",
           extension: "webp",
+          version: "20260731-2",
           width: 1190,
           height: 1684,
           pageHeights: [1285, 1166, 1532, 1103, 1444, 1489, 1247, 1518, 1503, 1512, 1481, 1474, 1504, 1435, 1535, 1505, 1525, 908, 1535, 1408, 1507, 1248, 1270, 1506, 1490, 459],

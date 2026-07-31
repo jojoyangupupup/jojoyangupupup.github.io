@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=25";
+} from "/scripts/rooms-data.js?v=26";
 
 const FOCUS_TIMING = {
   expandStart: 80,
