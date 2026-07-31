@@ -158,7 +158,6 @@ export const ROOMS = [
               { title: "商业策划思维", text: "可独立完成项目预算拆分、媒介投放排期规划，平衡创意效果与落地成本，方案兼顾比赛创意性与真实市场可执行性。" },
               { title: "年轻群体传播洞察", text: "擅长把握 Z 世代年轻群体传播逻辑，融合明星跨界、短视频 UGC、线下快闪、公益营销等当下主流营销玩法，懂得用生活化、共情化故事替代硬广推销，贴合当代年轻人接收广告的偏好。" },
             ],
-            note: "注：部分内容可能由 AI 生成",
           },
         ],
         file: "/assets/works/kitchen-heartprint-introduction/heartprint-introduction.pdf",
