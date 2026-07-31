@@ -340,6 +340,7 @@ export const ROOMS = [
         renderedPages: {
           basePath: "/assets/works/study-interview-analysis/transparent-pages",
           extension: "webp",
+          version: "20260731-1",
           width: 1190,
           height: 1684,
           pageHeights: [1488, 1546, 1001, 1558, 1539, 1528, 1559, 957],

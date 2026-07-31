@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=24";
+} from "/scripts/rooms-data.js?v=25";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -257,8 +257,9 @@ function getRoomObject(roomId, objectId) {
 }
 
 function renderedDocumentPage(documentEntry, pageNumber) {
-  const { basePath, extension } = documentEntry.renderedPages;
-  return `${basePath}/page-${String(pageNumber).padStart(2, "0")}.${extension}`;
+  const { basePath, extension, version } = documentEntry.renderedPages;
+  const cacheVersion = version ? `?v=${encodeURIComponent(version)}` : "";
+  return `${basePath}/page-${String(pageNumber).padStart(2, "0")}.${extension}${cacheVersion}`;
 }
 
 function renderDocumentText(documentEntry) {

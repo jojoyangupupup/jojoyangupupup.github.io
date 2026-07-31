@@ -1058,7 +1058,33 @@ button {
 .document-page.is-transparent .document-page-jump.is-labeled {
   color: #fff6e0;
   font-weight: 700;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 -1px rgba(239, 180, 95, 0.78),
+    0 0 0 1px rgba(239, 180, 95, 0.14),
+    0 0 7px rgba(239, 180, 95, 0.12);
+  text-decoration: underline;
+  text-decoration-color: rgba(239, 180, 95, 0.72);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease,
+    text-decoration-color 180ms ease;
   animation-name: document-text-beacon-warm;
+}
+
+.document-page.is-transparent .document-page-link::after,
+.document-page.is-transparent .document-page-jump.is-labeled::after {
+  margin-left: 0.28em;
+  color: #efb45f;
+  content: "\203A";
+  font-size: 0.82em;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.94;
+  transition: transform 180ms ease;
 }
 
 .document-page.is-transparent .document-page-jump.is-tinted,
@@ -1087,6 +1113,16 @@ button {
 .document-page.is-transparent .document-page-jump.is-labeled:hover {
   background: #4d594c;
   color: #fffaf0;
+  box-shadow:
+    inset 0 -2px rgba(239, 180, 95, 0.94),
+    0 0 0 1px rgba(239, 180, 95, 0.24),
+    0 0 9px rgba(239, 180, 95, 0.18);
+  text-decoration-color: #efb45f;
+}
+
+.document-page.is-transparent .document-page-link:hover::after,
+.document-page.is-transparent .document-page-jump.is-labeled:hover::after {
+  transform: translateX(2px);
 }
 
 .document-page.is-transparent .document-page-link:focus-visible,
