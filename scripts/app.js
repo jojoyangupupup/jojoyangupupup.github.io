@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=23";
+} from "/scripts/rooms-data.js?v=24";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -281,7 +281,8 @@ function renderDocumentText(documentEntry) {
 }
 
 function renderDocumentPageLinks(documentEntry, pageNumber) {
-  const { width, height } = documentEntry.renderedPages;
+  const { width, height: defaultHeight, pageHeights } = documentEntry.renderedPages;
+  const height = pageHeights?.[pageNumber - 1] || defaultHeight;
   const positionFor = (box) => `--link-x:${(box.x / width * 100).toFixed(4)}%;--link-y:${(box.y / height * 100).toFixed(4)}%;--link-width:${(box.width / width * 100).toFixed(4)}%;--link-height:${(box.height / height * 100).toFixed(4)}%`;
   return (documentEntry.links || [])
     .filter((link) => link.page === pageNumber)
@@ -332,15 +333,16 @@ function renderDocumentPages(documents) {
         </article>
       `;
     }
-    const { width, height } = documentEntry.renderedPages;
+    const { width, height, pageHeights } = documentEntry.renderedPages;
     const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
       const pageNumber = index + 1;
+      const pageHeight = pageHeights?.[index] || height;
       return `
         <div class="document-page${documentEntry.transparentPages ? " is-transparent" : ""}" id="document-${documentEntry.id}-page-${pageNumber}">
           <img
             src="${renderedDocumentPage(documentEntry, pageNumber)}"
             width="${width}"
-            height="${height}"
+            height="${pageHeight}"
             loading="${pageNumber === 1 ? "eager" : "lazy"}"
             decoding="async"
           ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
@@ -351,7 +353,7 @@ function renderDocumentPages(documents) {
     `;
     }).join("");
     return `
-      <article class="document-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
+      <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
         <div class="document-column-pages">${pages}</div>
       </article>

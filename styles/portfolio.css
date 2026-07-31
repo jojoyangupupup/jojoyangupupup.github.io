@@ -915,6 +915,10 @@ button {
   gap: 30px;
 }
 
+.document-transparent-column .document-column-pages {
+  gap: 10px;
+}
+
 .document-text-column {
   padding-right: 0 !important;
 }
@@ -1050,6 +1054,18 @@ button {
   background: #434c41;
 }
 
+.document-page.is-transparent .document-page-link,
+.document-page.is-transparent .document-page-jump.is-labeled {
+  color: #fff6e0;
+  font-weight: 700;
+  animation-name: document-text-beacon-warm;
+}
+
+.document-page.is-transparent .document-page-jump.is-tinted,
+.document-page.is-transparent .document-page-cover.is-tinted {
+  background: #2f3a32;
+}
+
 .document-page-link::before {
   position: absolute;
   inset: -8px;
@@ -1065,6 +1081,17 @@ button {
 .document-page-link:focus-visible {
   outline: 2px solid #2767c9;
   outline-offset: 3px;
+}
+
+.document-page.is-transparent .document-page-link:hover,
+.document-page.is-transparent .document-page-jump.is-labeled:hover {
+  background: #4d594c;
+  color: #fffaf0;
+}
+
+.document-page.is-transparent .document-page-link:focus-visible,
+.document-page.is-transparent .document-page-jump:focus-visible {
+  outline-color: #efb45f;
 }
 
 .document-page-jump {
@@ -1134,6 +1161,10 @@ button {
   background: #eef4fb;
 }
 
+.document-page.is-transparent .document-page-jump.is-labeled.is-tinted:hover {
+  background: #39473c;
+}
+
 .document-page-jump:focus-visible {
   outline: 2px solid #2767c9;
   outline-offset: 3px;
@@ -1149,6 +1180,19 @@ button {
     text-shadow:
       0 0 5px rgba(69, 139, 255, 0.82),
       0 0 11px rgba(69, 139, 255, 0.46);
+  }
+}
+
+@keyframes document-text-beacon-warm {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(239, 180, 95, 0);
+  }
+
+  50% {
+    text-shadow:
+      0 0 4px rgba(239, 180, 95, 0.42),
+      0 0 9px rgba(239, 180, 95, 0.22);
   }
 }
 
@@ -1400,6 +1444,11 @@ button {
   .document-page-jump.is-labeled {
     animation: none !important;
     text-shadow: 0 0 6px rgba(69, 139, 255, 0.58);
+  }
+
+  .document-page.is-transparent .document-page-link,
+  .document-page.is-transparent .document-page-jump.is-labeled {
+    text-shadow: 0 0 5px rgba(239, 180, 95, 0.36);
   }
 
   .visual-stage.is-focus-selecting .visual-layer-current,
