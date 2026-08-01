@@ -471,7 +471,7 @@ button {
   transition: opacity 180ms ease;
 }
 
-.visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"]) .room-object-map {
+.visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"]) .room-object-map {
   opacity: 1;
   pointer-events: auto;
 }
@@ -483,7 +483,8 @@ button {
 }
 
 .visual-stage[data-room-id="study"] .room-object-group[data-room-id="study"],
-.visual-stage[data-room-id="kitchen"] .room-object-group[data-room-id="kitchen"] {
+.visual-stage[data-room-id="kitchen"] .room-object-group[data-room-id="kitchen"],
+.visual-stage[data-room-id="living"] .room-object-group[data-room-id="living"] {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
@@ -913,6 +914,32 @@ button {
 .document-column-pages {
   display: grid;
   gap: 30px;
+}
+
+.document-pages.is-embed {
+  width: min(1440px, 100%);
+  height: calc(100vh - 136px);
+  min-height: 620px;
+}
+
+.document-embed-column {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(241, 240, 235, 0.22);
+  border-radius: 12px;
+  background: #f3f5f8;
+  box-shadow: 0 18px 48px rgba(25, 31, 27, 0.25);
+}
+
+.document-embed-frame {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  border: 0;
+  background: #f3f5f8;
 }
 
 .document-transparent-column .document-column-pages {

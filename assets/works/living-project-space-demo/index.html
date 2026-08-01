@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f5f8">
+  <meta name="description" content="项目空间交互原型：集中浏览项目、沉淀资料并追溯原始内容。">
+  <title>项目空间 Demo</title>
+  <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+  <div class="app-shell" id="app">
+    <header class="topbar">
+      <a class="brand" href="#projects" data-action="show-projects" aria-label="项目空间首页">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>
+          <strong>项目空间</strong>
+          <small>Project Knowledge</small>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="项目空间导航">
+        <button class="topnav-item is-active" type="button" data-action="show-projects" aria-current="page">全部项目</button>
+        <button class="topnav-item" type="button" data-action="open-recent">最近沉淀</button>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="icon-button" type="button" data-action="open-search" aria-label="搜索项目和资料" title="搜索项目和资料">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        </button>
+        <button class="button button-primary" type="button" data-action="open-create">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          新建项目
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace" id="main-content">
+      <section id="projects-view" aria-labelledby="projects-title"></section>
+      <section id="detail-view" aria-labelledby="detail-title" hidden></section>
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="drawer-root"></div>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./demo.js" defer></script>
+</body>
+</html>

@@ -198,6 +198,31 @@ export const ROOMS = [
       { id: "project-01", title: "Project placeholder 01", type: "Interactive design", year: "2026" },
       { id: "project-02", title: "Project placeholder 02", type: "Visual narrative", year: "2025" },
     ],
+    documents: [
+      {
+        id: "living-project-space-demo",
+        title: "项目空间 Demo",
+        format: "Interactive HTML",
+        contentType: "embed",
+        embedUrl: "/assets/works/living-project-space-demo/",
+      },
+    ],
+    objectHotspots: [
+      {
+        id: "living-tv",
+        number: "01",
+        label: "项目空间 Demo",
+        documentId: "living-project-space-demo",
+        path: "M 1398 784 L 1410 777 L 1745 977 L 1745 1226 L 1732 1243 L 1398 1045 Z M 1463 1127 L 1492 1121 L 1621 1215 L 1629 1237 L 1619 1244 L 1605 1243 L 1570 1218 L 1463 1141 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/living-tv.png",
+          x: 1390,
+          y: 768,
+          width: 361,
+          height: 478,
+        },
+      },
+    ],
     hotspotPath: "M980 327 L1175 451 L1175 616 L946 711 L946 614 L744 498 L802 456 L871 396 Z",
     hotspotCenter: { x: 970, y: 515 },
     transition: {

@@ -321,11 +321,21 @@ function renderDocumentPageLinks(documentEntry, pageNumber) {
 
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
+  const embedded = documents.some((documentEntry) => documentEntry.contentType === "embed");
   documentPages.classList.toggle("is-comparison", comparison);
+  documentPages.classList.toggle("is-embed", embedded);
   documentPages.innerHTML = documents.map((documentEntry) => {
     const heading = comparison
       ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
       : "";
+    if (documentEntry.contentType === "embed") {
+      return `
+        <article class="document-column document-embed-column" aria-label="${documentEntry.title}">
+          ${heading}
+          <iframe class="document-embed-frame" src="${documentEntry.embedUrl}" title="${documentEntry.title}" loading="eager"></iframe>
+        </article>
+      `;
+    }
     if (documentEntry.contentType === "text") {
       return `
         <article class="document-column document-text-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
@@ -364,9 +374,12 @@ function renderDocumentPages(documents) {
 
 function updateDocumentCloseAction() {
   const previousView = documentModalHistory.at(-1);
+  const currentView = activeModalDocuments[0];
   const label = previousView
     ? `返回${previousView.documents.map((documentEntry) => documentEntry.title).join(" / ")}`
-    : "关闭文档";
+    : currentView?.contentType === "embed"
+      ? `关闭${currentView.title}`
+      : "关闭文档";
   documentModalClose.setAttribute("aria-label", label);
 }
 
