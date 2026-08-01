@@ -122,8 +122,9 @@ app.innerHTML = `
             </svg>
           </div>
 
-          <nav class="room-switch-controls folio-rail" aria-label="Folio page navigation" hidden>
-            <span class="folio-rail-page" aria-live="polite" aria-atomic="true">01 / ${String(PAGE_NAVIGATION.length).padStart(2, "0")}</span>
+        </div>
+
+          <nav class="room-switch-controls" aria-label="Adjacent portfolio pages" hidden>
             <button class="room-switch-button room-switch-previous" type="button" data-direction="previous">
               <svg class="room-switch-icon" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
                 <path d="M22 14H6M12 8l-6 6 6 6"></path>
@@ -135,7 +136,6 @@ app.innerHTML = `
               </svg>
             </button>
           </nav>
-        </div>
       </section>
 
       <aside class="room-detail" aria-live="polite" aria-label="Portfolio category details"></aside>
@@ -167,7 +167,6 @@ const incomingImage = document.querySelector(".visual-layer-incoming");
 const focusClipPath = document.querySelector(".focus-clip-path");
 const detail = document.querySelector(".room-detail");
 const roomSwitchControls = document.querySelector(".room-switch-controls");
-const folioRailPage = document.querySelector(".folio-rail-page");
 const previousButton = document.querySelector(".room-switch-previous");
 const nextButton = document.querySelector(".room-switch-next");
 const navLinks = [...document.querySelectorAll(".top-navigation-link")];
@@ -534,11 +533,6 @@ function openRoomObject(roomId, objectId, trigger) {
 
 function updateVisualControls(pageId) {
   const { previous, next } = adjacentPages(pageId);
-  const currentIndex = PAGE_NAVIGATION.findIndex((item) => item.id === pageId);
-  const totalPages = PAGE_NAVIGATION.length;
-  const currentPage = currentIndex + 1;
-  folioRailPage.textContent = `${String(currentPage).padStart(2, "0")} / ${String(totalPages).padStart(2, "0")}`;
-  folioRailPage.setAttribute("aria-label", `Page ${currentPage} of ${totalPages}`);
   previousButton.dataset.pageId = previous.id;
   previousButton.setAttribute("aria-label", `Previous page: ${previous.accessibleLabel}`);
   nextButton.dataset.pageId = next.id;
