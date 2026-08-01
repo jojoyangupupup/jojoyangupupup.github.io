@@ -423,24 +423,24 @@ button {
 }
 
 .visual-stage.is-switch-prepared .visual-layer-incoming {
-  filter: blur(4px);
-  transform: translateX(var(--switch-enter-x)) scale(0.985);
+  filter: none;
+  transform: translateX(var(--switch-enter-x));
 }
 
 .visual-stage.is-switch-prepared.is-switching .visual-layer-current,
 .visual-stage.is-returning .visual-layer-current {
   opacity: 0;
-  filter: blur(4px);
-  transform: translateX(var(--switch-exit-x)) scale(0.992);
-  transition: opacity 420ms ease, filter 500ms ease, transform 500ms var(--ease-editorial);
+  filter: none;
+  transform: translateX(var(--switch-exit-x));
+  transition: opacity 300ms ease, transform 300ms var(--ease-editorial);
 }
 
 .visual-stage.is-switch-prepared.is-switching .visual-layer-incoming,
 .visual-stage.is-returning .visual-layer-incoming {
   opacity: 1;
   filter: blur(0);
-  transform: scale(1);
-  transition: opacity 420ms ease, filter 500ms ease, transform 500ms var(--ease-editorial);
+  transform: translateX(0);
+  transition: opacity 300ms ease, transform 300ms var(--ease-editorial);
 }
 
 .hotspot-map {
@@ -574,91 +574,98 @@ button {
   transition: opacity 150ms ease;
 }
 
-.visual-caption {
-  position: absolute;
-  z-index: 6;
-  right: 18px;
-  bottom: 16px;
-  margin: 0;
-  color: rgba(32, 36, 31, 0.6);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.room-switch-button {
-  z-index: 8;
-  min-width: 44px;
-  min-height: 44px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: #30352f;
-  cursor: pointer;
-}
-
 .room-switch-controls {
   position: absolute;
   z-index: 8;
+  right: 32px;
+  bottom: 32px;
+  display: grid;
+  width: 176px;
+  height: 44px;
+  grid-template-columns: 72px 52px 52px;
+  border: 0;
+  border-radius: 0;
+  background: #ebe6de;
+  color: #1b1b18;
+  pointer-events: auto;
+}
+
+.room-switch-controls::before {
+  position: absolute;
+  z-index: 2;
   inset: 0;
+  border: 1px solid #1b1b18;
+  content: "";
   pointer-events: none;
 }
 
+.folio-rail-page {
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .room-switch-button {
-  position: absolute;
-  top: 50%;
+  z-index: 8;
   display: grid;
   width: 52px;
-  height: 52px;
+  height: 100%;
+  min-width: 52px;
+  min-height: 44px;
   place-items: center;
   padding: 0;
+  border: 0;
+  border-left: 1px solid #1b1b18;
+  border-radius: 0;
+  background: transparent;
+  color: #1b1b18;
+  cursor: pointer;
   pointer-events: auto;
-  transform: translateY(-50%);
-  transition: color 180ms ease;
-}
-
-.room-switch-previous {
-  left: -58px;
-}
-
-.room-switch-next {
-  right: -58px;
+  transition: color 160ms ease, background-color 160ms ease, opacity 160ms ease, transform 100ms ease;
 }
 
 .room-switch-icon {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
-  filter: drop-shadow(0 1px 1px rgba(241, 240, 235, 0.62));
-  transition: transform 180ms ease;
+  stroke-width: 1.5;
+  transition: transform 160ms ease;
 }
 
-.room-switch-button:hover {
-  color: var(--rust);
+.room-switch-button:not(:disabled):hover {
+  background: #1b1b18;
+  color: #f4f1ea;
 }
 
-.room-switch-previous:hover .room-switch-icon {
+.room-switch-previous:not(:disabled):hover .room-switch-icon {
   transform: translateX(-3px);
 }
 
-.room-switch-next:hover .room-switch-icon {
+.room-switch-next:not(:disabled):hover .room-switch-icon {
   transform: translateX(3px);
 }
 
+.room-switch-button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
 .room-switch-button:focus-visible {
-  outline: 2px solid var(--rust);
+  position: relative;
+  outline: 2px solid #1b1b18;
   outline-offset: -5px;
 }
 
 .room-switch-button:disabled {
   cursor: wait;
-  opacity: 0.42;
+  opacity: 0.28;
 }
 
 .room-detail {
@@ -1450,14 +1457,6 @@ button {
     font-size: 35px;
   }
 
-  .room-switch-previous {
-    left: -20px;
-  }
-
-  .room-switch-next {
-    right: -20px;
-  }
-
 }
 
 @media (max-width: 820px) {
@@ -1498,17 +1497,16 @@ button {
 
   .room-switch-controls {
     position: relative;
-    display: flex;
-    min-height: 56px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4px 2px 0;
-    border-top: 1px solid var(--line);
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    grid-template-columns: minmax(72px, 1fr) 52px 52px;
+    margin-top: 12px;
   }
 
-  .room-switch-button {
-    position: static;
-    transform: none;
+  .folio-rail-page {
+    justify-items: start;
+    padding-left: 16px;
   }
 
   .room-detail {

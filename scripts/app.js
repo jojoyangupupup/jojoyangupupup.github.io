@@ -17,7 +17,7 @@ const FOCUS_TIMING = {
   total: 950,
 };
 const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 };
-const ROOM_SWITCH_MS = 500;
+const ROOM_SWITCH_MS = 300;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
 
@@ -122,7 +122,8 @@ app.innerHTML = `
             </svg>
           </div>
 
-          <nav class="room-switch-controls" aria-label="Adjacent portfolio categories" hidden>
+          <nav class="room-switch-controls folio-rail" aria-label="Folio page navigation" hidden>
+            <span class="folio-rail-page" aria-live="polite" aria-atomic="true">01 / ${String(PAGE_NAVIGATION.length).padStart(2, "0")}</span>
             <button class="room-switch-button room-switch-previous" type="button" data-direction="previous">
               <svg class="room-switch-icon" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
                 <path d="M22 14H6M12 8l-6 6 6 6"></path>
@@ -166,6 +167,7 @@ const incomingImage = document.querySelector(".visual-layer-incoming");
 const focusClipPath = document.querySelector(".focus-clip-path");
 const detail = document.querySelector(".room-detail");
 const roomSwitchControls = document.querySelector(".room-switch-controls");
+const folioRailPage = document.querySelector(".folio-rail-page");
 const previousButton = document.querySelector(".room-switch-previous");
 const nextButton = document.querySelector(".room-switch-next");
 const navLinks = [...document.querySelectorAll(".top-navigation-link")];
@@ -530,20 +532,13 @@ function openRoomObject(roomId, objectId, trigger) {
   openDocumentModal(room, object, documents, trigger);
 }
 
-function showRoomCaption(room) {
-  const caption = document.createElement("p");
-  caption.className = "visual-caption";
-  caption.textContent = `${room.number} / ${room.title}`;
-  stage.querySelector(".visual-caption")?.remove();
-  stage.append(caption);
-}
-
-function removeVisualCaption() {
-  stage.querySelector(".visual-caption")?.remove();
-}
-
 function updateVisualControls(pageId) {
   const { previous, next } = adjacentPages(pageId);
+  const currentIndex = PAGE_NAVIGATION.findIndex((item) => item.id === pageId);
+  const totalPages = PAGE_NAVIGATION.length;
+  const currentPage = currentIndex + 1;
+  folioRailPage.textContent = `${String(currentPage).padStart(2, "0")} / ${String(totalPages).padStart(2, "0")}`;
+  folioRailPage.setAttribute("aria-label", `Page ${currentPage} of ${totalPages}`);
   previousButton.dataset.pageId = previous.id;
   previousButton.setAttribute("aria-label", `Previous page: ${previous.accessibleLabel}`);
   nextButton.dataset.pageId = next.id;
@@ -608,8 +603,8 @@ function setFocusRoom(room) {
 
 function setSwitchDirection(direction) {
   const sign = direction === "previous" ? -1 : 1;
-  stage.style.setProperty("--switch-enter-x", `${sign * 16}px`);
-  stage.style.setProperty("--switch-exit-x", `${sign * -12}px`);
+  stage.style.setProperty("--switch-enter-x", `${sign * 12}px`);
+  stage.style.setProperty("--switch-exit-x", `${sign * -10}px`);
   stage.dataset.switchDirection = direction;
 }
 
@@ -721,7 +716,6 @@ async function transitionToRoom(room, historyMode = "push", animate = true, requ
   portfolioMain.dataset.page = room.id;
   stage.dataset.view = "room";
   stage.dataset.roomId = room.id;
-  showRoomCaption(room);
   detail.classList.add("is-visible");
   updateVisualControls(currentPageId);
   clearTransitionClasses();
@@ -761,7 +755,6 @@ async function transitionToOverview(historyMode = "push", animate = true) {
   portfolioMain.dataset.page = "overview";
   stage.dataset.view = "overview";
   delete stage.dataset.roomId;
-  removeVisualCaption();
   detail.innerHTML = "";
   updateVisualControls(currentPageId);
   clearTransitionClasses();
