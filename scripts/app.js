@@ -18,6 +18,7 @@ const FOCUS_TIMING = {
 };
 const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 };
 const ROOM_SWITCH_MS = 300;
+const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
 
@@ -188,6 +189,7 @@ let activeModalDocuments = [];
 let documentModalHistory = [];
 let workIntroObserver = null;
 let workIntroSetupFrame = 0;
+let discoveredItems = loadDiscoveredItems();
 
 function syncBranding() {
   if (wordmarkName.textContent !== PORTFOLIO.authorName) wordmarkName.textContent = PORTFOLIO.authorName;
@@ -225,29 +227,240 @@ function warmRoomDocuments(id) {
   });
 }
 
-function renderDetail(room) {
+function directoryRooms() {
+  return PAGE_NAVIGATION
+    .filter((page) => page.type === "room")
+    .map((page) => ({ page, room: ROOMS.find((room) => room.id === page.roomId) }))
+    .filter(({ room }) => room);
+}
+
+function discoveryKey(roomId, objectId) {
+  return `${roomId}:${objectId}`;
+}
+
+function configuredDiscoveryKeys() {
+  return new Set(directoryRooms().flatMap(({ room }) =>
+    (room.objectHotspots || []).map((object) => discoveryKey(room.id, object.id))));
+}
+
+function loadDiscoveredItems() {
+  try {
+    const configured = configuredDiscoveryKeys();
+    const stored = JSON.parse(window.localStorage.getItem(DISCOVERY_STORAGE_KEY) || "[]");
+    return new Set(Array.isArray(stored) ? stored.filter((key) => configured.has(key)) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveDiscoveredItems() {
+  try {
+    window.localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify([...discoveredItems]));
+  } catch {
+    // Discovery still works for the current page when storage is unavailable.
+  }
+}
+
+function roomProgress(room) {
+  const objects = room.objectHotspots || [];
+  return {
+    total: objects.length,
+    viewed: objects.filter((object) => discoveredItems.has(discoveryKey(room.id, object.id))).length,
+  };
+}
+
+function directoryThumbnail(item, size = "room") {
+  const image = item.directoryImage;
+  return `
+    <span class="directory-thumb directory-thumb-${size}" aria-hidden="true">
+      ${image ? `<img src="${image}" alt="" loading="lazy" decoding="async">` : ""}
+    </span>
+  `;
+}
+
+function roomProgressLabel(viewed, total) {
+  if (total > 0 && viewed === total) return "COMPLETE";
+  return `${String(viewed).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+}
+
+function bindDirectoryInteractions() {
+  detail.querySelectorAll("[data-directory-room]").forEach((row) => {
+    const roomId = row.dataset.roomId;
+    const activate = () => {
+      setDirectoryRoomHighlight(roomId, true);
+      warmRoomImage(roomId);
+    };
+    const deactivate = () => {
+      if (document.activeElement !== row) setDirectoryRoomHighlight(roomId, false);
+    };
+    row.addEventListener("pointerenter", activate);
+    row.addEventListener("pointerleave", deactivate);
+    row.addEventListener("focus", activate);
+    row.addEventListener("blur", () => setDirectoryRoomHighlight(roomId, false));
+    row.addEventListener("click", () => navigateToRoom(roomId, undefined, "overview-directory"));
+  });
+
+  detail.querySelectorAll("[data-directory-object]").forEach((row) => {
+    const { roomId, objectId } = row.dataset;
+    const activate = () => {
+      setDirectoryObjectHighlight(roomId, objectId, true);
+      warmRoomObjectDocuments(roomId, objectId);
+    };
+    const deactivate = () => {
+      if (document.activeElement !== row) setDirectoryObjectHighlight(roomId, objectId, false);
+    };
+    row.addEventListener("pointerenter", activate);
+    row.addEventListener("pointerleave", deactivate);
+    row.addEventListener("focus", activate);
+    row.addEventListener("blur", () => setDirectoryObjectHighlight(roomId, objectId, false));
+    row.addEventListener("click", () => openRoomObject(roomId, objectId, row));
+  });
+}
+
+function renderOverviewDirectory({ entering = false } = {}) {
+  const rooms = directoryRooms();
+  const total = rooms.reduce((sum, { room }) => sum + roomProgress(room).total, 0);
+  const viewed = rooms.reduce((sum, { room }) => sum + roomProgress(room).viewed, 0);
+
+  detail.dataset.directoryLevel = "overview";
+  detail.classList.toggle("is-level-entering", entering);
   detail.innerHTML = `
-    <p class="detail-kicker">${room.number} / Category</p>
-    <h1 class="detail-title" tabindex="-1">${room.title}</h1>
-    <p class="detail-description">${room.description}</p>
-    <section class="projects-section" aria-labelledby="projects-heading">
-      <h2 class="projects-label" id="projects-heading">Selected Work</h2>
-      <ol class="project-list">
-        ${room.projects.map((project, index) => `
-          <li id="${project.id}">
-            <a class="project-link" href="${room.path}#${project.id}" aria-label="${project.title}, ${project.type}, ${project.year}">
-              <span class="project-number">${String(index + 1).padStart(2, "0")}</span>
-              <span class="project-copy">
-                <span class="project-title">${project.title}</span>
-                <span class="project-type">${project.type}</span>
-              </span>
-              <span class="project-year">${project.year}</span>
-            </a>
-          </li>
-        `).join("")}
+    <section class="exploration-directory overview-directory" aria-labelledby="archive-heading">
+      <header class="exploration-header">
+        <p class="exploration-kicker">House Archive</p>
+        <h1 class="exploration-title" id="archive-heading" tabindex="-1">小屋作品档案</h1>
+        <p class="exploration-intro">这间小屋收藏了 <strong data-directory-total>${total}</strong> 件作品。<br>它们没有挂在墙上，而是藏进了日常物件里。</p>
+        <p class="exploration-prompt">选择一间房，开始寻找。</p>
+      </header>
+      <ol class="directory-list room-directory-list">
+        ${rooms.map(({ page, room }, index) => {
+          const progress = roomProgress(room);
+          const status = roomProgressLabel(progress.viewed, progress.total);
+          return `
+            <li>
+              <button
+                class="directory-row room-directory-row${status === "COMPLETE" ? " is-complete" : ""}"
+                type="button"
+                data-directory-room
+                data-room-id="${room.id}"
+                aria-label="${page.label}，已查看 ${progress.viewed} / ${progress.total}"
+              >
+                ${directoryThumbnail(room)}
+                <span class="directory-copy">
+                  <span class="directory-name-line">
+                    <span class="directory-number">${String(index + 1).padStart(2, "0")}</span>
+                    <span class="directory-name">${page.label}</span>
+                  </span>
+                  <span class="directory-meta">${page.accessibleLabel}</span>
+                </span>
+                <span class="directory-progress" data-room-progress>${status}</span>
+              </button>
+            </li>
+          `;
+        }).join("")}
       </ol>
+      <footer class="directory-total" aria-label="总探索进度">
+        <span>Discovered</span>
+        <strong data-discovered-total>${String(viewed).padStart(2, "0")} / ${String(total).padStart(2, "0")}</strong>
+      </footer>
     </section>
   `;
+  bindDirectoryInteractions();
+}
+
+function renderDetail(room, { entering = false } = {}) {
+  const rooms = directoryRooms();
+  const roomIndex = rooms.findIndex(({ room: item }) => item.id === room.id);
+  const page = rooms[roomIndex]?.page;
+  const objects = room.objectHotspots || [];
+  const progress = roomProgress(room);
+
+  detail.dataset.directoryLevel = "room";
+  detail.classList.toggle("is-level-entering", entering);
+  detail.innerHTML = `
+    <section class="exploration-directory object-directory" aria-labelledby="room-directory-heading">
+      <header class="exploration-header room-directory-header">
+        <p class="exploration-kicker">${String(roomIndex + 1).padStart(2, "0")} / ${(page?.accessibleLabel || room.title).toUpperCase()}</p>
+        <h1 class="detail-title exploration-title" id="room-directory-heading" tabindex="-1">${page?.label || room.title}</h1>
+        <div class="room-directory-summary" aria-label="房间探索进度">
+          <span>${String(progress.total).padStart(2, "0")} ITEMS</span>
+          <strong data-room-viewed>${String(progress.viewed).padStart(2, "0")} VIEWED</strong>
+        </div>
+      </header>
+      ${objects.length ? `
+        <ol class="directory-list object-directory-list">
+          ${objects.map((object, index) => {
+            const viewed = discoveredItems.has(discoveryKey(room.id, object.id));
+            return `
+              <li>
+                <button
+                  class="directory-row object-directory-row${viewed ? " is-viewed" : ""}"
+                  type="button"
+                  data-directory-object
+                  data-room-id="${room.id}"
+                  data-object-id="${object.id}"
+                  aria-label="${object.label}，${viewed ? "已查看" : "待发现"}"
+                >
+                  ${directoryThumbnail(object, "object")}
+                  <span class="directory-copy">
+                    <span class="directory-name-line">
+                      <span class="directory-number">${object.number || String(index + 1).padStart(2, "0")}</span>
+                      <span class="directory-name">${object.label}</span>
+                    </span>
+                  </span>
+                  <span class="directory-item-status" data-object-status>${viewed ? "VIEWED / 已查看" : "TO FIND / 待发现"}</span>
+                </button>
+              </li>
+            `;
+          }).join("")}
+        </ol>
+      ` : `<p class="directory-empty">尚无作品</p>`}
+    </section>
+  `;
+  bindDirectoryInteractions();
+}
+
+function syncDirectoryProgress() {
+  const rooms = directoryRooms();
+  let total = 0;
+  let viewed = 0;
+
+  rooms.forEach(({ page, room }) => {
+    const progress = roomProgress(room);
+    total += progress.total;
+    viewed += progress.viewed;
+    const roomRow = detail.querySelector(`[data-directory-room][data-room-id="${room.id}"]`);
+    if (roomRow) {
+      const status = roomProgressLabel(progress.viewed, progress.total);
+      roomRow.querySelector("[data-room-progress]").textContent = status;
+      roomRow.classList.toggle("is-complete", status === "COMPLETE");
+      roomRow.setAttribute("aria-label", `${page.label}，已查看 ${progress.viewed} / ${progress.total}`);
+    }
+  });
+
+  const totalProgress = detail.querySelector("[data-discovered-total]");
+  if (totalProgress) totalProgress.textContent = `${String(viewed).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+
+  const currentRoom = ROOMS.find((room) => room.id === currentPageId);
+  if (!currentRoom) return;
+  const currentProgress = roomProgress(currentRoom);
+  const roomViewed = detail.querySelector("[data-room-viewed]");
+  if (roomViewed) roomViewed.textContent = `${String(currentProgress.viewed).padStart(2, "0")} VIEWED`;
+  detail.querySelectorAll("[data-directory-object]").forEach((row) => {
+    const isViewed = discoveredItems.has(discoveryKey(row.dataset.roomId, row.dataset.objectId));
+    row.classList.toggle("is-viewed", isViewed);
+    row.querySelector("[data-object-status]").textContent = isViewed ? "VIEWED / 已查看" : "TO FIND / 待发现";
+    const object = currentRoom.objectHotspots?.find((item) => item.id === row.dataset.objectId);
+    if (object) row.setAttribute("aria-label", `${object.label}，${isViewed ? "已查看" : "待发现"}`);
+  });
+}
+
+function markObjectDiscovered(roomId, objectId) {
+  const key = discoveryKey(roomId, objectId);
+  if (discoveredItems.has(key)) return;
+  discoveredItems.add(key);
+  saveDiscoveredItems();
+  syncDirectoryProgress();
 }
 
 function getRoomObject(roomId, objectId) {
@@ -528,6 +741,7 @@ function openRoomObject(roomId, objectId, trigger) {
   if (transitioning || currentPageId !== roomId) return;
   const { room, object, documents } = getRoomObject(roomId, objectId);
   if (!room || !object || !documents.length) return;
+  markObjectDiscovered(roomId, objectId);
   openDocumentModal(room, object, documents, trigger);
 }
 
@@ -634,7 +848,18 @@ function clearOverviewInteractionState() {
   ].forEach((property) => stage.style.removeProperty(property));
 }
 
-async function focusFromOverview(room) {
+function prepareOverviewDirectorySelection(roomId) {
+  const directory = detail.querySelector(".overview-directory");
+  if (!directory) return;
+  directory.classList.add("is-committing");
+  detail.querySelectorAll("[data-directory-room]").forEach((row) => {
+    const selected = row.dataset.roomId === roomId;
+    row.classList.toggle("is-selected", selected);
+    row.classList.toggle("is-muted", !selected);
+  });
+}
+
+async function focusFromOverview(room, swapDirectory) {
   setFocusRoom(room);
   portfolioMain.dataset.page = "transition";
   stage.dataset.view = "transition";
@@ -645,6 +870,7 @@ async function focusFromOverview(room) {
   if (prefersReducedMotion.matches) {
     await wait(REDUCED_FOCUS_TIMING.crossfadeStart);
     stage.classList.add("is-focus-crossfading");
+    swapDirectory();
     await wait(REDUCED_FOCUS_TIMING.detailStart - REDUCED_FOCUS_TIMING.crossfadeStart);
     detail.classList.add("is-visible");
     await wait(REDUCED_FOCUS_TIMING.total - REDUCED_FOCUS_TIMING.detailStart);
@@ -655,7 +881,9 @@ async function focusFromOverview(room) {
   stage.classList.add("is-focus-expanding");
   await wait(FOCUS_TIMING.crossfadeStart - FOCUS_TIMING.expandStart);
   stage.classList.add("is-focus-crossfading");
-  await wait(FOCUS_TIMING.detailStart - FOCUS_TIMING.crossfadeStart);
+  await wait(60);
+  swapDirectory();
+  await wait(FOCUS_TIMING.detailStart - FOCUS_TIMING.crossfadeStart - 60);
   detail.classList.add("is-visible");
   await wait(FOCUS_TIMING.total - FOCUS_TIMING.detailStart);
 }
@@ -685,8 +913,10 @@ async function transitionToRoom(room, historyMode = "push", animate = true, requ
   setLocked(true);
   const fromOverview = currentPageId === "overview";
   const direction = getSwitchDirection(room.id, requestedDirection);
+  if (fromOverview && animate) prepareOverviewDirectorySelection(room.id);
   const imageReady = await preloadImage(room.image);
   if (!imageReady) {
+    if (fromOverview) renderOverviewDirectory();
     setLocked(false);
     return;
   }
@@ -697,10 +927,10 @@ async function transitionToRoom(room, historyMode = "push", animate = true, requ
   incomingImage.alt = room.alt;
   incomingImage.removeAttribute("aria-hidden");
   if (!fromOverview && animate) detail.classList.add("is-updating");
-  renderDetail(room);
+  if (!fromOverview || !animate) renderDetail(room);
   setNavigationState(room.id);
 
-  if (animate && fromOverview) await focusFromOverview(room);
+  if (animate && fromOverview) await focusFromOverview(room, () => renderDetail(room, { entering: true }));
   else if (animate) await switchRoomVisual(direction);
 
   currentImage.src = room.image;
@@ -734,7 +964,7 @@ async function transitionToOverview(historyMode = "push", animate = true) {
   stage.dataset.view = "transition";
   portfolioMain.dataset.page = "overview-enter";
   stage.classList.add("is-returning");
-  detail.classList.remove("is-visible");
+  if (animate) detail.classList.add("is-updating");
   setNavigationState("overview");
 
   if (animate) {
@@ -749,7 +979,8 @@ async function transitionToOverview(historyMode = "push", animate = true) {
   portfolioMain.dataset.page = "overview";
   stage.dataset.view = "overview";
   delete stage.dataset.roomId;
-  detail.innerHTML = "";
+  renderOverviewDirectory({ entering: animate });
+  detail.classList.add("is-visible");
   updateVisualControls(currentPageId);
   clearTransitionClasses();
   if (!historySyncPending) commitHistory("/", historyMode);
@@ -780,6 +1011,37 @@ function navigateToRoom(id, direction, source = "overview-hotspot") {
 
 function highlightRoom(id, highlighted) {
   document.querySelector(`.hotspot[data-room-id="${id}"]`)?.classList.toggle("is-highlighted", highlighted);
+}
+
+function setDirectoryRoomHighlight(roomId, highlighted) {
+  const directory = detail.querySelector(".overview-directory");
+  if (!directory || (!highlighted && transitioning && directory.classList.contains("is-committing"))) return;
+  detail.querySelectorAll("[data-directory-room]").forEach((row) => {
+    const active = highlighted && row.dataset.roomId === roomId;
+    row.classList.toggle("is-active", active);
+    row.classList.toggle("is-muted", highlighted && !active);
+  });
+  highlightRoom(roomId, highlighted);
+}
+
+function setDirectoryObjectHighlight(roomId, objectId, highlighted) {
+  detail.querySelectorAll("[data-directory-object]").forEach((row) => {
+    const active = highlighted && row.dataset.roomId === roomId && row.dataset.objectId === objectId;
+    row.classList.toggle("is-active", active);
+    row.classList.toggle("is-muted", highlighted && !active);
+  });
+  roomObjectHotspots.forEach((hotspot) => {
+    const active = highlighted && hotspot.dataset.roomId === roomId && hotspot.dataset.objectId === objectId;
+    hotspot.classList.toggle("is-directory-highlighted", active);
+  });
+}
+
+function warmRoomObjectDocuments(roomId, objectId) {
+  const { documents } = getRoomObject(roomId, objectId);
+  documents.forEach((documentEntry) => {
+    if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+    if (documentEntry.workIntro?.coverImage) preloadImage(documentEntry.workIntro.coverImage);
+  });
 }
 
 navLinks.forEach((link) => {
@@ -815,8 +1077,18 @@ navLinks.forEach((link) => {
 hotspots.forEach((hotspot) => {
   const id = hotspot.dataset.roomId;
   hotspot.addEventListener("click", () => navigateToRoom(id, undefined, "overview-hotspot"));
-  hotspot.addEventListener("pointerenter", () => warmRoomImage(id));
-  hotspot.addEventListener("focus", () => warmRoomImage(id));
+  hotspot.addEventListener("pointerenter", () => {
+    setDirectoryRoomHighlight(id, true);
+    warmRoomImage(id);
+  });
+  hotspot.addEventListener("pointerleave", () => {
+    if (document.activeElement !== hotspot) setDirectoryRoomHighlight(id, false);
+  });
+  hotspot.addEventListener("focus", () => {
+    setDirectoryRoomHighlight(id, true);
+    warmRoomImage(id);
+  });
+  hotspot.addEventListener("blur", () => setDirectoryRoomHighlight(id, false));
   hotspot.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -829,15 +1101,20 @@ roomObjectHotspots.forEach((hotspot) => {
   const roomId = hotspot.dataset.roomId;
   const objectId = hotspot.dataset.objectId;
   const activate = () => openRoomObject(roomId, objectId, hotspot);
-  const warmDocument = () => {
-    const { documents } = getRoomObject(roomId, objectId);
-    documents.forEach((documentEntry) => {
-      if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
-    });
-  };
+  const warmDocument = () => warmRoomObjectDocuments(roomId, objectId);
   hotspot.addEventListener("click", activate);
-  hotspot.addEventListener("pointerenter", warmDocument);
-  hotspot.addEventListener("focus", warmDocument);
+  hotspot.addEventListener("pointerenter", () => {
+    setDirectoryObjectHighlight(roomId, objectId, true);
+    warmDocument();
+  });
+  hotspot.addEventListener("pointerleave", () => {
+    if (document.activeElement !== hotspot) setDirectoryObjectHighlight(roomId, objectId, false);
+  });
+  hotspot.addEventListener("focus", () => {
+    setDirectoryObjectHighlight(roomId, objectId, true);
+    warmDocument();
+  });
+  hotspot.addEventListener("blur", () => setDirectoryObjectHighlight(roomId, objectId, false));
   hotspot.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
@@ -960,6 +1237,8 @@ window.addEventListener("popstate", () => {
 if (initialRoom) {
   transitionToRoom(initialRoom, "replace", false);
 } else {
+  renderOverviewDirectory();
+  detail.classList.add("is-visible");
   commitHistory("/", "replace");
   setNavigationState("overview");
   updateVisualControls("overview");

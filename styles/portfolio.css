@@ -515,7 +515,8 @@ button {
 }
 
 .room-object-hotspot:hover + .room-object-glow,
-.room-object-hotspot:focus-visible + .room-object-glow {
+.room-object-hotspot:focus-visible + .room-object-glow,
+.room-object-hotspot.is-directory-highlighted + .room-object-glow {
   opacity: 0.94;
 }
 
@@ -536,6 +537,12 @@ button {
   stroke: transparent;
   stroke-width: 5;
   vector-effect: non-scaling-stroke;
+}
+
+.hotspot.is-highlighted {
+  stroke: rgba(255, 247, 223, 0.9);
+  stroke-width: 6;
+  filter: drop-shadow(0 0 5px rgba(152, 91, 67, 0.42));
 }
 
 .show-hotspots .hotspot-1 {
@@ -652,10 +659,12 @@ button {
 
 .room-detail {
   display: flex;
+  max-height: calc(100svh - var(--header-height));
   min-width: 0;
   flex-direction: column;
   padding: 36px 28px 28px;
   border-left: 1px solid var(--line);
+  overflow: hidden;
   opacity: 0;
   transform: translateY(6px);
   visibility: hidden;
@@ -768,6 +777,322 @@ button {
 
 .project-year {
   padding-top: 2px;
+}
+
+.exploration-directory {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.exploration-header {
+  flex: none;
+}
+
+.exploration-kicker {
+  margin: 0 0 10px;
+  color: var(--rust);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.exploration-title {
+  max-width: 100%;
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.exploration-title[tabindex="-1"]:focus {
+  outline: none;
+}
+
+.exploration-intro {
+  margin: 20px 0 0;
+  color: #4f554e;
+  font-size: 12px;
+  line-height: 1.78;
+}
+
+.exploration-intro strong {
+  color: var(--rust);
+  font-weight: 700;
+}
+
+.exploration-prompt {
+  margin: 13px 0 24px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.directory-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.directory-list li {
+  border-bottom: 1px solid var(--line);
+}
+
+.directory-row {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 74px;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+.directory-row:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: -2px;
+}
+
+.directory-row.is-muted {
+  opacity: 0.55;
+}
+
+.directory-row.is-active,
+.directory-row.is-selected {
+  opacity: 1;
+}
+
+.directory-thumb {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  overflow: visible;
+}
+
+.directory-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  transition: filter 240ms ease, transform 240ms var(--ease-editorial);
+}
+
+.directory-row.is-active .directory-thumb img,
+.directory-row:hover .directory-thumb img,
+.directory-row:focus-visible .directory-thumb img {
+  transform: translateX(-5px) translateY(-3px) rotate(-2deg) scale(1.06);
+}
+
+.directory-copy,
+.directory-name-line {
+  min-width: 0;
+}
+
+.directory-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.directory-name-line {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.directory-number {
+  flex: none;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+}
+
+.directory-name {
+  position: relative;
+  min-width: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.directory-name::after {
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  left: 0;
+  height: 1px;
+  background: var(--rust);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.directory-row.is-active .directory-name::after,
+.directory-row:hover .directory-name::after,
+.directory-row:focus-visible .directory-name::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.directory-meta,
+.directory-progress,
+.directory-item-status,
+.directory-total,
+.room-directory-summary {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.directory-progress {
+  justify-self: end;
+  color: #555b53;
+  white-space: nowrap;
+  transition: color 220ms ease;
+}
+
+.directory-row.is-active .directory-progress,
+.directory-row:hover .directory-progress,
+.directory-row:focus-visible .directory-progress,
+.directory-row.is-complete .directory-progress {
+  color: var(--rust);
+  font-weight: 700;
+}
+
+.directory-total {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 16px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.directory-total strong {
+  color: var(--rust);
+  font-weight: 700;
+}
+
+.room-directory-header {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 22px;
+  background: var(--paper);
+}
+
+.room-directory-header .exploration-title {
+  font-size: 42px;
+}
+
+.room-directory-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+}
+
+.room-directory-summary strong {
+  color: var(--rust);
+}
+
+.object-directory-list {
+  min-height: 0;
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--line) transparent;
+  scrollbar-width: thin;
+}
+
+.object-directory-row {
+  min-height: 86px;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-content: center;
+}
+
+.directory-thumb-object {
+  width: 58px;
+  height: 58px;
+  grid-row: 1 / span 2;
+}
+
+.object-directory-row .directory-copy {
+  align-self: end;
+}
+
+.directory-item-status {
+  grid-column: 2;
+  align-self: start;
+  margin-top: 2px;
+  color: #666b64;
+}
+
+.object-directory-row.is-viewed {
+  opacity: 0.62;
+}
+
+.object-directory-row.is-viewed .directory-thumb img {
+  filter: saturate(0.7);
+}
+
+.object-directory-row.is-viewed:hover,
+.object-directory-row.is-viewed:focus-visible,
+.object-directory-row.is-viewed.is-active {
+  opacity: 0.85;
+}
+
+.object-directory-row.is-viewed .directory-item-status {
+  color: var(--moss);
+  font-weight: 700;
+}
+
+.directory-empty {
+  margin: 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.overview-directory.is-committing .directory-row.is-selected {
+  transform: translateY(-5px);
+  transition: color 220ms ease, opacity 220ms ease, transform 360ms var(--ease-editorial);
+}
+
+.room-detail.is-level-entering .exploration-directory {
+  animation: directory-level-enter 420ms var(--ease-editorial) both;
+}
+
+@keyframes directory-level-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .document-modal {
@@ -1512,9 +1837,11 @@ button {
   }
 
   .room-detail {
+    max-height: none;
     padding: 30px 20px 24px;
     border-top: 1px solid var(--line);
     border-left: 0;
+    overflow: visible;
   }
 
   .room-detail:not(.is-visible) {
@@ -1528,6 +1855,45 @@ button {
   .detail-description {
     max-width: 520px;
     margin-bottom: 30px;
+  }
+
+  .exploration-header {
+    max-width: 560px;
+  }
+
+  .room-directory-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .room-directory-list li:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+
+  .room-directory-row {
+    min-height: 82px;
+    grid-template-columns: 48px minmax(0, 1fr);
+    padding: 10px 12px;
+  }
+
+  .directory-thumb-room {
+    width: 48px;
+    height: 48px;
+    grid-row: 1 / span 2;
+  }
+
+  .room-directory-row .directory-progress {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .directory-total {
+    margin-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .object-directory-list {
+    overflow: visible;
   }
 
   .room-object-hotspot {
@@ -1687,6 +2053,38 @@ button {
     padding: 8px;
   }
 
+  .room-detail {
+    padding-inline: 16px;
+  }
+
+  .exploration-title {
+    font-size: 28px;
+  }
+
+  .room-directory-header .exploration-title {
+    font-size: 36px;
+  }
+
+  .room-directory-row {
+    min-height: 78px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 7px;
+    padding-inline: 7px;
+  }
+
+  .directory-thumb-room {
+    width: 40px;
+    height: 40px;
+  }
+
+  .directory-name-line {
+    gap: 6px;
+  }
+
+  .room-directory-row .directory-name {
+    font-size: 13px;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1713,6 +2111,14 @@ button {
   }
 
   .overview-motion-object {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .directory-row,
+  .directory-thumb img,
+  .overview-directory.is-committing .directory-row.is-selected,
+  .room-detail.is-level-entering .exploration-directory {
     animation: none !important;
     transform: none !important;
   }
