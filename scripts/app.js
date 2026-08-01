@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=30";
+} from "/scripts/rooms-data.js?v=31";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -328,6 +328,17 @@ function renderDocumentPages(documents) {
     const heading = comparison
       ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
       : "";
+    const primaryAction = documentEntry.primaryAction
+      ? `
+        <div class="document-intro-toolbar">
+          <button
+            class="document-intro-demo-button"
+            type="button"
+            data-document-link="${documentEntry.primaryAction.targetDocumentId}"
+          >${documentEntry.primaryAction.label}</button>
+        </div>
+      `
+      : "";
     if (documentEntry.contentType === "embed") {
       return `
         <article class="document-column document-embed-column" aria-label="${documentEntry.title}">
@@ -366,6 +377,7 @@ function renderDocumentPages(documents) {
     return `
       <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
+        ${primaryAction}
         <div class="document-column-pages">${pages}</div>
       </article>
     `;

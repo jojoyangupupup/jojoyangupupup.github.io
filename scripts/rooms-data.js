@@ -200,6 +200,23 @@ export const ROOMS = [
     ],
     documents: [
       {
+        id: "living-project-space-introduction",
+        title: "【一期】组织档案沉淀 V2.0",
+        format: "PDF",
+        pages: 1,
+        primaryAction: {
+          label: "点我看看👀",
+          targetDocumentId: "living-project-space-demo",
+        },
+        renderedPages: {
+          basePath: "/assets/works/living-project-space-introduction/pages",
+          extension: "png",
+          version: "20260801-1",
+          width: 1466,
+          height: 10754,
+        },
+      },
+      {
         id: "living-project-space-demo",
         title: "项目空间 Demo",
         format: "Interactive HTML",
@@ -211,8 +228,8 @@ export const ROOMS = [
       {
         id: "living-tv",
         number: "01",
-        label: "项目空间 Demo",
-        documentId: "living-project-space-demo",
+        label: "【一期】组织档案沉淀 V2.0",
+        documentId: "living-project-space-introduction",
         path: "M 1398 784 L 1410 777 L 1745 977 L 1745 1226 L 1732 1243 L 1398 1045 Z M 1463 1127 L 1492 1121 L 1621 1215 L 1629 1237 L 1619 1244 L 1605 1243 L 1570 1218 L 1463 1141 Z",
         glowImage: {
           file: "/assets/rooms/objects/living-tv.png",
