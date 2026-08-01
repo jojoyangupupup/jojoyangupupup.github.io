@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=31";
+} from "/scripts/rooms-data.js?v=32";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -185,6 +185,8 @@ let historySyncPending = false;
 let documentReturnFocus = null;
 let activeModalDocuments = [];
 let documentModalHistory = [];
+let workIntroObserver = null;
+let workIntroSetupFrame = 0;
 
 function syncBranding() {
   if (wordmarkName.textContent !== PORTFOLIO.authorName) wordmarkName.textContent = PORTFOLIO.authorName;
@@ -218,6 +220,7 @@ function warmRoomDocuments(id) {
   const room = ROOMS.find((item) => item.id === id);
   (room?.documents || []).forEach((documentEntry) => {
     if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+    if (documentEntry.workIntro?.coverImage) preloadImage(documentEntry.workIntro.coverImage);
   });
 }
 
@@ -328,15 +331,47 @@ function renderDocumentPages(documents) {
     const heading = comparison
       ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
       : "";
-    const primaryAction = documentEntry.primaryAction
+    const workIntro = documentEntry.workIntro
       ? `
-        <div class="document-intro-toolbar">
-          <button
-            class="document-intro-demo-button"
-            type="button"
-            data-document-link="${documentEntry.primaryAction.targetDocumentId}"
-          >${documentEntry.primaryAction.label}</button>
-        </div>
+        <section class="work-intro" aria-labelledby="work-intro-${documentEntry.id}">
+          <div class="work-intro-copy">
+            <p class="work-intro-kicker">${documentEntry.workIntro.kicker}</p>
+            <h2 id="work-intro-${documentEntry.id}">${documentEntry.title}</h2>
+            <p class="work-intro-summary">${documentEntry.workIntro.summary}</p>
+          </div>
+          <figure class="work-intro-cover">
+            <img
+              src="${documentEntry.workIntro.coverImage}"
+              width="${documentEntry.workIntro.coverWidth}"
+              height="${documentEntry.workIntro.coverHeight}"
+              alt="${documentEntry.workIntro.coverAlt}"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            >
+          </figure>
+          <div class="work-intro-action">
+            <button
+              class="work-cta"
+              type="button"
+              data-document-link="${documentEntry.workIntro.action.targetDocumentId}"
+              aria-label="${documentEntry.workIntro.action.ariaLabel}"
+            >
+              <span>${documentEntry.workIntro.action.label}</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </section>
+        <button
+          class="work-cta work-cta-float"
+          type="button"
+          data-document-link="${documentEntry.workIntro.action.targetDocumentId}"
+          aria-label="${documentEntry.workIntro.action.ariaLabel}"
+          tabindex="-1"
+        >
+          <span>${documentEntry.workIntro.action.label}</span>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </button>
       `
       : "";
     if (documentEntry.contentType === "embed") {
@@ -377,11 +412,45 @@ function renderDocumentPages(documents) {
     return `
       <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
-        ${primaryAction}
+        ${workIntro}
         <div class="document-column-pages">${pages}</div>
       </article>
     `;
   }).join("");
+}
+
+function disconnectWorkIntroCta() {
+  if (workIntroSetupFrame) {
+    window.cancelAnimationFrame(workIntroSetupFrame);
+    workIntroSetupFrame = 0;
+  }
+  workIntroObserver?.disconnect();
+  workIntroObserver = null;
+}
+
+function setupWorkIntroCta() {
+  disconnectWorkIntroCta();
+  const hero = documentPages.querySelector(".work-intro");
+  const floatingCta = documentPages.querySelector(".work-cta-float");
+  if (!hero || !floatingCta || !("IntersectionObserver" in window)) return;
+
+  workIntroObserver = new IntersectionObserver(
+    ([entry]) => {
+      const visible = !entry.isIntersecting && !documentModal.hidden;
+      floatingCta.classList.toggle("is-visible", visible);
+      floatingCta.tabIndex = visible ? 0 : -1;
+    },
+    { root: documentModalScroll, threshold: 0.1 },
+  );
+  workIntroObserver.observe(hero);
+}
+
+function scheduleWorkIntroCta() {
+  disconnectWorkIntroCta();
+  workIntroSetupFrame = window.requestAnimationFrame(() => {
+    workIntroSetupFrame = 0;
+    setupWorkIntroCta();
+  });
 }
 
 function updateDocumentCloseAction() {
@@ -406,6 +475,7 @@ function renderDocumentModalView(documents, scrollTop = 0) {
   documentModalScroll.scrollTop = scrollTop;
   documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
   updateDocumentCloseAction();
+  scheduleWorkIntroCta();
 }
 
 function openDocumentModal(room, object, documents, trigger, { pushCurrent = false } = {}) {
@@ -423,6 +493,7 @@ function openDocumentModal(room, object, documents, trigger, { pushCurrent = fal
   renderDocumentModalView(documents);
   documentModal.hidden = false;
   documentModal.setAttribute("aria-hidden", "false");
+  if (openingModal) documentModalScroll.scrollTop = 0;
   document.body.classList.add("is-document-open");
   documentModalClose.focus({ preventScroll: true });
 }
@@ -439,6 +510,7 @@ function closeOrReturnDocument() {
 
 function closeDocumentModal(restoreFocus = true) {
   if (documentModal.hidden) return;
+  disconnectWorkIntroCta();
   documentModal.hidden = true;
   documentModal.setAttribute("aria-hidden", "true");
   documentPages.replaceChildren();

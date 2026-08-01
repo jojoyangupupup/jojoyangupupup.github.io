@@ -204,9 +204,18 @@ export const ROOMS = [
         title: "【一期】组织档案沉淀 V2.0",
         format: "PDF",
         pages: 1,
-        primaryAction: {
-          label: "点我看看👀",
-          targetDocumentId: "living-project-space-demo",
+        workIntro: {
+          kicker: "PRODUCT DESIGN · INTERACTIVE PROTOTYPE",
+          summary: "项目空间将分散在群聊、知识库、会议、iCafe、代码库和链接附件中的协作信息，聚合为可检索、可追溯的项目知识。",
+          coverImage: "/assets/works/living-project-space-introduction/cover.jpg",
+          coverAlt: "项目空间 Demo 的项目列表界面",
+          coverWidth: 1280,
+          coverHeight: 720,
+          action: {
+            label: "查看作品",
+            ariaLabel: "查看作品：项目空间 Demo",
+            targetDocumentId: "living-project-space-demo",
+          },
         },
         renderedPages: {
           basePath: "/assets/works/living-project-space-introduction/pages",
