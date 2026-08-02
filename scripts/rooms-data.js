@@ -448,6 +448,13 @@ export const ROOMS = [
         label: "竞品调研（完整连续表格）",
         documentId: "study-competitor-research",
         path: "M 466 1050 L 686 972 L 749 1397 L 536 1518 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/study-board-aligned.png",
+          x: 0,
+          y: 0,
+          width: 2048,
+          height: 2048,
+        },
       },
     ],
     hotspotPath: "M744 151 L980 327 L871 396 L802 456 L744 490 L499 382 L499 322 Z",

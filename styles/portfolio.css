@@ -506,14 +506,6 @@ button {
   outline: none;
 }
 
-.room-object-hotspot[data-object-id="study-board"]:hover,
-.room-object-hotspot[data-object-id="study-board"]:focus-visible,
-.room-object-hotspot[data-object-id="study-board"].is-directory-highlighted {
-  stroke: rgba(255, 247, 223, 0.9);
-  stroke-width: 16;
-  filter: drop-shadow(0 0 6px rgba(239, 180, 95, 0.82));
-}
-
 .room-object-glow {
   opacity: 0;
   pointer-events: none;
