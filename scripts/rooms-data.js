@@ -397,6 +397,21 @@ export const ROOMS = [
           pageHeights: [1488, 1546, 1001, 1558, 1539, 1528, 1559, 957],
         },
       },
+      {
+        id: "study-competitor-research",
+        title: "竞品调研（完整连续表格）",
+        format: "PDF",
+        pages: 1,
+        layout: "wide-table",
+        renderedPages: {
+          basePath: "/assets/works/study-competitor-research/pages",
+          extension: "png",
+          version: "20260802-1",
+          width: 1190,
+          height: 4252,
+          pageHeights: [4252],
+        },
+      },
     ],
     objectHotspots: [
       {
@@ -426,6 +441,13 @@ export const ROOMS = [
           width: 190,
           height: 349.6,
         },
+      },
+      {
+        id: "study-board",
+        number: "03",
+        label: "竞品调研（完整连续表格）",
+        documentId: "study-competitor-research",
+        path: "M 466 1050 L 686 972 L 749 1397 L 536 1518 Z",
       },
     ],
     hotspotPath: "M744 151 L980 327 L871 396 L802 456 L744 490 L499 382 L499 322 Z",

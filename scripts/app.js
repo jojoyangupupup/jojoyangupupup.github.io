@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=32";
+} from "/scripts/rooms-data.js?v=33";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -539,8 +539,10 @@ function renderDocumentPageLinks(documentEntry, pageNumber) {
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
   const embedded = documents.some((documentEntry) => documentEntry.contentType === "embed");
+  const wideTable = documents.some((documentEntry) => documentEntry.layout === "wide-table");
   documentPages.classList.toggle("is-comparison", comparison);
   documentPages.classList.toggle("is-embed", embedded);
+  documentPages.classList.toggle("has-wide-table", wideTable);
   documentPages.innerHTML = documents.map((documentEntry) => {
     const heading = comparison
       ? `<header class="document-column-heading"><h2>${documentEntry.columnLabel || documentEntry.title}</h2><p>${documentEntry.title}</p></header>`
