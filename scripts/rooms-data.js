@@ -162,6 +162,20 @@ export const ROOMS = [
         ],
         file: "/assets/works/kitchen-heartprint-introduction/heartprint-introduction.pdf",
       },
+      {
+        id: "kitchen-processing-platform",
+        title: "无暇不出——加工台运营稿",
+        format: "PDF",
+        pages: 1,
+        file: "/assets/works/kitchen-processing-platform/kitchen-processing-platform.pdf",
+        renderedPages: {
+          basePath: "/assets/works/kitchen-processing-platform/pages",
+          extension: "png",
+          version: "20260803-1",
+          width: 1662,
+          height: 6766,
+        },
+      },
     ],
     objectHotspots: [
       {
@@ -176,6 +190,20 @@ export const ROOMS = [
           y: 1289.82,
           width: 257.38,
           height: 158.37,
+        },
+      },
+      {
+        id: "kitchen-pot",
+        number: "02",
+        label: "无暇不出——加工台运营稿",
+        documentId: "kitchen-processing-platform",
+        path: "M555 969 C586 968 611 977 618 986 C627 983 638 987 640 995 C642 1002 635 1009 624 1013 C622 1024 622 1042 619 1050 C614 1064 590 1071 559 1072 C528 1072 504 1063 499 1049 C497 1044 499 1040 498 1037 C489 1040 477 1037 473 1030 C469 1023 475 1016 483 1012 C490 1008 497 1010 501 1015 C501 1008 496 1002 496 994 C497 982 522 970 555 969 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/kitchen-pot-aligned.png",
+          x: 0,
+          y: 0,
+          width: 2048,
+          height: 2048,
         },
       },
     ],
