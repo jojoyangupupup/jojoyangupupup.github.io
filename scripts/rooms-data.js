@@ -188,8 +188,16 @@ export const ROOMS = [
           },
           metrics: {
             label: "PV / UV 数据变化",
-            heading: "发布前后对比",
-            placeholder: "待补充横向长截图。建议使用相同统计周期，直接对照发布前 7 日与发布后 7 日。",
+            heading: "PPT / 信息图任务发起",
+            summary: "以两个完整周对照运营稿发布前后的任务发起表现；当前周（08.03–08.09）尚未完整，不纳入增长计算。",
+            beforeLabel: "发布前完整周 · 07.20–07.26",
+            afterLabel: "发布后完整周 · 07.27–08.02",
+            source: "来源：AI知识加工台_1785925809729.xlsx · 任务发起次数分布-周维度；PPT演示文稿与信息图合计。",
+            scaleMax: 1600,
+            rows: [
+              { label: "PV", description: "页面浏览", before: 575, after: 1422, change: "+147%" },
+              { label: "UV", description: "独立访客", before: 167, after: 424, change: "+154%" },
+            ],
           },
         },
       },

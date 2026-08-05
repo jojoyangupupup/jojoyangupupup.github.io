@@ -1814,6 +1814,136 @@ button {
   line-height: 1.55;
 }
 
+.outcome-metrics-panel {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid rgba(67, 76, 65, 0.26);
+  background: rgba(230, 226, 217, 0.46);
+}
+
+.outcome-metrics-panel h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.outcome-metrics-summary {
+  max-width: 720px;
+  margin: 0;
+  color: #666b64;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.metric-comparison {
+  display: grid;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) minmax(140px, auto);
+  gap: 16px;
+  align-items: center;
+}
+
+.metric-name {
+  display: grid;
+  gap: 3px;
+}
+
+.metric-name strong {
+  color: var(--rust);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.metric-name span {
+  color: #666b64;
+  font-size: 10px;
+}
+
+.metric-bars {
+  display: grid;
+  gap: 5px;
+}
+
+.metric-bar {
+  height: 7px;
+  background: rgba(67, 76, 65, 0.12);
+}
+
+.metric-bar span {
+  display: block;
+  height: 100%;
+}
+
+.metric-bar-before span {
+  background: #9c9587;
+}
+
+.metric-bar-after span {
+  background: var(--rust);
+}
+
+.metric-values {
+  display: grid;
+  gap: 3px;
+  justify-items: end;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.metric-values strong {
+  color: var(--rust);
+  font-size: 12px;
+}
+
+.metric-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 4px;
+  color: #666b64;
+  font-size: 10px;
+}
+
+.metric-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metric-legend-swatch {
+  display: inline-block;
+  width: 18px;
+  height: 5px;
+}
+
+.metric-legend-before {
+  background: #9c9587;
+}
+
+.metric-legend-after {
+  background: var(--rust);
+}
+
+.outcome-metrics-source {
+  margin: 3px 0 0;
+  color: #7b8078;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+/* Preserve the intentionally empty state for any future metric block. */
 .outcome-metrics-placeholder {
   display: grid;
   min-height: 214px;
@@ -2171,6 +2301,16 @@ button {
   .document-outcome-grid {
     grid-template-columns: 1fr;
     gap: 22px;
+  }
+
+  .metric-row {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .metric-values {
+    grid-column: 2;
+    justify-items: start;
   }
 
   .document-text-section p,

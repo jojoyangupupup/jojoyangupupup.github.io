@@ -663,10 +663,31 @@ function renderDocumentPages(documents) {
             </figure>
             <section class="outcome-metrics" aria-labelledby="metrics-${documentEntry.id}">
               <div class="outcome-label">${documentEntry.outcome.metrics.label}</div>
-              <div class="outcome-metrics-placeholder" aria-label="PV / UV 数据变化待补充">
+              <div class="outcome-metrics-panel">
                 <span class="outcome-metrics-mark" aria-hidden="true">PV / UV</span>
                 <h3 id="metrics-${documentEntry.id}">${documentEntry.outcome.metrics.heading}</h3>
-                <p>${documentEntry.outcome.metrics.placeholder}</p>
+                <p class="outcome-metrics-summary">${documentEntry.outcome.metrics.summary}</p>
+                <div class="metric-comparison" role="list" aria-label="发布前后 PV 与 UV 对比">
+                  ${documentEntry.outcome.metrics.rows.map((row) => {
+                    const beforeWidth = Math.max(3, Math.round((row.before / documentEntry.outcome.metrics.scaleMax) * 100));
+                    const afterWidth = Math.max(3, Math.round((row.after / documentEntry.outcome.metrics.scaleMax) * 100));
+                    return `
+                      <div class="metric-row" role="listitem" aria-label="${row.label}：${row.before} 到 ${row.after}，${row.change}">
+                        <div class="metric-name"><strong>${row.label}</strong><span>${row.description}</span></div>
+                        <div class="metric-bars" aria-hidden="true">
+                          <div class="metric-bar metric-bar-before"><span style="width:${beforeWidth}%"></span></div>
+                          <div class="metric-bar metric-bar-after"><span style="width:${afterWidth}%"></span></div>
+                        </div>
+                        <div class="metric-values"><span>${row.before.toLocaleString()} → ${row.after.toLocaleString()}</span><strong>${row.change}</strong></div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+                <div class="metric-legend" aria-label="图例">
+                  <span><i class="metric-legend-swatch metric-legend-before" aria-hidden="true"></i>${documentEntry.outcome.metrics.beforeLabel}</span>
+                  <span><i class="metric-legend-swatch metric-legend-after" aria-hidden="true"></i>${documentEntry.outcome.metrics.afterLabel}</span>
+                </div>
+                <p class="outcome-metrics-source">${documentEntry.outcome.metrics.source}</p>
               </div>
             </section>
           </div>
