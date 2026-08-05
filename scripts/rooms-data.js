@@ -195,8 +195,8 @@ export const ROOMS = [
             source: "来源：AI知识加工台_1785925809729.xlsx · 任务发起次数分布-周维度；PPT演示文稿与信息图合计。",
             scaleMax: 1600,
             rows: [
-              { label: "PV", description: "页面浏览", before: 575, after: 1422, change: "+147%" },
-              { label: "UV", description: "独立访客", before: 167, after: 424, change: "+154%" },
+              { label: "PV", description: "任务发起次数", before: 575, after: 1422, change: "+147%" },
+              { label: "UV", description: "去重用户数", before: 167, after: 424, change: "+154%" },
             ],
           },
         },
