@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=35";
+} from "/scripts/rooms-data.js?v=36";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -94,13 +94,13 @@ app.innerHTML = `
                   </feMerge>
                 </filter>
                 <filter id="room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="8" result="outer-edge"></feMorphology>
                   <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
                   <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
-                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
-                  <feFlood flood-color="#efb45f" flood-opacity="0.62" result="soft-color"></feFlood>
+                  <feGaussianBlur in="edge" stdDeviation="5" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.66" result="soft-color"></feFlood>
                   <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
-                  <feFlood flood-color="#fff7df" flood-opacity="0.88" result="line-color"></feFlood>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.94" result="line-color"></feFlood>
                   <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
                   <feMerge>
                     <feMergeNode in="soft-glow"></feMergeNode>
@@ -638,13 +638,47 @@ function renderDocumentPages(documents) {
         >
         ${renderDocumentPageLinks(documentEntry, pageNumber)}
       </div>
-    `;
+      `;
     }).join("");
+    const outcome = documentEntry.outcome
+      ? `
+        <section class="document-outcome" aria-labelledby="outcome-${documentEntry.id}">
+          <header class="document-outcome-header">
+            <p class="document-outcome-kicker">02 / 发布效果</p>
+            <h2 id="outcome-${documentEntry.id}">${documentEntry.outcome.heading}</h2>
+            <p>${documentEntry.outcome.summary}</p>
+          </header>
+          <div class="document-outcome-grid">
+            <figure class="outcome-ranking">
+              <div class="outcome-label">${documentEntry.outcome.ranking.label}</div>
+              <img
+                src="${documentEntry.outcome.ranking.image}"
+                width="${documentEntry.outcome.ranking.width}"
+                height="${documentEntry.outcome.ranking.height}"
+                alt="${documentEntry.outcome.ranking.alt}"
+                loading="lazy"
+                decoding="async"
+              >
+              <figcaption>${documentEntry.outcome.ranking.caption}</figcaption>
+            </figure>
+            <section class="outcome-metrics" aria-labelledby="metrics-${documentEntry.id}">
+              <div class="outcome-label">${documentEntry.outcome.metrics.label}</div>
+              <div class="outcome-metrics-placeholder" aria-label="PV / UV 数据变化待补充">
+                <span class="outcome-metrics-mark" aria-hidden="true">PV / UV</span>
+                <h3 id="metrics-${documentEntry.id}">${documentEntry.outcome.metrics.heading}</h3>
+                <p>${documentEntry.outcome.metrics.placeholder}</p>
+              </div>
+            </section>
+          </div>
+        </section>
+      `
+      : "";
     return `
       <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
         ${workIntro}
         <div class="document-column-pages">${pages}</div>
+        ${outcome}
       </article>
     `;
   }).join("");

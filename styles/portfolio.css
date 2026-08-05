@@ -1747,6 +1747,107 @@ button {
   object-fit: contain;
 }
 
+.document-outcome {
+  margin-top: 34px;
+  padding: 28px;
+  border: 1px solid rgba(241, 246, 229, 0.28);
+  background: rgba(241, 240, 235, 0.96);
+  color: var(--ink);
+}
+
+.document-outcome-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(67, 76, 65, 0.2);
+}
+
+.document-outcome-kicker,
+.outcome-label {
+  margin: 0 0 9px;
+  color: var(--rust);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.document-outcome-header h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.document-outcome-header p:last-child {
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: #555b53;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.document-outcome-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.outcome-ranking,
+.outcome-metrics {
+  min-width: 0;
+  margin: 0;
+}
+
+.outcome-ranking img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(67, 76, 65, 0.2);
+}
+
+.outcome-ranking figcaption {
+  margin-top: 10px;
+  color: #555b53;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.outcome-metrics-placeholder {
+  display: grid;
+  min-height: 214px;
+  align-content: center;
+  justify-items: start;
+  gap: 10px;
+  padding: 24px;
+  border: 1px dashed rgba(67, 76, 65, 0.4);
+  background: rgba(230, 226, 217, 0.46);
+}
+
+.outcome-metrics-mark {
+  color: var(--rust);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.outcome-metrics-placeholder h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.outcome-metrics-placeholder p {
+  margin: 0;
+  color: #666b64;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
 @media (max-width: 1060px) {
   :root {
     --detail-width: 250px;
@@ -2037,6 +2138,15 @@ button {
 
   .document-text-content {
     padding-inline: 0;
+  }
+
+  .document-outcome {
+    padding: 22px 18px;
+  }
+
+  .document-outcome-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
   }
 
   .document-text-section p,

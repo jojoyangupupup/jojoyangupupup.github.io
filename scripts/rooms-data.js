@@ -175,6 +175,23 @@ export const ROOMS = [
           width: 1662,
           height: 6766,
         },
+        outcome: {
+          heading: "运营稿发布后的内容表现",
+          summary: "这份运营稿上线后进入厂内知识库排行；PV / UV 变化将在补充横向数据图后，继续沿用同一结果区呈现。",
+          ranking: {
+            label: "厂内内容排行",
+            image: "/assets/works/kitchen-processing-platform/ranking.jpg",
+            width: 1820,
+            height: 852,
+            alt: "无暇不出加工台运营稿在厂内知识库排行与知识达人周榜中的截图",
+            caption: "内容榜单中“无暇不出，仅展示加工台「PPT/信息图」效果全面升级”位列 TOP1；截图下方同时保留作者知识达人周榜信息。",
+          },
+          metrics: {
+            label: "PV / UV 数据变化",
+            heading: "发布前后对比",
+            placeholder: "待补充横向长截图。建议使用相同统计周期，直接对照发布前 7 日与发布后 7 日。",
+          },
+        },
       },
     ],
     objectHotspots: [
