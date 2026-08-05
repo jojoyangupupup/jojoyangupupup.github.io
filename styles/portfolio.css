@@ -514,6 +514,10 @@ button {
   transition: opacity 180ms ease;
 }
 
+.room-object-glow[data-object-id="kitchen-pot"] {
+  filter: url(#room-object-edge-glow-tight);
+}
+
 .room-object-hotspot:hover + .room-object-glow,
 .room-object-hotspot:focus-visible + .room-object-glow,
 .room-object-hotspot.is-directory-highlighted + .room-object-glow {

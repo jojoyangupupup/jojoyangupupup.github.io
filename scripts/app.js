@@ -93,6 +93,20 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
+                <filter id="room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
+                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
+                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.62" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.88" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
               </defs>
               ${ROOMS.flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
@@ -109,6 +123,7 @@ app.innerHTML = `
                     <image
                       class="room-object-glow"
                       data-room-id="${room.id}"
+                      data-object-id="${object.id}"
                       href="${object.glowImage.file}"
                       x="${object.glowImage.x}"
                       y="${object.glowImage.y}"
