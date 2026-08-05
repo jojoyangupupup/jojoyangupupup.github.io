@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=37";
+} from "/scripts/rooms-data.js?v=38";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -554,9 +554,11 @@ function renderDocumentPageLinks(documentEntry, pageNumber) {
 function renderDocumentPages(documents) {
   const comparison = documents.length > 1;
   const embedded = documents.some((documentEntry) => documentEntry.contentType === "embed");
+  const workbook = documents.some((documentEntry) => documentEntry.contentType === "workbook");
   const wideTable = documents.some((documentEntry) => documentEntry.layout === "wide-table");
   documentPages.classList.toggle("is-comparison", comparison);
   documentPages.classList.toggle("is-embed", embedded);
+  documentPages.classList.toggle("is-workbook", workbook);
   documentPages.classList.toggle("has-wide-table", wideTable);
   documentPages.innerHTML = documents.map((documentEntry) => {
     const heading = comparison
@@ -618,6 +620,50 @@ function renderDocumentPages(documents) {
         <article class="document-column document-text-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
           ${heading}
           <div class="document-text-content">${renderDocumentText(documentEntry)}</div>
+        </article>
+      `;
+    }
+    if (documentEntry.contentType === "workbook") {
+      const sheets = documentEntry.sheets || [];
+      return `
+        <article class="document-column workbook-document" aria-label="${documentEntry.title}">
+          <header class="workbook-header">
+            <div>
+              <p>具体数据 / ${sheets.length} 个工作表</p>
+              <h2>${documentEntry.title}</h2>
+            </div>
+            <a class="workbook-download" href="${documentEntry.file}" download>下载原始 Excel <span aria-hidden="true">↓</span></a>
+          </header>
+          <div class="workbook-tabs" role="tablist" aria-label="选择工作表">
+            ${sheets.map((sheet, index) => `
+              <button
+                class="workbook-tab"
+                type="button"
+                role="tab"
+                id="workbook-tab-${sheet.id}"
+                aria-controls="workbook-sheet-${sheet.id}"
+                aria-selected="${index === 0}"
+                tabindex="${index === 0 ? 0 : -1}"
+                data-workbook-sheet-target="${sheet.id}"
+              >${sheet.label}</button>
+            `).join("")}
+          </div>
+          <div class="workbook-sheet-stage">
+            ${sheets.map((sheet, index) => `
+              <section
+                class="workbook-sheet"
+                id="workbook-sheet-${sheet.id}"
+                role="tabpanel"
+                aria-labelledby="workbook-tab-${sheet.id}"
+                ${index === 0 ? "" : "hidden"}
+              >
+                <div class="workbook-sheet-meta"><strong>${sheet.name}</strong><span>可横向滚动查看完整数据</span></div>
+                <div class="workbook-sheet-scroll" tabindex="0" aria-label="${sheet.name} 数据表">
+                  <img src="${sheet.image}" width="${sheet.width}" height="${sheet.height}" alt="${sheet.name} 工作表完整预览" loading="${index === 0 ? "eager" : "lazy"}" decoding="async"${index === 0 ? ' fetchpriority="high"' : ""}>
+                </div>
+              </section>
+            `).join("")}
+          </div>
         </article>
       `;
     }
@@ -688,6 +734,17 @@ function renderDocumentPages(documents) {
                   <span><i class="metric-legend-swatch metric-legend-after" aria-hidden="true"></i>${documentEntry.outcome.metrics.afterLabel}</span>
                 </div>
                 <p class="outcome-metrics-source">${documentEntry.outcome.metrics.source}</p>
+                ${documentEntry.outcome.metrics.dataDocumentId ? `
+                  <button
+                    class="outcome-data-cta"
+                    type="button"
+                    data-document-link="${documentEntry.outcome.metrics.dataDocumentId}"
+                    aria-label="点击查看 AI 知识加工台具体数据"
+                  >
+                    <span>点击查看具体数据</span>
+                    <span aria-hidden="true">↗</span>
+                  </button>
+                ` : ""}
               </div>
             </section>
           </div>
@@ -1212,6 +1269,9 @@ function linkedDocument(link) {
 function warmLinkedDocument(link) {
   const { documentEntry } = linkedDocument(link);
   if (documentEntry?.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+  if (documentEntry?.contentType === "workbook" && documentEntry.sheets?.[0]) {
+    preloadImage(documentEntry.sheets[0].image);
+  }
 }
 
 async function openLinkedDocument(link) {
@@ -1244,6 +1304,20 @@ function jumpToDocumentPage(pageJump) {
 }
 
 documentPages.addEventListener("keydown", async (event) => {
+  const workbookTab = event.target.closest("[data-workbook-sheet-target]");
+  if (workbookTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+    event.preventDefault();
+    const tabs = [...workbookTab.closest("[role=tablist]").querySelectorAll("[role=tab]")];
+    const currentIndex = tabs.indexOf(workbookTab);
+    const targetIndex = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? tabs.length - 1
+        : (currentIndex + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    tabs[targetIndex].focus();
+    tabs[targetIndex].click();
+    return;
+  }
   if (event.key !== "Enter") return;
   const pageJump = event.target.closest("[data-document-page-jump]");
   if (pageJump) {
@@ -1259,6 +1333,21 @@ documentPages.addEventListener("keydown", async (event) => {
 });
 
 documentPages.addEventListener("click", async (event) => {
+  const workbookTab = event.target.closest("[data-workbook-sheet-target]");
+  if (workbookTab) {
+    const workbook = workbookTab.closest(".workbook-document");
+    const targetId = workbookTab.dataset.workbookSheetTarget;
+    workbook.querySelectorAll("[data-workbook-sheet-target]").forEach((tab) => {
+      const selected = tab === workbookTab;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    workbook.querySelectorAll(".workbook-sheet").forEach((sheet) => {
+      sheet.hidden = sheet.id !== `workbook-sheet-${targetId}`;
+    });
+    workbook.querySelector(`#workbook-sheet-${targetId} .workbook-sheet-scroll`)?.scrollTo({ left: 0, top: 0 });
+    return;
+  }
   const pageJump = event.target.closest("[data-document-page-jump]");
   if (pageJump) {
     event.preventDefault();

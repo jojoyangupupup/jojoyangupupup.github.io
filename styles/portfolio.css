@@ -1943,6 +1943,177 @@ button {
   line-height: 1.55;
 }
 
+.outcome-data-cta {
+  justify-self: end;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 14px;
+  margin-top: 3px;
+  padding: 0 3px 0 14px;
+  border: 0;
+  border-left: 3px solid var(--rust);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.outcome-data-cta span:last-child {
+  color: var(--rust);
+  font-size: 15px;
+  transition: transform 180ms ease;
+}
+
+.outcome-data-cta:hover {
+  background: rgba(152, 91, 67, 0.08);
+  color: var(--rust);
+}
+
+.outcome-data-cta:hover span:last-child {
+  transform: translate(2px, -2px);
+}
+
+.outcome-data-cta:focus-visible,
+.workbook-tab:focus-visible,
+.workbook-download:focus-visible,
+.workbook-sheet-scroll:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 3px;
+}
+
+.document-pages.is-workbook {
+  width: min(1440px, 100%);
+}
+
+.workbook-document {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+  color: var(--ink);
+}
+
+.workbook-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px 20px;
+  border-bottom: 1px solid rgba(67, 76, 65, 0.22);
+  background: #f1f0eb;
+}
+
+.workbook-header p {
+  margin: 0 0 7px;
+  color: var(--rust);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.workbook-header h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.workbook-download {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.workbook-download span {
+  color: var(--rust);
+  font-size: 15px;
+}
+
+.workbook-tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(67, 76, 65, 0.28);
+  background: #e6e2d9;
+  scrollbar-width: thin;
+}
+
+.workbook-tab {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: 0 17px;
+  border: 0;
+  border-right: 1px solid rgba(67, 76, 65, 0.22);
+  border-radius: 0;
+  background: transparent;
+  color: #666b64;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.workbook-tab[aria-selected="true"] {
+  background: var(--moss);
+  color: #fff6e0;
+}
+
+.workbook-tab:hover:not([aria-selected="true"]) {
+  background: rgba(152, 91, 67, 0.08);
+  color: var(--rust);
+}
+
+.workbook-sheet-stage {
+  min-width: 0;
+  background: #f8f6f1;
+}
+
+.workbook-sheet[hidden] {
+  display: none;
+}
+
+.workbook-sheet-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(67, 76, 65, 0.18);
+  color: #666b64;
+  font-size: 10px;
+}
+
+.workbook-sheet-meta strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.workbook-sheet-scroll {
+  width: 100%;
+  max-height: calc(100svh - 258px);
+  min-height: 260px;
+  padding: 18px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(67, 76, 65, 0.5) transparent;
+  scrollbar-width: thin;
+}
+
+.workbook-sheet-scroll img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid rgba(67, 76, 65, 0.16);
+  background: #fff;
+}
+
 /* Preserve the intentionally empty state for any future metric block. */
 .outcome-metrics-placeholder {
   display: grid;
@@ -2208,6 +2379,34 @@ button {
 
   .document-modal-scroll {
     padding: 74px 12px 30px;
+  }
+
+  .outcome-data-cta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .workbook-header {
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+  }
+
+  .workbook-header h2 {
+    font-size: 21px;
+  }
+
+  .workbook-sheet-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .workbook-sheet-scroll {
+    max-height: calc(100svh - 310px);
+    min-height: 220px;
+    padding: 12px;
   }
 
   .work-intro {
