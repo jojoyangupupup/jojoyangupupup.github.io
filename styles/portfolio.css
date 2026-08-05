@@ -1748,7 +1748,7 @@ button {
 }
 
 .document-outcome {
-  margin-top: 34px;
+  margin-top: 0;
   padding: 28px;
   border: 1px solid rgba(241, 246, 229, 0.28);
   background: rgba(241, 240, 235, 0.96);
@@ -1846,6 +1846,30 @@ button {
   color: #666b64;
   font-size: 11px;
   line-height: 1.6;
+}
+
+.document-source-heading {
+  margin: 34px 0 16px;
+  padding: 0 2px 13px;
+  border-bottom: 1px solid rgba(241, 240, 235, 0.28);
+}
+
+.document-source-heading p {
+  margin: 0 0 7px;
+  color: #efb45f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.document-source-heading h2 {
+  margin: 0;
+  color: #fff6e0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 @media (max-width: 1060px) {

@@ -644,7 +644,7 @@ function renderDocumentPages(documents) {
       ? `
         <section class="document-outcome" aria-labelledby="outcome-${documentEntry.id}">
           <header class="document-outcome-header">
-            <p class="document-outcome-kicker">02 / 发布效果</p>
+            <p class="document-outcome-kicker">01 / 发布效果</p>
             <h2 id="outcome-${documentEntry.id}">${documentEntry.outcome.heading}</h2>
             <p>${documentEntry.outcome.summary}</p>
           </header>
@@ -673,12 +673,21 @@ function renderDocumentPages(documents) {
         </section>
       `
       : "";
+    const sourceHeading = documentEntry.outcome
+      ? `
+        <header class="document-source-heading">
+          <p>02 / 运营稿</p>
+          <h2>完整运营稿</h2>
+        </header>
+      `
+      : "";
     return `
       <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
         ${workIntro}
-        <div class="document-column-pages">${pages}</div>
         ${outcome}
+        ${sourceHeading}
+        <div class="document-column-pages">${pages}</div>
       </article>
     `;
   }).join("");
