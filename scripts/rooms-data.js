@@ -1,4 +1,4 @@
-export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-new.webp";
+export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-new.png";
 export const OVERVIEW_SIZE = { width: 2048, height: 2048 };
 export const SHOW_HOTSPOTS = false;
 
