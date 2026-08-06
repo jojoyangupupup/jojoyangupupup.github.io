@@ -196,10 +196,10 @@ button {
 }
 
 .visual-stage {
-  --overview-media-left: -25%;
-  --overview-media-top: 6.03%;
-  --overview-media-width: 150%;
-  --overview-media-height: 87.93%;
+  --overview-media-left: -32.7126%;
+  --overview-media-top: -8.85%;
+  --overview-media-width: 165.4253%;
+  --overview-media-height: 117.7%;
   --focus-x: 50%;
   --focus-y: 50%;
   --focus-scale: 1.13;
@@ -264,12 +264,6 @@ button {
   filter: saturate(0.88) contrast(0.98) brightness(0.99)
     drop-shadow(0 15px 12px rgba(102, 72, 54, 0.18))
     drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
-}
-
-.visual-stage[data-view="overview"] .visual-layer-current,
-.visual-stage.is-focus-transition .visual-layer-current,
-.visual-stage.is-returning .visual-layer-incoming {
-  clip-path: none;
 }
 
 .overview-motion-layer {
@@ -2385,10 +2379,10 @@ button {
 
 @media (max-width: 640px) {
   .visual-stage {
-    --overview-media-left: 0;
-    --overview-media-top: 20.69%;
-    --overview-media-width: 100%;
-    --overview-media-height: 58.62%;
+    --overview-media-left: -36.5692%;
+    --overview-media-top: -11.594%;
+    --overview-media-width: 173.1385%;
+    --overview-media-height: 123.188%;
   }
 
   .site-header {
