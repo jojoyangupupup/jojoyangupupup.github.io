@@ -514,7 +514,8 @@ button {
   transition: opacity 180ms ease;
 }
 
-.room-object-glow[data-object-id="kitchen-pot"] {
+.room-object-glow[data-object-id="kitchen-pot"],
+.room-object-glow[data-object-id="kitchen-plant"] {
   filter: url(#room-object-edge-glow-tight);
 }
 
