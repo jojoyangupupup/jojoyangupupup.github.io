@@ -1,5 +1,5 @@
-export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
-export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
+export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-new.png";
+export const OVERVIEW_SIZE = { width: 2048, height: 2048 };
 export const SHOW_HOTSPOTS = false;
 
 export const OVERVIEW_MOTION_OBJECTS = [
@@ -39,7 +39,7 @@ export const PORTFOLIO = {
   edition: "Portfolio / 2026",
 };
 
-// Hotspots use the overview image's 1487 x 1058 coordinate space so they stay
+// Hotspots use the overview image's 2048 x 2048 coordinate space so they stay
 // aligned at every rendered size. The same paths also drive the focus clipPath.
 export const ROOMS = [
   {
@@ -54,8 +54,8 @@ export const ROOMS = [
       { id: "project-01", title: "Project placeholder 01", type: "Visual study", year: "2026" },
       { id: "project-02", title: "Project placeholder 02", type: "Image making", year: "2025" },
     ],
-    hotspotPath: "M478 360 L512 391 L744 498 L540 617 L540 789 L309 613 L309 596 L337 580 L337 523 L360 510 L371 474 L411 466 L430 438 L461 421 Z",
-    hotspotCenter: { x: 480, y: 585 },
+    hotspotPath: "M392 398 L800 705 L476 905 L75 930 L75 755 L205 650 L310 485 Z",
+    hotspotCenter: { x: 350, y: 690 },
     transition: {
       sourceFinal: { x: 3.2, y: -1.5, scale: 1.17, blur: 6 },
       detailInitial: { x: -22.5, y: 1.5, scale: 0.58, blur: 6 },
@@ -393,8 +393,8 @@ export const ROOMS = [
         },
       },
     ],
-    hotspotPath: "M744 498 L946 615 L946 790 L744 907 L540 790 L540 617 Z",
-    hotspotCenter: { x: 744, y: 700 },
+    hotspotPath: "M800 705 L1118 1212 L800 1400 L475 1188 L475 906 Z",
+    hotspotCenter: { x: 805, y: 1070 },
     transition: {
       sourceFinal: { x: 0.2, y: -3.4, scale: 1.16, blur: 5 },
       detailInitial: { x: 0.5, y: 12.5, scale: 0.56, blur: 6 },
@@ -463,8 +463,8 @@ export const ROOMS = [
         },
       },
     ],
-    hotspotPath: "M980 327 L1175 451 L1175 616 L946 711 L946 614 L744 498 L802 456 L871 396 Z",
-    hotspotCenter: { x: 970, y: 515 },
+    hotspotPath: "M1190 406 L1515 610 L1515 1012 L1118 1212 L800 705 Z",
+    hotspotCenter: { x: 1190, y: 770 },
     transition: {
       sourceFinal: { x: -3.2, y: 0.5, scale: 1.16, blur: 6 },
       detailInitial: { x: 22.5, y: -3.5, scale: 0.58, blur: 7 },
@@ -671,8 +671,8 @@ export const ROOMS = [
         },
       },
     ],
-    hotspotPath: "M744 151 L980 327 L871 396 L802 456 L744 490 L499 382 L499 322 Z",
-    hotspotCenter: { x: 744, y: 330 },
+    hotspotPath: "M392 398 L798 114 L1190 406 L800 705 Z",
+    hotspotCenter: { x: 800, y: 405 },
     transition: {
       sourceFinal: { x: 0.5, y: 3.4, scale: 1.18, blur: 5 },
       detailInitial: { x: 0, y: -24, scale: 0.54, blur: 6 },
