@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=41";
+} from "/scripts/rooms-data.js?v=42";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -751,6 +751,19 @@ function renderDocumentPages(documents) {
         </section>
       `
       : "";
+    const introduction = documentEntry.introduction
+      ? `
+        <section class="document-introduction" aria-labelledby="introduction-${documentEntry.id}">
+          <header class="document-introduction-header">
+            <p>${documentEntry.introduction.kicker}</p>
+            <h2 id="introduction-${documentEntry.id}">${documentEntry.introduction.heading}</h2>
+          </header>
+          <div class="document-introduction-copy">
+            ${documentEntry.introduction.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+          </div>
+        </section>
+      `
+      : "";
     const sourceHeading = documentEntry.outcome
       ? `
         <header class="document-source-heading">
@@ -758,11 +771,19 @@ function renderDocumentPages(documents) {
           <h2>完整运营稿</h2>
         </header>
       `
-      : "";
+      : documentEntry.introduction
+        ? `
+          <header class="document-source-heading">
+            <p>02 / 运营内容</p>
+            <h2>完整运营内容</h2>
+          </header>
+        `
+        : "";
     return `
       <article class="document-column${documentEntry.transparentPages ? " document-transparent-column" : ""}" aria-label="${documentEntry.columnLabel || documentEntry.title}">
         ${heading}
         ${workIntro}
+        ${introduction}
         ${outcome}
         ${sourceHeading}
         <div class="document-column-pages">${pages}</div>
