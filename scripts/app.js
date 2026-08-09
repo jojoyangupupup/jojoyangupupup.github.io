@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=42";
+} from "/scripts/rooms-data.js?v=44";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -671,17 +671,40 @@ function renderDocumentPages(documents) {
     const pages = Array.from({ length: documentEntry.pages }, (_, index) => {
       const pageNumber = index + 1;
       const pageHeight = pageHeights?.[index] || height;
+      const imageMarkup = `
+        <img
+          src="${renderedDocumentPage(documentEntry, pageNumber)}"
+          width="${width}"
+          height="${pageHeight}"
+          loading="${pageNumber === 1 ? "eager" : "lazy"}"
+          decoding="async"
+        ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
+        alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
+      >`;
+      if (pageNumber === 1 && documentEntry.preface) {
+        const splitY = documentEntry.preface.titleSplitY;
+        const splitOffset = (splitY / width) * 100;
+        return `
+          <div
+            class="document-page document-page-with-preface"
+            id="document-${documentEntry.id}-page-${pageNumber}"
+            style="--document-width:${width};--document-height:${pageHeight};--document-title-split:${splitY};--document-title-offset:${splitOffset}%"
+          >
+            <div class="document-title-slice" aria-hidden="true">${imageMarkup}</div>
+            <section class="document-preface" aria-label="${documentEntry.title}项目概述">
+              <p class="document-preface-kicker">${documentEntry.preface.kicker}</p>
+              <div class="document-preface-copy">
+                ${documentEntry.preface.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+              </div>
+            </section>
+            <div class="document-body-slice">${imageMarkup}</div>
+            ${renderDocumentPageLinks(documentEntry, pageNumber)}
+          </div>
+        `;
+      }
       return `
         <div class="document-page${documentEntry.transparentPages ? " is-transparent" : ""}" id="document-${documentEntry.id}-page-${pageNumber}">
-          <img
-            src="${renderedDocumentPage(documentEntry, pageNumber)}"
-            width="${width}"
-            height="${pageHeight}"
-            loading="${pageNumber === 1 ? "eager" : "lazy"}"
-            decoding="async"
-          ${pageNumber === 1 ? 'fetchpriority="high"' : ""}
-          alt="${documentEntry.title}, page ${pageNumber} of ${documentEntry.pages}"
-        >
+        ${imageMarkup}
         ${renderDocumentPageLinks(documentEntry, pageNumber)}
       </div>
       `;

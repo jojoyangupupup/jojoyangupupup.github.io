@@ -489,6 +489,15 @@ export const ROOMS = [
         format: "PDF",
         pages: 1,
         file: "/assets/works/study-model-experience/model-experience-4.0.pdf",
+        preface: {
+          kicker: "PROJECT OVERVIEW / 项目概述",
+          titleSplitY: 116,
+          paragraphs: [
+            "模型体验台是一款承载多模型对话、模型对比、图片生成、视频生成及附件输入等能力的一站式 AI 模型体验产品。随着产品从基础能力建设进入规模化使用阶段，用户关注点逐渐从“模型能否生成结果”，转向“任务过程是否清晰、等待是否可控、内容是否易于管理、结果是否方便复用”。",
+            "本轮迭代基于真实用户反馈，围绕上传状态、视频生成反馈、跨会话完成通知、长对话定位、历史会话管理、生图参数简化和对话分享等场景，完成了 10 项体验需求的梳理与方案设计。我主要负责用户问题归因、需求优先级判断、核心流程设计、推进验收等工作，将零散反馈转化为可开发、可验收的产品方案。",
+            "当前，对比模式、Markdown 展示、长对话定位、生图默认参数及模型名称展示等能力已上线，其余需求正在按优先级持续推进。以下为本轮迭代的完整 PRD。",
+          ],
+        },
         renderedPages: {
           basePath: "/assets/works/study-model-experience/pages",
           extension: "jpg",

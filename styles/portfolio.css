@@ -1748,6 +1748,63 @@ button {
   object-fit: contain;
 }
 
+.document-page-with-preface {
+  overflow: hidden;
+  background: #fff;
+}
+
+.document-title-slice {
+  aspect-ratio: var(--document-width) / var(--document-title-split);
+  overflow: hidden;
+}
+
+.document-title-slice img {
+  width: 100%;
+  max-width: none;
+}
+
+.document-preface {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.42fr) minmax(0, 1.58fr);
+  gap: clamp(28px, 4.5vw, 64px);
+  padding: clamp(30px, 4vw, 54px) clamp(38px, 6vw, 76px);
+  border-top: 1px solid rgba(67, 76, 65, 0.2);
+  border-bottom: 1px solid rgba(67, 76, 65, 0.2);
+  background: #f1f0eb;
+  color: var(--ink);
+}
+
+.document-preface-kicker {
+  margin: 2px 0 0;
+  color: var(--rust);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+
+.document-preface-copy {
+  display: grid;
+  gap: 16px;
+  padding-left: clamp(20px, 3vw, 38px);
+  border-left: 1px solid rgba(67, 76, 65, 0.22);
+}
+
+.document-preface-copy p {
+  margin: 0;
+  color: #4f554e;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.document-body-slice {
+  overflow: hidden;
+}
+
+.document-body-slice img {
+  margin-top: calc(-1 * var(--document-title-offset));
+}
+
 .document-introduction {
   display: grid;
   grid-template-columns: minmax(220px, 0.62fr) minmax(0, 1.38fr);
@@ -2533,6 +2590,24 @@ button {
 
   .document-column-pages {
     gap: 18px;
+  }
+
+  .document-preface {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 26px 20px 30px;
+  }
+
+  .document-preface-copy {
+    gap: 14px;
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(67, 76, 65, 0.2);
+    border-left: 0;
+  }
+
+  .document-preface-copy p {
+    font-size: 12px;
+    line-height: 1.82;
   }
 
   .document-text-content {
