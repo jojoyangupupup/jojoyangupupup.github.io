@@ -196,10 +196,10 @@ button {
 }
 
 .visual-stage {
-  --overview-media-left: -32.7126%;
-  --overview-media-top: -8.85%;
-  --overview-media-width: 165.4253%;
-  --overview-media-height: 117.7%;
+  --overview-media-left: -42.6382%;
+  --overview-media-top: -15.912%;
+  --overview-media-width: 185.2763%;
+  --overview-media-height: 131.824%;
   --focus-x: 50%;
   --focus-y: 50%;
   --focus-scale: 1.13;
@@ -2281,6 +2281,13 @@ button {
     --detail-width: 250px;
   }
 
+  .visual-stage {
+    --overview-media-left: -38.5025%;
+    --overview-media-top: -12.9695%;
+    --overview-media-width: 177.0051%;
+    --overview-media-height: 125.939%;
+  }
+
   .site-header {
     padding-inline: 24px;
   }
@@ -2308,6 +2315,13 @@ button {
 }
 
 @media (max-width: 820px) {
+  .visual-stage {
+    --overview-media-left: -36.5692%;
+    --overview-media-top: -11.594%;
+    --overview-media-width: 173.1385%;
+    --overview-media-height: 123.188%;
+  }
+
   .portfolio-main {
     display: block;
     min-height: 0;
@@ -2435,13 +2449,6 @@ button {
 }
 
 @media (max-width: 640px) {
-  .visual-stage {
-    --overview-media-left: -36.5692%;
-    --overview-media-top: -11.594%;
-    --overview-media-width: 173.1385%;
-    --overview-media-height: 123.188%;
-  }
-
   .site-header {
     display: flex;
     min-height: 0;
