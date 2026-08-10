@@ -1,4 +1,4 @@
-export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
+export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-decorated.png";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
 

@@ -235,11 +235,7 @@ button {
   width: var(--overview-media-width);
   height: var(--overview-media-height);
   object-fit: fill;
-  clip-path: polygon(
-    50.03% 14.18%, 79.02% 42.63%, 79.02% 58.13%, 63.55% 74.67%,
-    50.03% 85.82%, 36.31% 74.67%, 20.78% 57.94%, 23% 48%,
-    32.1% 34%, 33.56% 30.43%
-  );
+  clip-path: none;
 }
 
 .visual-layer {

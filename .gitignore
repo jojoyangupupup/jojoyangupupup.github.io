@@ -23,6 +23,7 @@ assets/*
 assets/rooms/*
 !assets/rooms/garden-cutout.png
 !assets/rooms/home-overview-fresh-original.png
+!assets/rooms/home-overview-decorated.png
 !assets/rooms/kitchen-cutout.png
 !assets/rooms/living-cutout.png
 !assets/rooms/study-cutout.png
