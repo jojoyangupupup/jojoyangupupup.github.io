@@ -164,7 +164,7 @@ button {
 
 .portfolio-main[data-page="overview"],
 .portfolio-main[data-page="overview-enter"] {
-  background: #ebe7df;
+  background: #e6e3dc;
 }
 
 .visual-column {
@@ -175,6 +175,11 @@ button {
   padding: 24px;
   overflow: hidden;
   background: #ebe7df;
+}
+
+.portfolio-main[data-page="overview"] .visual-column,
+.portfolio-main[data-page="overview-enter"] .visual-column {
+  background: #e6e3dc;
 }
 
 .visual-frame {
@@ -222,7 +227,7 @@ button {
 
 .visual-stage[data-view="overview"] {
   overflow: visible;
-  background: #ebe7df;
+  background: #e6e3dc;
 }
 
 .visual-stage[data-view="overview"] .visual-layer-current,
@@ -260,7 +265,6 @@ button {
   filter: saturate(0.88) contrast(0.98) brightness(0.99)
     drop-shadow(0 15px 12px rgba(102, 72, 54, 0.18))
     drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
-  clip-path: inset(0 2px 0 2px);
 }
 
 .focus-room-layer {
