@@ -8,7 +8,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=44";
+} from "/scripts/rooms-data.js?v=45";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -780,9 +780,26 @@ function renderDocumentPages(documents) {
           <header class="document-introduction-header">
             <p>${documentEntry.introduction.kicker}</p>
             <h2 id="introduction-${documentEntry.id}">${documentEntry.introduction.heading}</h2>
+            ${documentEntry.introduction.meta ? `
+              <dl class="document-introduction-meta">
+                ${documentEntry.introduction.meta.map((item) => `
+                  <div>
+                    <dt>${item.label}</dt>
+                    <dd>${item.value}</dd>
+                  </div>
+                `).join("")}
+              </dl>
+            ` : ""}
           </header>
           <div class="document-introduction-copy">
-            ${documentEntry.introduction.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+            ${documentEntry.introduction.sections
+              ? documentEntry.introduction.sections.map((section) => `
+                <section class="document-introduction-section">
+                  <h3>${section.heading}</h3>
+                  ${section.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+                </section>
+              `).join("")
+              : documentEntry.introduction.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
           </div>
         </section>
       `
@@ -797,8 +814,8 @@ function renderDocumentPages(documents) {
       : documentEntry.introduction
         ? `
           <header class="document-source-heading">
-            <p>02 / 运营内容</p>
-            <h2>完整运营内容</h2>
+            <p>${documentEntry.introduction.source?.kicker || "02 / 运营内容"}</p>
+            <h2>${documentEntry.introduction.source?.heading || "完整运营内容"}</h2>
           </header>
         `
         : "";

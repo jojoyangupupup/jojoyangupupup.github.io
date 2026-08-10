@@ -621,18 +621,61 @@ export const ROOMS = [
         },
       },
       {
-        id: "study-competitor-research",
-        title: "竞品调研（完整连续表格）",
+        id: "study-enterprise-ai-search",
+        title: "企业 AI 搜索升级为数字员工",
         format: "PDF",
         pages: 1,
-        layout: "wide-table",
+        file: "/assets/works/study-enterprise-ai-search/enterprise-ai-search-prd.pdf",
+        introduction: {
+          kicker: "PRODUCT CASE / 企业级 AI 搜索",
+          heading: "企业 AI 搜索升级为数字员工",
+          meta: [
+            { label: "项目类型", value: "企业级 AI 搜索升级 / 数字员工产品设计" },
+            { label: "我的角色", value: "产品经理" },
+            { label: "负责内容", value: "问题分析、产品定位、需求拆解、搜索入口设计、核心问答链路及数据埋点设计" },
+            { label: "当前阶段", value: "主要方案已完成并进入分阶段交付，核心埋点已验收" },
+          ],
+          sections: [
+            {
+              heading: "项目背景",
+              paragraphs: [
+                "企业 AI 搜索是面向公司内部知识查询场景的智能问答产品。用户可以通过自然语言查询企业制度、业务资料和项目知识，并在已有答案的基础上继续追问、总结内容或查看参考来源。",
+                "在用户反馈和产品体验自查中，我发现原有方案存在两个主要问题：一方面，通用 Agent 需要经过多轮推理和工具调用，响应时间较长，调用链路也存在一定的稳定性风险；另一方面，AI 问答依附在传统搜索入口中，触发方式不够明确，用户难以建立“企业问题可以直接问 AI”的使用认知。",
+              ],
+            },
+            {
+              heading: "项目目标",
+              paragraphs: [
+                "本次迭代的重点，是将原有的企业搜索能力从“超级助理”中独立出来，升级为定位更清晰的“企业 AI 搜索”数字员工。产品不再同时承接差旅、休假等多个场景，而是聚焦企业知识查询、连续追问、内容总结和参考资料定位。通过收缩能力范围，减少不必要的工具调用，使产品更符合高频搜索场景对响应速度、稳定性和答案可信度的要求。",
+              ],
+            },
+            {
+              heading: "我的工作",
+              paragraphs: [
+                "在项目中，我主要负责梳理原有产品的问题，协助重新定义企业 AI 搜索的产品定位和能力边界。",
+                "围绕“用户如何找到产品、如何完成提问、如何继续使用”的完整路径，设计如流搜索、内搜等场景中的“问 AI”入口。用户已经输入搜索内容时，可以携带当前问题进入企业 AI 搜索并直接生成答案，减少从传统搜索切换到 AI 问答的操作成本。",
+                "在数字员工内部，进一步完善推荐提问、历史会话、连续追问、互联网搜索开关、参考资源和模型选择等能力，并简化对普通用户帮助有限的工具调用过程。针对不同模型的能力和成本差异，模型列表中增加了能力描述、内部标签和价格倍率，帮助用户根据实际任务选择模型。",
+              ],
+            },
+            {
+              heading: "项目进展",
+              paragraphs: [
+                "目前，产品定位、搜索入口、数字员工问答链路、模型选择及数据埋点等主要方案已经完成，项目进入分阶段交付阶段，核心埋点已验收。后续将结合入口点击、问题提交和答案反馈等数据，持续验证用户从传统搜索转向 AI 搜索的实际效果。",
+              ],
+            },
+          ],
+          source: {
+            kicker: "02 / PRODUCT REQUIREMENTS",
+            heading: "完整 PRD",
+          },
+        },
         renderedPages: {
-          basePath: "/assets/works/study-competitor-research/pages",
+          basePath: "/assets/works/study-enterprise-ai-search/pages",
           extension: "png",
-          version: "20260802-1",
+          version: "20260810-1",
           width: 1190,
-          height: 4252,
-          pageHeights: [4252],
+          height: 8929,
+          pageHeights: [8929],
         },
       },
     ],
@@ -668,8 +711,8 @@ export const ROOMS = [
       {
         id: "study-board",
         number: "03",
-        label: "竞品调研（完整连续表格）",
-        documentId: "study-competitor-research",
+        label: "企业 AI 搜索升级为数字员工",
+        documentId: "study-enterprise-ai-search",
         path: "M 466 1050 L 686 972 L 749 1397 L 536 1518 Z",
         glowImage: {
           file: "/assets/rooms/objects/study-board-aligned.png",

@@ -1837,6 +1837,33 @@ button {
   line-height: 1.16;
 }
 
+.document-introduction-meta {
+  display: grid;
+  gap: 12px;
+  margin: 28px 0 0;
+  padding: 22px 0 0;
+  border-top: 1px solid rgba(67, 76, 65, 0.2);
+}
+
+.document-introduction-meta div {
+  display: grid;
+  gap: 4px;
+}
+
+.document-introduction-meta dt {
+  color: var(--rust);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.document-introduction-meta dd {
+  margin: 0;
+  color: #4f554e;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
 .document-introduction-copy {
   display: grid;
   align-content: start;
@@ -1848,6 +1875,26 @@ button {
   color: #4f554e;
   font-size: 13px;
   line-height: 1.9;
+}
+
+.document-introduction-section {
+  display: grid;
+  gap: 10px;
+}
+
+.document-introduction-section + .document-introduction-section {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(67, 76, 65, 0.14);
+}
+
+.document-introduction-section h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.3;
 }
 
 .document-outcome {
@@ -2645,9 +2692,18 @@ button {
     font-size: 27px;
   }
 
+  .document-introduction-meta {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+
   .document-introduction-copy p {
     font-size: 12px;
     line-height: 1.82;
+  }
+
+  .document-introduction-section h3 {
+    font-size: 17px;
   }
 
   .document-outcome-grid {
