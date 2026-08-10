@@ -266,93 +266,6 @@ button {
     drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
 }
 
-.overview-motion-layer {
-  position: absolute;
-  z-index: 0;
-  top: -24px;
-  bottom: auto;
-  left: 50%;
-  width: calc(100vw - var(--detail-width));
-  height: calc(100% + 48px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%);
-  transition: opacity 220ms ease;
-}
-
-.visual-stage[data-view="overview"] .overview-motion-layer {
-  opacity: 1;
-}
-
-.visual-stage.is-focus-transition .overview-motion-layer,
-.visual-stage.is-returning .overview-motion-layer {
-  opacity: 0;
-}
-
-.overview-motion-object {
-  position: absolute;
-  top: var(--object-y);
-  left: var(--object-x);
-  display: block;
-  width: var(--object-width);
-  height: auto;
-  animation-delay: var(--motion-delay);
-  animation-duration: var(--motion-duration);
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.motion-cloud {
-  animation-name: overview-cloud-float;
-}
-
-.motion-bob {
-  animation-name: overview-soft-bob;
-}
-
-.motion-sparkle {
-  animation-name: overview-sparkle;
-}
-
-.motion-plane {
-  animation-name: overview-plane-glide;
-}
-
-.motion-drift {
-  animation-name: overview-paper-drift;
-}
-
-.visual-stage:not([data-view="overview"]) .overview-motion-object {
-  animation-play-state: paused;
-}
-
-@keyframes overview-cloud-float {
-  0%, 100% { transform: translate3d(-3px, 1px, 0) rotate(-0.5deg); }
-  50% { transform: translate3d(4px, -5px, 0) rotate(0.6deg); }
-}
-
-@keyframes overview-soft-bob {
-  0%, 100% { transform: translate3d(0, 2px, 0) rotate(-1deg); }
-  50% { transform: translate3d(2px, -6px, 0) rotate(1deg); }
-}
-
-@keyframes overview-sparkle {
-  0%, 100% { opacity: 0.9; transform: translate3d(-1px, 1px, 0) rotate(-1deg) scale(0.99); }
-  50% { opacity: 1; transform: translate3d(2px, -5px, 0) rotate(1.5deg) scale(1.025); }
-}
-
-@keyframes overview-plane-glide {
-  0%, 100% { transform: translate3d(-4px, 3px, 0) rotate(-1.5deg); }
-  50% { transform: translate3d(7px, -6px, 0) rotate(1.5deg); }
-}
-
-@keyframes overview-paper-drift {
-  0%, 100% { transform: translate3d(-1px, 1px, 0) rotate(-0.4deg); }
-  50% { transform: translate3d(2px, -3px, 0) rotate(0.5deg); }
-}
-
 .focus-room-layer {
   position: absolute;
   z-index: 3;
@@ -2394,16 +2307,6 @@ button {
     transform: none;
   }
 
-  .overview-motion-layer {
-    top: -12px;
-    width: 100vw;
-    height: calc(100% + 24px);
-  }
-
-  .scatter-mobile-hidden {
-    display: none;
-  }
-
   .room-switch-controls {
     position: relative;
     inset: auto;
@@ -2801,11 +2704,6 @@ button {
     filter: saturate(0.88) contrast(0.98) brightness(0.99)
       drop-shadow(0 15px 12px rgba(102, 72, 54, 0.18))
       drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12)) !important;
-  }
-
-  .overview-motion-object {
-    animation: none !important;
-    transform: none !important;
   }
 
   .directory-row,

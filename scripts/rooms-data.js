@@ -2,36 +2,6 @@ export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
 
-export const OVERVIEW_MOTION_OBJECTS = [
-  { id: "cloud-left", width: 90, height: 80, x: 4, y: 7, size: 5.5, motion: "cloud", duration: 8.6, delay: -1.8, mobile: true },
-  { id: "tape-left", width: 120, height: 105, x: 9, y: 19, size: 6, motion: "drift", duration: 12.2, delay: -5.4 },
-  { id: "cat-white", width: 80, height: 100, x: 21, y: 7, size: 4.5, motion: "bob", duration: 8.8, delay: -3.2, mobile: true },
-  { id: "flower-pink", width: 75, height: 75, x: 31, y: 4, size: 3.2, motion: "bob", duration: 6.8, delay: -2.1 },
-  { id: "flower-yellow", width: 75, height: 80, x: 56, y: 3, size: 3.2, motion: "bob", duration: 7.4, delay: -4.7, mobile: true },
-  { id: "cloud-right", width: 115, height: 85, x: 82, y: 6, size: 6.2, motion: "cloud", duration: 9.1, delay: -5.2, mobile: true },
-  { id: "stars", width: 130, height: 95, x: 67, y: 12, size: 6.8, motion: "sparkle", duration: 7.8, delay: -2.4 },
-  { id: "plane-top", width: 115, height: 100, x: 76, y: 19, size: 6, motion: "plane", duration: 8.5, delay: -6.1, mobile: true },
-  { id: "heart-top", width: 70, height: 80, x: 94, y: 12, size: 3.4, motion: "bob", duration: 7.1, delay: -2.8 },
-  { id: "daisy-left", width: 95, height: 90, x: 7, y: 30, size: 4.8, motion: "drift", duration: 11.2, delay: -6.2 },
-  { id: "book-left", width: 90, height: 90, x: 2, y: 40, size: 4.8, motion: "drift", duration: 13.1, delay: -4.1 },
-  { id: "pencil-left", width: 75, height: 80, x: 22, y: 31, size: 3.6, motion: "drift", duration: 10.8, delay: -7.2 },
-  { id: "glasses-left", width: 90, height: 80, x: 15, y: 43, size: 4.4, motion: "drift", duration: 12.4, delay: -3.5 },
-  { id: "camera-left", width: 85, height: 80, x: 4, y: 54, size: 4.5, motion: "drift", duration: 13.7, delay: -8.4, mobile: true },
-  { id: "flower-line", width: 80, height: 125, x: 2, y: 65, size: 4.2, motion: "drift", duration: 14.2, delay: -4.9 },
-  { id: "swatches-right", width: 140, height: 155, x: 84, y: 30, size: 7.2, motion: "drift", duration: 14.8, delay: -7.3 },
-  { id: "cup-right", width: 85, height: 85, x: 77, y: 42, size: 4.2, motion: "drift", duration: 11.8, delay: -5.1 },
-  { id: "sticky-right", width: 105, height: 115, x: 93, y: 52, size: 5.1, motion: "drift", duration: 13.4, delay: -9.2 },
-  { id: "plane-bottom", width: 100, height: 100, x: 84, y: 65, size: 5.4, motion: "plane", duration: 9.4, delay: -3.3, mobile: true },
-  { id: "hydrangea", width: 90, height: 105, x: 8, y: 74, size: 4.6, motion: "bob", duration: 9.8, delay: -6.4 },
-  { id: "scissors", width: 90, height: 105, x: 17, y: 82, size: 4.6, motion: "drift", duration: 13.2, delay: -2.7 },
-  { id: "orange-cat", width: 115, height: 150, x: 4, y: 86, size: 5.7, motion: "bob", duration: 10.6, delay: -7.7, mobile: true },
-  { id: "cat-pair", width: 120, height: 145, x: 25, y: 85, size: 6, motion: "bob", duration: 11.3, delay: -5.8 },
-  { id: "tableware", width: 160, height: 115, x: 66, y: 80, size: 8.2, motion: "drift", duration: 14.4, delay: -8.1 },
-  { id: "black-cat", width: 210, height: 193, x: 82, y: 82, size: 10.2, motion: "bob", duration: 11.9, delay: -4.4, mobile: true },
-  { id: "hearts-bottom", width: 112, height: 150, x: 94, y: 85, size: 4.2, motion: "sparkle", duration: 8.9, delay: -6.7 },
-  { id: "star-bottom", width: 80, height: 105, x: 57, y: 91, size: 3.2, motion: "sparkle", duration: 8.2, delay: -3.9 },
-];
-
 export const PORTFOLIO = {
   authorName: "杨昕乔",
   indexLabel: "Project Index",

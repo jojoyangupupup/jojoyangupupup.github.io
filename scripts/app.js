@@ -1,6 +1,5 @@
 import {
   OVERVIEW_IMAGE,
-  OVERVIEW_MOTION_OBJECTS,
   OVERVIEW_SIZE,
   PAGE_NAVIGATION,
   PORTFOLIO,
@@ -8,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=45";
+} from "/scripts/rooms-data.js?v=46";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -49,19 +48,6 @@ app.innerHTML = `
         <div class="visual-frame">
           <div class="visual-stage${showHotspots ? " show-hotspots" : ""}" data-view="overview" data-show-hotspots="${showHotspots}">
             <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="Isometric overview of four portfolio categories: garden, kitchen, living room, and study" fetchpriority="high">
-            <div class="overview-motion-layer" aria-hidden="true">
-              ${OVERVIEW_MOTION_OBJECTS.map((object) => `
-                <img
-                  class="overview-motion-object motion-${object.motion}${object.mobile ? "" : " scatter-mobile-hidden"}"
-                  src="/assets/rooms/overview-motion/${object.id}.webp"
-                  width="${object.width}"
-                  height="${object.height}"
-                  alt=""
-                  draggable="false"
-                  style="--object-x:${object.x}%;--object-y:${object.y}%;--object-width:${object.size}%;--motion-duration:${object.duration}s;--motion-delay:${object.delay}s"
-                >
-              `).join("")}
-            </div>
             <svg class="focus-room-layer" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <clipPath id="selected-room-clip">
