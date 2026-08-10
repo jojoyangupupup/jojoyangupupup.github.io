@@ -232,7 +232,7 @@ button {
 }
 
 .visual-stage[data-view="overview"] {
-  overflow: visible;
+  overflow: hidden;
   background: #e6e3db;
 }
 
