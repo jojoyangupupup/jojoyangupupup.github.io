@@ -182,6 +182,12 @@ button {
   background: #e6e3db;
 }
 
+.portfolio-main[data-page="overview"] .room-detail,
+.portfolio-main[data-page="overview-enter"] .room-detail {
+  background: #e6e3db;
+  border-left-color: transparent;
+}
+
 .visual-frame {
   position: relative;
   z-index: 1;
