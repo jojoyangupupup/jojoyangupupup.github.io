@@ -260,6 +260,7 @@ button {
   filter: saturate(0.88) contrast(0.98) brightness(0.99)
     drop-shadow(0 15px 12px rgba(102, 72, 54, 0.18))
     drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
+  clip-path: inset(0 2px 0 2px);
 }
 
 .focus-room-layer {
