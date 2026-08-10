@@ -28,7 +28,7 @@ assets/rooms/*
 !assets/rooms/study-cutout.png
 !assets/rooms/objects
 !assets/rooms/objects/**
-!assets/rooms/overview-motion
-!assets/rooms/overview-motion/**
+!assets/rooms/overview-elements
+!assets/rooms/overview-elements/**
 !assets/works
 !assets/works/**
