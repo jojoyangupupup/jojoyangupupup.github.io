@@ -266,40 +266,6 @@ button {
     drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
 }
 
-.overview-decor-layer {
-  position: absolute;
-  z-index: 0;
-  top: -24px;
-  bottom: auto;
-  left: 50%;
-  width: calc(100vw - var(--detail-width));
-  height: calc(100% + 48px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%);
-  transition: opacity 180ms ease;
-}
-
-.visual-stage[data-view="overview"] .overview-decor-layer {
-  opacity: 1;
-}
-
-.visual-stage.is-focus-transition .overview-decor-layer,
-.visual-stage.is-returning .overview-decor-layer {
-  opacity: 0;
-}
-
-.overview-decor-element {
-  position: absolute;
-  top: var(--decor-y);
-  left: var(--decor-x);
-  display: block;
-  width: var(--decor-size);
-  height: auto;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
 .focus-room-layer {
   position: absolute;
   z-index: 3;
@@ -2339,22 +2305,6 @@ button {
   .portfolio-main[data-page="overview"] .visual-frame,
   .portfolio-main[data-page="overview-enter"] .visual-frame {
     transform: none;
-  }
-
-  .overview-decor-layer {
-    top: -12px;
-    width: 100vw;
-    height: calc(100% + 24px);
-  }
-
-  .overview-decor-element {
-    top: var(--decor-mobile-y);
-    left: var(--decor-mobile-x);
-    width: var(--decor-mobile-size);
-  }
-
-  .decor-secondary {
-    display: none;
   }
 
   .room-switch-controls {

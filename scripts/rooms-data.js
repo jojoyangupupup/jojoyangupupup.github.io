@@ -2,17 +2,6 @@ export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-fresh-original.png";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
 
-export const OVERVIEW_DECOR_ELEMENTS = [
-  { id: "cloud-left", file: "cloud.png", width: 1737, height: 883, x: 6, y: 13, size: 12, mobileX: 2, mobileY: 7, mobileSize: 14 },
-  { id: "cloud-top", file: "cloud.png", width: 1737, height: 883, x: 31, y: 4, size: 8, secondary: true },
-  { id: "sun", file: "sun.png", width: 1811, height: 1779, x: 68, y: 3, size: 10, mobileX: 68, mobileY: 2, mobileSize: 12 },
-  { id: "cloud-right", file: "cloud.png", width: 1737, height: 883, x: 81, y: 13, size: 13, mobileX: 78, mobileY: 9, mobileSize: 16 },
-  { id: "pine", file: "pine.png", width: 530, height: 1246, x: 5, y: 54, size: 8, mobileX: 2, mobileY: 59, mobileSize: 9 },
-  { id: "cactus-cluster", file: "cactus-cluster.png", width: 636, height: 1360, x: 14, y: 65, size: 6, mobileX: 13, mobileY: 70, mobileSize: 6 },
-  { id: "cactus-single", file: "cactus-single.png", width: 523, height: 1305, x: 21, y: 70, size: 5, mobileX: 22, mobileY: 73, mobileSize: 5, secondary: true },
-  { id: "dog", file: "dog.png", width: 959, height: 1012, x: 74, y: 72, size: 8, mobileX: 76, mobileY: 72, mobileSize: 9 },
-];
-
 export const PORTFOLIO = {
   authorName: "杨昕乔",
   indexLabel: "Project Index",
