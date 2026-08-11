@@ -725,7 +725,7 @@ export const ROOMS = [
         renderedPages: {
           basePath: "/assets/works/study-intelligent-knowledge-assistant/pages",
           extension: "png",
-          version: "20260811-2",
+          version: "20260811-3",
           width: 1190,
           height: 9754,
           pageHeights: [9754],
