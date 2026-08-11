@@ -1372,15 +1372,19 @@ button {
 .document-preface-video {
   display: block;
   width: 100%;
-  max-height: 340px;
+  max-height: 420px;
   aspect-ratio: 16 / 9;
+  align-self: center;
+  justify-self: center;
   border: 1px solid rgba(67, 76, 65, 0.2);
   background: #20241f;
   object-fit: contain;
 }
 
 .document-preface:has(.document-preface-video) {
-  grid-template-columns: minmax(280px, 0.76fr) minmax(0, 1.24fr);
+  grid-template-columns: minmax(360px, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 3vw, 46px);
 }
 
 .document-transparent-column .document-column-pages {
