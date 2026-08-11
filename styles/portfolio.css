@@ -442,6 +442,12 @@ button {
   filter: url(#room-object-edge-glow-tight);
 }
 
+.room-object-hotspot:hover + .room-object-glow[data-object-id="garden-bike"],
+.room-object-hotspot:focus-visible + .room-object-glow[data-object-id="garden-bike"],
+.room-object-hotspot.is-directory-highlighted + .room-object-glow[data-object-id="garden-bike"] {
+  opacity: 0.72;
+}
+
 .room-object-hotspot:hover + .room-object-glow,
 .room-object-hotspot:focus-visible + .room-object-glow,
 .room-object-hotspot.is-directory-highlighted + .room-object-glow {
@@ -1366,10 +1372,15 @@ button {
 .document-preface-video {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  max-height: 340px;
+  aspect-ratio: 16 / 9;
   border: 1px solid rgba(67, 76, 65, 0.2);
   background: #20241f;
   object-fit: contain;
+}
+
+.document-preface:has(.document-preface-video) {
+  grid-template-columns: minmax(280px, 0.76fr) minmax(0, 1.24fr);
 }
 
 .document-transparent-column .document-column-pages {
@@ -1448,6 +1459,31 @@ button {
   margin-bottom: 2px;
   color: #fff6e0;
   font-weight: 700;
+}
+
+.document-text-list-plain {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.document-text-list-plain > div {
+  display: grid;
+  gap: 4px;
+  color: rgba(255, 246, 224, 0.78);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.document-text-list-plain strong,
+.document-text-list-plain span {
+  color: inherit;
+  font-size: 16px;
+}
+
+.document-text-list-plain strong {
+  color: #fff6e0;
 }
 
 .document-text-subsection {
@@ -2588,6 +2624,10 @@ button {
     grid-template-columns: 1fr;
     gap: 16px;
     padding: 26px 20px 30px;
+  }
+
+  .document-preface:has(.document-preface-video) {
+    grid-template-columns: 1fr;
   }
 
   .document-preface-copy {

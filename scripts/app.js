@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=49";
+} from "/scripts/rooms-data.js?v=50";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -490,7 +490,9 @@ function renderDocumentText(documentEntry) {
     <section class="document-text-section${nested ? " document-text-subsection" : ""}">
       <h3>${section.heading}</h3>
       ${(section.paragraphs || []).map((paragraph) => `<p>${paragraph}</p>`).join("")}
-      ${renderItems(section.items)}
+      ${section.plainItems && section.items?.length
+        ? `<div class="document-text-list document-text-list-plain">${section.items.map((item) => `<div><strong>${item.title}</strong><span>${item.text}</span></div>`).join("")}</div>`
+        : renderItems(section.items)}
       ${(section.paragraphsAfter || []).map((paragraph) => `<p>${paragraph}</p>`).join("")}
       ${(section.subsections || []).map((subsection) => renderSection(subsection, true)).join("")}
       ${section.note ? `<p class="document-text-note">${section.note}</p>` : ""}
@@ -605,8 +607,7 @@ function renderDocumentPages(documents) {
       return `
         <article class="document-column document-video-column" aria-label="${documentEntry.title}">
           ${heading}
-          <video class="document-video" controls preload="metadata" playsinline>
-            <source src="${documentEntry.file}" type="${documentEntry.file.endsWith(".mov") ? "video/quicktime" : "video/mp4"}">
+          <video class="document-video" src="${documentEntry.file}" controls preload="metadata" playsinline>
             当前浏览器不支持视频播放。
           </video>
         </article>
@@ -690,8 +691,7 @@ function renderDocumentPages(documents) {
             <div class="document-title-slice" aria-hidden="true">${imageMarkup}</div>
             <section class="document-preface" aria-label="${documentEntry.title}项目概述">
               ${documentEntry.preface.video ? `
-                <video class="document-preface-video" controls preload="metadata" playsinline>
-                  <source src="${documentEntry.preface.video}" type="video/quicktime">
+                <video class="document-preface-video" src="${documentEntry.preface.video}" controls preload="metadata" playsinline>
                   当前浏览器不支持视频播放。
                 </video>
               ` : `<p class="document-preface-kicker">${documentEntry.preface.kicker}</p>`}

@@ -41,6 +41,7 @@ export const ROOMS = [
         textSections: [
           {
             heading: "作品信息",
+            plainItems: true,
             items: [
               { title: "作品名称", text: "《会理财更会生活》" },
               { title: "类别", text: "短视频" },
@@ -66,10 +67,10 @@ export const ROOMS = [
         path: "M 412 1314 C 457 1280 530 1280 573 1317 L 640 1367 L 738 1375 L 779 1430 L 766 1512 L 723 1575 L 737 1674 L 713 1760 L 653 1777 L 608 1717 L 573 1634 L 519 1582 L 472 1544 L 426 1500 L 382 1436 Z",
         glowImage: {
           file: "/assets/rooms/objects/garden-bike.png",
-          x: 386,
-          y: 1265,
-          width: 390,
-          height: 510,
+          x: 455,
+          y: 1280,
+          width: 430,
+          height: 455,
         },
       },
     ],
@@ -509,7 +510,7 @@ export const ROOMS = [
         pages: 1,
         file: "/assets/works/study-model-experience/model-experience-4.0.pdf",
         preface: {
-          video: "/assets/works/study-model-experience/model-experience-overview.mov",
+          video: "/assets/works/study-model-experience/model-experience-overview.mp4?v=2",
           titleSplitY: 116,
           paragraphs: [
             "模型体验台是一款承载多模型对话、模型对比、图片生成、视频生成及附件输入等能力的一站式 AI 模型体验产品。随着产品从基础能力建设进入规模化使用阶段，用户关注点逐渐从“模型能否生成结果”，转向“任务过程是否清晰、等待是否可控、内容是否易于管理、结果是否方便复用”。",
