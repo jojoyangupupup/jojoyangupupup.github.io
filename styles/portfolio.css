@@ -268,8 +268,7 @@ button {
 }
 
 .visual-stage[data-view="overview"] .visual-layer-current {
-  filter: drop-shadow(0 15px 12px rgba(102, 72, 54, 0.18))
-    drop-shadow(0 5px 4px rgba(102, 72, 54, 0.12));
+  filter: none;
 }
 
 .focus-room-layer {
