@@ -24,6 +24,55 @@ export const ROOMS = [
       { id: "project-01", title: "Project placeholder 01", type: "Visual study", year: "2026" },
       { id: "project-02", title: "Project placeholder 02", type: "Image making", year: "2025" },
     ],
+    documents: [
+      {
+        id: "garden-finance-video",
+        title: "《会理财更会生活》",
+        columnLabel: "作品视频",
+        format: "MP4",
+        contentType: "video",
+        file: "/assets/works/garden-finance-video/finance-life.mp4",
+      },
+      {
+        id: "garden-finance-introduction",
+        title: "《会理财更会生活》作品介绍",
+        columnLabel: "作品介绍",
+        contentType: "text",
+        textSections: [
+          {
+            heading: "作品信息",
+            items: [
+              { title: "作品名称", text: "《会理财更会生活》" },
+              { title: "类别", text: "短视频" },
+              { title: "广告品牌", text: "招商银行“朝朝宝”" },
+            ],
+          },
+          {
+            heading: "创意思想",
+            paragraphs: [
+              "本视频广告从低风险高收益的产品优势切入，结合大学生等受众群体与年轻化的品牌特性，以年轻有活力的大学生为视频主角，直击年轻受众热爱享受生活、热衷搞钱的营销痛点，吸引眼球，让“朝朝宝”成为让消费者“一下就爱上”的 app。",
+              "视频决定采用分屏方式，以此通过对比的手法展示：具有基本相同生活背景的两人，因为是否使用朝朝宝，而导致截然不同的生活，以此凸显朝朝宝高收益低风险的热门优势，以及零钱理财、随存随理、随取随花的便捷性。使用朝朝宝的便利与优势拉近品牌与大学生之间的距离，选择朝朝宝不只是短期的资金投资，更是长期的人生投资，用零碎时间理零碎的钱，空出的时间就用来理理自己的生活！",
+            ],
+          },
+        ],
+      },
+    ],
+    objectHotspots: [
+      {
+        id: "garden-bike",
+        number: "01",
+        label: "《会理财更会生活》",
+        documentIds: ["garden-finance-video", "garden-finance-introduction"],
+        path: "M 412 1314 C 457 1280 530 1280 573 1317 L 640 1367 L 738 1375 L 779 1430 L 766 1512 L 723 1575 L 737 1674 L 713 1760 L 653 1777 L 608 1717 L 573 1634 L 519 1582 L 472 1544 L 426 1500 L 382 1436 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/garden-bike.png",
+          x: 386,
+          y: 1265,
+          width: 390,
+          height: 510,
+        },
+      },
+    ],
     hotspotPath: "M478 360 L512 391 L744 498 L540 617 L540 789 L309 613 L309 596 L337 580 L337 523 L360 510 L371 474 L411 466 L430 438 L461 421 Z",
     hotspotCenter: { x: 480, y: 585 },
     transition: {
@@ -460,7 +509,7 @@ export const ROOMS = [
         pages: 1,
         file: "/assets/works/study-model-experience/model-experience-4.0.pdf",
         preface: {
-          kicker: "PROJECT OVERVIEW / 项目概述",
+          video: "/assets/works/study-model-experience/model-experience-overview.mov",
           titleSplitY: 116,
           paragraphs: [
             "模型体验台是一款承载多模型对话、模型对比、图片生成、视频生成及附件输入等能力的一站式 AI 模型体验产品。随着产品从基础能力建设进入规模化使用阶段，用户关注点逐渐从“模型能否生成结果”，转向“任务过程是否清晰、等待是否可控、内容是否易于管理、结果是否方便复用”。",

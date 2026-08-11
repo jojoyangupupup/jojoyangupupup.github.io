@@ -601,6 +601,17 @@ function renderDocumentPages(documents) {
         </article>
       `;
     }
+    if (documentEntry.contentType === "video") {
+      return `
+        <article class="document-column document-video-column" aria-label="${documentEntry.title}">
+          ${heading}
+          <video class="document-video" controls preload="metadata" playsinline>
+            <source src="${documentEntry.file}" type="${documentEntry.file.endsWith(".mov") ? "video/quicktime" : "video/mp4"}">
+            当前浏览器不支持视频播放。
+          </video>
+        </article>
+      `;
+    }
     if (documentEntry.contentType === "text") {
       return `
         <article class="document-column document-text-column" aria-label="${documentEntry.columnLabel || documentEntry.title}">
@@ -678,7 +689,12 @@ function renderDocumentPages(documents) {
           >
             <div class="document-title-slice" aria-hidden="true">${imageMarkup}</div>
             <section class="document-preface" aria-label="${documentEntry.title}项目概述">
-              <p class="document-preface-kicker">${documentEntry.preface.kicker}</p>
+              ${documentEntry.preface.video ? `
+                <video class="document-preface-video" controls preload="metadata" playsinline>
+                  <source src="${documentEntry.preface.video}" type="video/quicktime">
+                  当前浏览器不支持视频播放。
+                </video>
+              ` : `<p class="document-preface-kicker">${documentEntry.preface.kicker}</p>`}
               <div class="document-preface-copy">
                 ${documentEntry.preface.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
               </div>

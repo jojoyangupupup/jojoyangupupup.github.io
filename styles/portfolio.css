@@ -390,7 +390,7 @@ button {
   transition: opacity 180ms ease;
 }
 
-.visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"]) .room-object-map {
+.visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"], [data-room-id="garden"]) .room-object-map {
   opacity: 1;
   pointer-events: auto;
 }
@@ -403,7 +403,8 @@ button {
 
 .visual-stage[data-room-id="study"] .room-object-group[data-room-id="study"],
 .visual-stage[data-room-id="kitchen"] .room-object-group[data-room-id="kitchen"],
-.visual-stage[data-room-id="living"] .room-object-group[data-room-id="living"] {
+.visual-stage[data-room-id="living"] .room-object-group[data-room-id="living"],
+.visual-stage[data-room-id="garden"] .room-object-group[data-room-id="garden"] {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
@@ -434,6 +435,10 @@ button {
 
 .room-object-glow[data-object-id="kitchen-pot"],
 .room-object-glow[data-object-id="kitchen-plant"] {
+  filter: url(#room-object-edge-glow-tight);
+}
+
+.room-object-glow[data-object-id="garden-bike"] {
   filter: url(#room-object-edge-glow-tight);
 }
 
@@ -1340,6 +1345,31 @@ button {
   flex: 1;
   border: 0;
   background: #f3f5f8;
+}
+
+.document-video-column {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.document-video {
+  display: block;
+  width: 100%;
+  max-height: calc(100svh - 190px);
+  margin: 0;
+  border: 1px solid rgba(241, 240, 235, 0.22);
+  background: #171717;
+  object-fit: contain;
+}
+
+.document-preface-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 1px solid rgba(67, 76, 65, 0.2);
+  background: #20241f;
+  object-fit: contain;
 }
 
 .document-transparent-column .document-column-pages {
