@@ -184,8 +184,8 @@ button {
 
 .portfolio-main[data-page="overview"] .room-detail,
 .portfolio-main[data-page="overview-enter"] .room-detail {
-  background: #e6e3db;
-  border-left-color: transparent;
+  background: var(--paper);
+  border-left-color: var(--line);
 }
 
 .visual-frame {
