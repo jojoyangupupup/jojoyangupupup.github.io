@@ -698,6 +698,39 @@ export const ROOMS = [
           pageHeights: [8929],
         },
       },
+      {
+        id: "study-intelligent-knowledge-assistant",
+        title: "智能知识助手升级一期",
+        format: "PDF",
+        pages: 1,
+        file: "/assets/works/study-intelligent-knowledge-assistant/intelligent-knowledge-assistant-prd.pdf",
+        introduction: {
+          kicker: "PRODUCT CASE / 企业知识订阅",
+          heading: "智能知识助手升级一期",
+          sections: [
+            {
+              heading: "项目概述",
+              paragraphs: [
+                "智能知识助手是一款面向企业员工的知识订阅与问答产品，用户可以通过自然语言设置关注主题和推送时间，由系统定期检索、筛选并整理相关内容，实现从主动搜索到持续获取信息的转变。",
+                "本轮升级建立在内部真实订阅需求的基础上。战略、法务、研发、市场等不同团队都存在持续获取行业资讯和业务情报的需求，但个人用户不希望配置复杂规则，团队用户又需要更精细的主题、信源和推送策略。针对这一问题，我将产品方案拆分为个人端和团队端两条路径：个人用户通过预设主题和自然语言快速完成订阅，团队用户则可以围绕业务方向配置专属资讯服务。",
+                "在项目中，我主要负责需求分析、用户分层、产品目标制定和核心链路设计，完成了首次订阅引导、自然语言创建与管理订阅、定时推送、工作卡展示及知识库沉淀等方案，并规划了侧边栏配置和群聊订阅等后续能力。目前，一期核心方案已完成需求设计，团队配置与群聊协作能力纳入二期规划。以下为本次升级的完整 PRD。",
+              ],
+            },
+          ],
+          source: {
+            kicker: "02 / PRODUCT REQUIREMENTS",
+            heading: "完整 PRD",
+          },
+        },
+        renderedPages: {
+          basePath: "/assets/works/study-intelligent-knowledge-assistant/pages",
+          extension: "png",
+          version: "20260811-1",
+          width: 1190,
+          height: 9754,
+          pageHeights: [9754],
+        },
+      },
     ],
     objectHotspots: [
       {
@@ -740,6 +773,20 @@ export const ROOMS = [
           y: 0,
           width: 2048,
           height: 2048,
+        },
+      },
+      {
+        id: "study-sofa",
+        number: "04",
+        label: "智能知识助手升级一期",
+        documentId: "study-intelligent-knowledge-assistant",
+        path: "M 884 1454 C 926 1437 979 1451 1010 1475 L 1087 1462 C 1137 1468 1176 1510 1183 1574 L 1175 1688 L 1135 1760 L 1068 1774 L 971 1760 L 888 1735 L 852 1686 L 845 1570 L 858 1496 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/study-sofa.png",
+          x: 845,
+          y: 1445,
+          width: 340,
+          height: 325,
         },
       },
     ],

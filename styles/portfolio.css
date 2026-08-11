@@ -434,7 +434,8 @@ button {
 }
 
 .room-object-glow[data-object-id="kitchen-pot"],
-.room-object-glow[data-object-id="kitchen-plant"] {
+.room-object-glow[data-object-id="kitchen-plant"],
+.room-object-glow[data-object-id="study-sofa"] {
   filter: url(#room-object-edge-glow-tight);
 }
 
