@@ -89,7 +89,7 @@ export const ROOMS = [
             { label: "实际使用 UV", old: "397", new: "619", oldPercent: 64, newPercent: 100, delta: "+55.9%" },
             { label: "实际使用 PV", old: "2,022", new: "2,425", oldPercent: 83, newPercent: 100, delta: "+19.9%" },
           ],
-          path: [{ label: "创建笔记本", count: "7,228 人" }, { label: "实际使用", count: "5,574 人" }, { label: "发起提问", count: "2,951 人" }],
+          path: [{ label: "创建", count: "512 UV" }, { label: "使用", count: "619 UV" }, { label: "提问", count: "257 UV" }],
           insight: "PPT、信息图、周报和知识库四类任务贡献约 72% 的流量，其中 PPT 约 33%，信息图约 19%，周报约 11%，知识库约 9%。运营重点不只是让用户知道产品，而是持续推动用户进入创建、使用和提问这条核心链路。",
           contentArchive: [
             { number: "01", title: "PPT 生成功能上新", function: "PPT 生成", type: "功能上新 / 场景教育", theme: "材料都在手里，PPT 怎么还是做不完？", description: "从临时汇报、材料堆积和时间不足的工作困境切入，讲清楚用户如何把已有资料交给 AI，快速获得一份可以继续修改的汇报初稿。" },
@@ -115,6 +115,12 @@ export const ROOMS = [
             { label: "周报", percent: 13.9 },
             { label: "知识库", percent: 10.3 },
             { label: "其他", percent: 27.6 },
+          ],
+          taskMix: [
+            { label: "PPT演示文稿", uv: "4,309", pv: "28,570", share: "33%" },
+            { label: "信息图", uv: "2,942", pv: "16,542", share: "19%" },
+            { label: "周报", uv: "3,435", pv: "8,884", share: "11%" },
+            { label: "知识库", uv: "1,632", pv: "7,464", share: "9%" },
           ],
           metrics: [
             { value: "+51.6%", numeric: 51.6, prefix: "+", suffix: "%", decimals: 1, label: "创建笔记本 UV 增长" },
