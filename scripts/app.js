@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=53";
+} from "/scripts/rooms-data.js?v=54";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -102,7 +102,7 @@ app.innerHTML = `
                     role="button"
                     data-room-id="${room.id}"
                     data-object-id="${object.id}"
-                    aria-label="Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}"
+                    aria-label="${object.ariaLabel || `Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}`}"
                     d="${object.path}"
                   ></path>
                   ${object.glowImage ? `
@@ -501,6 +501,63 @@ function renderDocumentText(documentEntry) {
   return (documentEntry.textSections || []).map((section) => renderSection(section)).join("");
 }
 
+function renderMemoryExperienceLegacy(documentEntry) {
+  const memory = documentEntry.memory;
+  return `
+    <article class="memory-experience" aria-labelledby="memory-title-${documentEntry.id}">
+      <section class="memory-section memory-header">
+        <div>
+          <p class="memory-index">${memory.index}</p>
+          <h2 id="memory-title-${documentEntry.id}">${memory.title}</h2>
+        </div>
+        <div class="memory-header-meta"><p>${memory.meta}</p><p>${memory.tagline}</p></div>
+        <p class="memory-intro">${memory.intro}</p>
+      </section>
+      <section class="memory-section memory-flow" aria-labelledby="memory-flow-title">
+        <h3 id="memory-flow-title">01 · KNOWLEDGE FLOW</h3>
+        <div class="memory-flow-track">
+          <div class="memory-flow-object memory-documents" aria-label="文档、周报、会议纪要">
+            <span></span><span></span><span></span><p>文档 / 周报 / 会议纪要</p>
+          </div>
+          <div class="memory-flow-line" aria-hidden="true"></div>
+          <div class="memory-flow-object memory-engine" aria-label="AI 知识加工台"><i></i><p>AI 知识加工台</p></div>
+          <div class="memory-flow-line" aria-hidden="true"></div>
+          <div class="memory-flow-object memory-results" aria-label="PPT、信息图、总结、播客">
+            <span>PPT</span><span>信息图</span><span>总结</span><span>播客</span><p>PPT / 信息图 / 总结 / 播客</p>
+          </div>
+        </div>
+      </section>
+      <section class="memory-section memory-practice">
+        <div><h3>02 · ITERATION</h3><div class="memory-stamps">${memory.iteration.map((item) => `<span>${item}</span>`).join("")}</div></div>
+        <div><h3>03 · OPERATIONS</h3><div class="memory-nodes">${memory.operations.map((item, index) => `<span class="${index === 0 ? "is-active" : ""}" tabindex="0">${item}</span>`).join("")}</div></div>
+      </section>
+      <section class="memory-section memory-metrics" aria-labelledby="memory-metrics-title">
+        <h3 id="memory-metrics-title">04 · CORE METRICS</h3>
+        <div class="memory-metric-grid">${memory.metrics.map((metric) => `<div class="memory-metric"><strong data-memory-number data-value="${metric.numeric}" data-prefix="${metric.prefix || ""}" data-suffix="${metric.suffix || ""}" data-decimals="${metric.decimals || 0}">0</strong><span>${metric.label}</span></div>`).join("")}</div>
+        <div class="memory-funnel">${memory.funnel.map((item, index) => `<div class="memory-funnel-stage" style="--funnel-height:${[100, 77, 41][index]}%;--funnel-delay:${index * 250}ms"><div></div><p><span>${item.stage}</span><strong>${item.count}</strong><em>${item.rate}</em></p></div>`).join("")}</div>
+      </section>
+      <section class="memory-section memory-bars" aria-labelledby="memory-bars-title">
+        <h3 id="memory-bars-title">05 · TASK DISTRIBUTION</h3>
+        <div>${memory.bars.map((bar) => `<div class="memory-bar-row${bar.highlight ? " is-highlighted" : ""}" tabindex="0"><i><span style="--bar-width:${bar.percent}%"></span></i><strong>${bar.label}</strong><em>${bar.percent}%</em><small>${bar.delta}</small></div>`).join("")}</div>
+      </section>
+    </article>
+  `;
+}
+
+function renderMemoryExperience(documentEntry) {
+  const memory = documentEntry.memory;
+  const highlightBody = (body) => memory.highlights.reduce((text, value) => text.replaceAll(value, `<span class="memory-inline-highlight">${value}</span>`), body);
+  return `<article class="memory-experience" aria-labelledby="memory-title-${documentEntry.id}">
+    <section class="memory-section memory-header">
+      <div class="memory-header-line"><p class="memory-index">${memory.index}</p><p class="memory-meta">${memory.meta}</p></div>
+      <h2 id="memory-title-${documentEntry.id}">${memory.title}</h2><p class="memory-tagline">${memory.tagline}</p>
+    </section>
+    <section class="memory-section memory-introduction" aria-labelledby="memory-introduction-title"><h3 id="memory-introduction-title">01 · INTRODUCTION</h3><div class="memory-paragraphs">${memory.paragraphs.map((paragraph) => `<article><h4>${paragraph.lead}</h4><p>${highlightBody(paragraph.body)}</p></article>`).join("")}</div></section>
+    <section class="memory-section memory-flow" aria-labelledby="memory-flow-title"><h3 id="memory-flow-title">02 · KNOWLEDGE FLOW</h3><div class="memory-flow-grid"><div class="memory-flow-object"><strong>${memory.flow.left.label}</strong><small>${memory.flow.left.sub}</small></div><div class="memory-flow-connector">┄┄┄</div><div class="memory-flow-object"><strong>${memory.flow.middle.label}</strong><small>${memory.flow.middle.sub}</small></div><div class="memory-flow-connector">┄┄┄</div><div class="memory-flow-object"><strong>${memory.flow.right.label}</strong><small>${memory.flow.right.sub}</small></div></div></section>
+    <section class="memory-section memory-bars" aria-labelledby="memory-bars-title"><h3 id="memory-bars-title">03 · TASK STRUCTURE</h3><div>${memory.taskDistribution.map((bar) => `<div class="memory-bar-row${bar.highlight ? " is-highlighted" : ""}"><i><span style="--bar-width:${bar.percent}%"></span></i><strong>${bar.label}</strong><em>${bar.percent}%</em></div>`).join("")}</div></section>
+  </article>`;
+}
+
 function renderDocumentPageLinks(documentEntry, pageNumber) {
   const { width, height: defaultHeight, pageHeights } = documentEntry.renderedPages;
   const height = pageHeights?.[pageNumber - 1] || defaultHeight;
@@ -612,6 +669,9 @@ function renderDocumentPages(documents) {
           </video>
         </article>
       `;
+    }
+    if (documentEntry.contentType === "memory") {
+      return renderMemoryExperience(documentEntry);
     }
     if (documentEntry.contentType === "text") {
       return `
@@ -886,11 +946,43 @@ function renderDocumentModalView(documents, scrollTop = 0) {
     "is-transparent-document",
     documents.length > 0 && documents.every((documentEntry) => documentEntry.transparentPages),
   );
+  documentModal.classList.toggle("is-memory-experience", documents.some((documentEntry) => documentEntry.contentType === "memory"));
   documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
   documentModalScroll.scrollTop = scrollTop;
   documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
   updateDocumentCloseAction();
   scheduleWorkIntroCta();
+}
+
+function enterMemoryExperience(trigger) {
+  const experience = documentPages.querySelector(".memory-experience");
+  if (!experience) return;
+  window.requestAnimationFrame(() => {
+    const panel = experience.getBoundingClientRect();
+    const origin = trigger?.getBoundingClientRect();
+    if (origin) {
+      experience.style.setProperty("--memory-origin-x", `${origin.left + origin.width / 2 - panel.left}px`);
+      experience.style.setProperty("--memory-origin-y", `${origin.top + origin.height / 2 - panel.top}px`);
+    }
+    experience.classList.add("is-entered");
+    documentPages.querySelectorAll("[data-memory-number]").forEach((number) => animateMemoryNumber(number));
+  });
+}
+
+function animateMemoryNumber(element) {
+  const target = Number(element.dataset.value);
+  const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 100 : 1500;
+  const started = performance.now();
+  const frame = (now) => {
+    const progress = Math.min(1, (now - started) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const decimals = Number(element.dataset.decimals || 0);
+    const value = target * eased;
+    const formatted = decimals ? value.toFixed(decimals) : Math.round(value).toLocaleString();
+    element.textContent = `${element.dataset.prefix}${formatted}${element.dataset.suffix}`;
+    if (progress < 1) window.requestAnimationFrame(frame);
+  };
+  window.requestAnimationFrame(frame);
 }
 
 function openDocumentModal(room, object, documents, trigger, { pushCurrent = false } = {}) {
@@ -911,6 +1003,7 @@ function openDocumentModal(room, object, documents, trigger, { pushCurrent = fal
   if (openingModal) documentModalScroll.scrollTop = 0;
   document.body.classList.add("is-document-open");
   documentModalClose.focus({ preventScroll: true });
+  if (documents.some((documentEntry) => documentEntry.contentType === "memory")) enterMemoryExperience(trigger);
 }
 
 function closeOrReturnDocument() {
@@ -925,11 +1018,21 @@ function closeOrReturnDocument() {
 
 function closeDocumentModal(restoreFocus = true) {
   if (documentModal.hidden) return;
+  const memoryExperience = documentPages.querySelector(".memory-experience.is-entered");
+  if (memoryExperience && !documentModal.classList.contains("is-memory-closing")) {
+    documentModal.classList.add("is-memory-closing");
+    memoryExperience.classList.remove("is-entered");
+    window.setTimeout(() => {
+      documentModal.classList.remove("is-memory-closing");
+      closeDocumentModal(restoreFocus);
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 100 : 400);
+    return;
+  }
   disconnectWorkIntroCta();
   documentModal.hidden = true;
   documentModal.setAttribute("aria-hidden", "true");
   documentPages.replaceChildren();
-  documentModal.classList.remove("is-transparent-document");
+  documentModal.classList.remove("is-transparent-document", "is-memory-experience", "is-memory-closing");
   document.body.classList.remove("is-document-open");
   if (restoreFocus) documentReturnFocus?.focus({ preventScroll: true });
   documentReturnFocus = null;
@@ -1430,6 +1533,20 @@ documentModal.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !documentModal.hidden) closeOrReturnDocument();
+  if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
+    console.log("TODO: switch product experience", event.key);
+  }
+  if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && event.key === "Tab") {
+    const focusable = [documentModalClose, ...documentModal.querySelectorAll('.memory-experience [tabindex="0"]')];
+    const currentIndex = focusable.indexOf(document.activeElement);
+    if (event.shiftKey && currentIndex <= 0) {
+      event.preventDefault();
+      focusable.at(-1).focus();
+    } else if (!event.shiftKey && currentIndex === focusable.length - 1) {
+      event.preventDefault();
+      focusable[0].focus();
+    }
+  }
 });
 
 const preloadAllRoomImages = () => PAGE_NAVIGATION
