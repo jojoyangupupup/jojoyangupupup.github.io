@@ -1578,6 +1578,16 @@ button {
   .document-modal.is-memory-experience .memory-flow-connector { text-align: center; line-height: 1; }
 }
 
+/* Keep the garden work sheet in the same neutral document surface as other items. */
+.document-modal.is-memory-experience .document-modal-scroll { background: var(--bg-warm); }
+.document-modal.is-memory-experience .memory-archive,
+.document-modal.is-memory-experience .memory-role,
+.document-modal.is-memory-experience .memory-features,
+.document-modal.is-memory-experience .memory-data,
+.document-modal.is-memory-experience .memory-content,
+.document-modal.is-memory-experience .memory-content-detail { background: var(--bg-cream); }
+.document-modal.is-memory-experience .memory-hero { background: var(--bg-cream); }
+
 /* Garden memory portfolio refinements */
 .document-modal.is-memory-experience .memory-major-title {
   margin: 0 0 9px;
