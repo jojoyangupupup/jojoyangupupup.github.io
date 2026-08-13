@@ -870,13 +870,31 @@ button {
 }
 
 .object-directory-row[data-object-id="living-tv"] .directory-thumb img {
+  position: relative;
+  z-index: 1;
+  width: 42px;
+  height: 48px;
+  max-width: 100%;
+  max-height: 100%;
   filter: drop-shadow(0 0 3px rgba(152, 91, 67, 0.24));
+  transform: none;
+}
+
+.object-directory-row[data-object-id="living-tv"] .directory-thumb {
+  position: relative;
+  z-index: 1;
+  width: 50px;
+  height: 54px;
+  padding: 3px 4px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .object-directory-row[data-object-id="living-tv"]:hover .directory-thumb img,
 .object-directory-row[data-object-id="living-tv"]:focus-visible .directory-thumb img,
 .object-directory-row[data-object-id="living-tv"].is-active .directory-thumb img {
   filter: drop-shadow(0 0 7px rgba(152, 91, 67, 0.62));
+  transform: scale(1.04);
 }
 
 .directory-row.is-active .directory-thumb img,
@@ -1042,6 +1060,16 @@ button {
 
 .object-directory-row.is-viewed .directory-thumb img {
   filter: saturate(0.7);
+}
+
+.object-directory-row.is-viewed[data-object-id="living-tv"] .directory-thumb img {
+  filter: saturate(0.82) drop-shadow(0 0 3px rgba(152, 91, 67, 0.24));
+}
+
+.object-directory-row.is-viewed[data-object-id="living-tv"]:hover .directory-thumb img,
+.object-directory-row.is-viewed[data-object-id="living-tv"]:focus-visible .directory-thumb img,
+.object-directory-row.is-viewed[data-object-id="living-tv"].is-active .directory-thumb img {
+  filter: saturate(0.94) drop-shadow(0 0 7px rgba(152, 91, 67, 0.62));
 }
 
 .object-directory-row.is-viewed:hover,
