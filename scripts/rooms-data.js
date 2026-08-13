@@ -454,6 +454,7 @@ export const ROOMS = [
         id: "kitchen-book",
         number: "01",
         label: "心相印营销策划",
+        directoryImage: "/assets/rooms/objects/kitchen-book.png",
         documentIds: ["heartprint-marketing", "heartprint-introduction"],
         path: "M 1078.8 1292.0 1027.6 1299.3 1008.9 1312.9 987.9 1313.4 957.0 1327.4 943.2 1327.9 946.4 1332.8 922.5 1341.5 912.0 1351.7 949.2 1408.5 978.9 1445.9 1164.9 1372.1 1091.5 1295.9 1080.4 1292.0 Z",
         glowImage: {
@@ -468,6 +469,7 @@ export const ROOMS = [
         id: "kitchen-pot",
         number: "02",
         label: "无暇不出——加工台运营稿",
+        directoryImage: "/assets/rooms/objects/kitchen-pot-directory.png",
         documentId: "kitchen-processing-platform",
         path: "M555 969 C586 968 611 977 618 986 C627 983 638 987 640 995 C642 1002 635 1009 624 1013 C622 1024 622 1042 619 1050 C614 1064 590 1071 559 1072 C528 1072 504 1063 499 1049 C497 1044 499 1040 498 1037 C489 1040 477 1037 473 1030 C469 1023 475 1016 483 1012 C490 1008 497 1010 501 1015 C501 1008 496 1002 496 994 C497 982 522 970 555 969 Z",
         glowImage: {
@@ -482,6 +484,7 @@ export const ROOMS = [
         id: "kitchen-radio",
         number: "03",
         label: "泡泡玛特「酷导演的剧本 —— 泡泡梦工厂」整合营销策划",
+        directoryImage: "/assets/rooms/objects/kitchen-radio.png",
         documentIds: ["popmart-marketing", "popmart-introduction"],
         path: "M1692 985 L1754 1047 M1644 1030 L1668 1016 L1762 1038 L1789 1061 L1788 1129 L1764 1154 L1663 1127 L1640 1105 L1640 1053 Z",
         glowImage: {
@@ -496,6 +499,7 @@ export const ROOMS = [
         id: "kitchen-plant",
         number: "04",
         label: "可远观不可亵玩",
+        directoryImage: "/assets/rooms/objects/kitchen-plant.png",
         documentId: "kitchen-distant-view",
         path: "M320 1058 C351 1055 374 1080 365 1110 C399 1093 432 1107 429 1132 C425 1152 388 1162 355 1150 C389 1165 414 1185 405 1205 C395 1223 363 1218 342 1208 L333 1278 C360 1271 382 1288 372 1306 C360 1324 335 1312 322 1326 L366 1328 L396 1351 L384 1408 L349 1428 L258 1428 L230 1405 L228 1354 L251 1328 L287 1320 L285 1208 C251 1214 220 1197 227 1177 C234 1157 270 1160 291 1169 C260 1146 244 1118 260 1101 C276 1085 298 1101 310 1114 C297 1086 299 1066 320 1058 Z",
         glowImage: {
