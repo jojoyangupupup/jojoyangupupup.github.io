@@ -832,6 +832,7 @@ export const ROOMS = [
         id: "study-book",
         number: "01",
         label: "模型体验台细节优化 4.0",
+        directoryImage: "/assets/rooms/objects/study-book.png",
         documentId: "model-experience-4",
         path: "M941 1255 L964 1228 L987 1202 L1010 1175 L1033 1162 L1056 1167 L1079 1169 L1103 1171 L1126 1179 L1149 1189 L1172 1190 L1195 1200 L1218 1211 L1241 1219 L1264 1239 L1241 1266 L1218 1294 L1195 1322 L1172 1320 L1149 1313 L1126 1307 L1103 1300 L1079 1293 L1056 1289 L1033 1281 L1010 1274 L987 1268 L964 1263 L941 1256 Z",
         glowImage: {
@@ -846,6 +847,7 @@ export const ROOMS = [
         id: "study-lamp",
         number: "02",
         label: "模型体验台使用情况分析报告",
+        directoryImage: "/assets/rooms/objects/study-lamp.png",
         documentId: "model-experience-usage-analysis",
         path: "M1060 589 C1060 575 1072 573 1088 573 C1105 573 1116 578 1116 590 C1116 602 1107 608 1089 610 C1072 608 1061 601 1060 589 Z M1086 608 L1090 608 L1090 753 L1086 753 Z M1088 754 C1110 754 1135 761 1147 774 L1179 867 C1183 885 1170 899 1148 908 C1129 916 1107 920 1087 921 C1064 920 1040 916 1017 908 C997 900 990 885 995 868 L1027 773 C1042 761 1065 754 1088 754 Z",
         glowImage: {
@@ -860,6 +862,7 @@ export const ROOMS = [
         id: "study-board",
         number: "03",
         label: "企业 AI 搜索升级为数字员工",
+        directoryImage: "/assets/rooms/objects/study-board-directory.png",
         documentId: "study-enterprise-ai-search",
         path: "M 466 1050 L 686 972 L 749 1397 L 536 1518 Z",
         glowImage: {
@@ -874,6 +877,7 @@ export const ROOMS = [
         id: "study-sofa",
         number: "04",
         label: "智能知识助手升级一期",
+        directoryImage: "/assets/rooms/objects/study-sofa.png",
         documentId: "study-intelligent-knowledge-assistant",
         path: "M 884 1454 C 926 1437 979 1451 1010 1475 L 1087 1462 C 1137 1468 1176 1510 1183 1574 L 1175 1688 L 1135 1760 L 1068 1774 L 971 1760 L 888 1735 L 852 1686 L 845 1570 L 858 1496 Z",
         glowImage: {
