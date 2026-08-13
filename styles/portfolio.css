@@ -1496,6 +1496,35 @@ button {
 .document-modal.is-memory-experience .memory-insight { color: var(--ink-strong); }
 .document-modal.is-memory-experience .memory-content-list > article { display: grid; grid-template-columns: 1fr 1.5fr; gap: 28px; padding: 20px 0; border-top: 1px dashed var(--memory-line); }
 .document-modal.is-memory-experience .memory-content-list > article > div:first-child { display: flex; gap: 14px; align-items: baseline; }
+.document-modal.is-memory-experience .memory-experience { max-width: 1040px; }
+.document-modal.is-memory-experience .document-pages { width: min(1040px, 92vw); }
+.document-modal.is-memory-experience .memory-section { padding: 26px 32px; }
+.document-modal.is-memory-experience .memory-hero { min-height: 330px; grid-template-columns: 56% 44%; }
+.document-modal.is-memory-experience .memory-hero-copy-text { font-size: 14px; line-height: 1.65; }
+.document-modal.is-memory-experience .memory-role { grid-template-columns: 1fr; gap: 0; }
+.document-modal.is-memory-experience .memory-role > div:first-child { display: none; }
+.document-modal.is-memory-experience .memory-role-focus { padding-left: 0; border-left: 0; }
+.document-modal.is-memory-experience .memory-role-focus h3::before { content: "02 · "; color: var(--accent-red); }
+.document-modal.is-memory-experience .memory-role p { font-size: 14px; line-height: 1.65; }
+.document-modal.is-memory-experience .memory-feature-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.document-modal.is-memory-experience .memory-feature { grid-template-columns: 1fr; gap: 9px; padding: 20px 22px; border-top: 1px solid var(--memory-line); }
+.document-modal.is-memory-experience .memory-feature:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--memory-line); }
+.document-modal.is-memory-experience .memory-feature:nth-child(even) { padding-right: 0; }
+.document-modal.is-memory-experience .memory-feature p { font-size: 13px; line-height: 1.6; }
+.document-modal.is-memory-experience .memory-feature blockquote { margin-top: 4px; font-size: 14px; }
+.document-modal.is-memory-experience .memory-kpis strong { font-size: 28px; }
+.document-modal.is-memory-experience .memory-kpis span { font-size: 10px; }
+.document-modal.is-memory-experience .memory-content-browser { display: grid; grid-template-columns: 34% 1fr; gap: 26px; margin-top: 18px; }
+.document-modal.is-memory-experience .memory-content-browser nav { border-top: 1px solid var(--memory-line); }
+.document-modal.is-memory-experience .memory-content-tab { width: 100%; display: grid; grid-template-columns: 28px 1fr; gap: 8px; padding: 13px 8px; border: 0; border-bottom: 1px solid var(--memory-line); background: transparent; text-align: left; color: var(--ink-soft); cursor: pointer; }
+.document-modal.is-memory-experience .memory-content-tab span { font: 11px var(--font-mono); color: var(--accent-red); }
+.document-modal.is-memory-experience .memory-content-tab strong { font: 13px/1.4 var(--font-serif); }
+.document-modal.is-memory-experience .memory-content-tab.is-active { color: var(--accent-green); border-left: 3px solid var(--accent-green); }
+.document-modal.is-memory-experience .memory-content-detail { min-height: 225px; border: 1px solid var(--memory-line); padding: 24px; }
+.document-modal.is-memory-experience .memory-content-detail small { font: 11px var(--font-mono); color: var(--accent-green); }
+.document-modal.is-memory-experience .memory-content-detail h4 { margin: 24px 0 10px; font: 600 20px/1.45 var(--font-serif); color: var(--ink-strong); }
+.document-modal.is-memory-experience .memory-content-detail p { margin: 8px 0 0; font: 13px/1.7 var(--font-serif); color: var(--ink-soft); }
+.document-modal.is-memory-experience .memory-content-detail .memory-content-function { font-family: var(--font-sans); font-size: 11px; }
 .document-modal.is-memory-experience .memory-flow-grid { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: center; }
 .document-modal.is-memory-experience .memory-flow-object { min-height: 92px; padding: 14px 10px; border: 1px solid var(--memory-line); display: flex; flex-direction: column; justify-content: center; text-align: center; }
 .document-modal.is-memory-experience .memory-flow-object strong { font: 600 14px/1.4 var(--font-serif); color: var(--ink-strong); }
@@ -1514,6 +1543,11 @@ button {
   .document-modal.is-memory-experience .memory-kpis { grid-template-columns: repeat(2, 1fr); }
   .document-modal.is-memory-experience .memory-month-row { grid-template-columns: 1fr; gap: 5px; }
   .document-modal.is-memory-experience .memory-path > div { gap: 8px; flex-wrap: wrap; }
+  .document-modal.is-memory-experience .memory-section { padding: 24px 18px; }
+  .document-modal.is-memory-experience .memory-hero { min-height: auto; grid-template-columns: 1fr; }
+  .document-modal.is-memory-experience .memory-feature-list, .document-modal.is-memory-experience .memory-content-browser { grid-template-columns: 1fr; }
+  .document-modal.is-memory-experience .memory-feature:nth-child(odd) { padding-left: 0; padding-right: 0; border-right: 0; }
+  .document-modal.is-memory-experience .memory-feature:nth-child(even) { padding-left: 0; padding-right: 0; }
   .document-modal.is-memory-experience .memory-flow-grid { grid-template-columns: 1fr; }
   .document-modal.is-memory-experience .memory-flow-connector { text-align: center; line-height: 1; }
 }

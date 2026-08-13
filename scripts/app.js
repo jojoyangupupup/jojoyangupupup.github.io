@@ -552,8 +552,17 @@ function renderMemoryExperience(documentEntry) {
     <section class="memory-section memory-role"><div><h3>02 · PRODUCT</h3><p>${memory.product}</p></div><div class="memory-role-focus"><h3>MY ROLE</h3><p>${memory.role}</p></div></section>
     <section class="memory-section memory-features"><header><p class="memory-index">03 · FEATURE OPERATIONS</p><h3>把功能迭代，变成用户能理解、愿意尝试的工作场景</h3></header><div class="memory-feature-list">${memory.features.map((feature) => `<article class="memory-feature"><div class="memory-feature-title"><span>${feature.number}</span><h4>${feature.title}</h4></div><div><small>功能迭代</small><p>${feature.iteration}</p></div><div><small>运营内容</small><p>${feature.operation}</p><blockquote>“${feature.expression}”</blockquote></div></article>`).join("")}</div></section>
     <section class="memory-section memory-data"><header><p class="memory-index">04 · DATA OUTCOME</p><h3>从创建入口，到实际使用，再到持续提问</h3></header><div class="memory-kpis">${memory.kpis.map((item) => `<div><strong>${item.value}</strong><span>${item.label}</span></div>`).join("")}</div><div class="memory-monthly"><h4>月度增长对比</h4>${memory.monthly.map((item) => `<div class="memory-month-row"><strong>${item.label}</strong><span class="memory-month-bar"><i style="--old:${item.oldPercent}%;--new:${item.newPercent}%"></i></span><em>${item.old} → ${item.new} · ${item.delta}</em></div>`).join("")}</div><div class="memory-path"><h4>用户行为路径</h4><div>${memory.path.map((item, index) => `<span><b>${item.count}</b><small>${item.label}</small></span>${index < memory.path.length - 1 ? `<i>${index === 0 ? "77.1% 创建用户进入实际使用" : "→"}</i>` : ""}`).join("")}</div></div><p class="memory-data-note">数据区间：2026.06.01—2026.08.04，约 10 周</p><p class="memory-insight">${memory.insight}</p></section>
-    <section class="memory-section memory-content"><header><p class="memory-index">05 · SELECTED CONTENT</p><h3>真实运营内容，不放附件预览，直接说明每次迭代如何被讲清楚</h3></header><div class="memory-content-list">${memory.contentArchive.map((item) => `<article><div><span>${item.number}</span><h4>${item.title}</h4></div><div><small>${item.type}</small><p>${item.description}</p></div></article>`).join("")}</div></section>
+    <section class="memory-section memory-content"><header><p class="memory-index">05 · SELECTED CONTENT</p><h3>真实运营内容，直接说明每次迭代如何被讲清楚</h3></header><div class="memory-content-browser"><nav aria-label="内容档案目录">${memory.contentArchive.map((item, index) => `<button type="button" class="memory-content-tab${index === 0 ? " is-active" : ""}" data-content-index="${index}"><span>${item.number}</span><strong>${item.title}</strong></button>`).join("")}</nav><div class="memory-content-detail" aria-live="polite"></div></div></section>
   </article>`;
+}
+
+function renderMemoryContentDetail(memory, index = 0) {
+  const data = memory?.memory || memory;
+  const item = data?.contentArchive?.[index] || data?.contentArchive?.[0];
+  const detail = document.querySelector(".memory-content-detail");
+  if (!detail || !item) return;
+  detail.innerHTML = `<small>${item.type}</small><p class="memory-content-function">对应功能：${item.function}</p><h4>${item.theme}</h4><p>${item.description}</p>`;
+  document.querySelectorAll(".memory-content-tab").forEach((tab, tabIndex) => tab.classList.toggle("is-active", tabIndex === index));
 }
 
 function renderDocumentPageLinks(documentEntry, pageNumber) {
@@ -964,6 +973,9 @@ function enterMemoryExperience(trigger) {
     }
     experience.classList.add("is-entered");
     documentPages.querySelectorAll("[data-memory-number]").forEach((number) => animateMemoryNumber(number));
+    const memoryEntry = activeModalDocuments.find((entry) => entry.contentType === "memory");
+    renderMemoryContentDetail(memoryEntry, 0);
+    documentPages.querySelectorAll(".memory-content-tab").forEach((tab) => tab.addEventListener("click", () => renderMemoryContentDetail(memoryEntry, Number(tab.dataset.contentIndex))));
   });
 }
 
