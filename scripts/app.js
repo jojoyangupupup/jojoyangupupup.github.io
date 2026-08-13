@@ -989,7 +989,12 @@ function enterMemoryExperience(trigger) {
     renderMemoryContentDetail(memoryEntry, 0);
     documentPages.querySelectorAll(".memory-content-tab").forEach((tab) => tab.addEventListener("click", () => renderMemoryContentDetail(memoryEntry, Number(tab.dataset.contentIndex))));
     renderMemoryMetricDetail(memoryEntry, 0);
-    documentPages.querySelectorAll(".memory-kpi").forEach((tab) => tab.addEventListener("click", () => renderMemoryMetricDetail(memoryEntry, Number(tab.dataset.memoryKpiIndex))));
+    documentPages.querySelectorAll(".memory-kpi").forEach((tab) => {
+      const selectMetric = () => renderMemoryMetricDetail(memoryEntry, Number(tab.dataset.memoryKpiIndex));
+      tab.addEventListener("click", selectMetric);
+      tab.addEventListener("pointerup", selectMetric);
+      tab.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") selectMetric(); });
+    });
     documentPages.addEventListener("click", (event) => {
       const tab = event.target.closest?.(".memory-kpi");
       if (tab) renderMemoryMetricDetail(memoryEntry, Number(tab.dataset.memoryKpiIndex));
