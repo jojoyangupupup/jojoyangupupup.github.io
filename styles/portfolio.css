@@ -1525,6 +1525,30 @@ button {
 .document-modal.is-memory-experience .memory-content-detail h4 { margin: 24px 0 10px; font: 600 20px/1.45 var(--font-serif); color: var(--ink-strong); }
 .document-modal.is-memory-experience .memory-content-detail p { margin: 8px 0 0; font: 13px/1.7 var(--font-serif); color: var(--ink-soft); }
 .document-modal.is-memory-experience .memory-content-detail .memory-content-function { font-family: var(--font-sans); font-size: 11px; }
+.document-modal.is-memory-experience { --archive-page: #f8f5ed; --archive-role: #edf0eb; --archive-feature: #eeeae3; --archive-data: #e7ece8; --archive-content: #e5dfd5; }
+.document-modal.is-memory-experience .document-modal-scroll { background: #e5e2d9; }
+.document-modal.is-memory-experience .memory-archive { background: var(--archive-page); }
+.document-modal.is-memory-experience .memory-section { padding-block: 22px; }
+.document-modal.is-memory-experience .memory-hero { min-height: 360px; }
+.document-modal.is-memory-experience .memory-hero h2 { margin-bottom: 4px; font-size: 30px; }
+.document-modal.is-memory-experience .memory-hero-copy-text { max-width: 31em; margin-top: 12px; font-size: 13px; line-height: 1.55; }
+.document-modal.is-memory-experience .memory-interface { min-height: 148px; }
+.document-modal.is-memory-experience .memory-role { background: var(--archive-role); }
+.document-modal.is-memory-experience .memory-role p { max-width: 48em; margin-top: 6px; font-size: 13px; line-height: 1.55; }
+.document-modal.is-memory-experience .memory-role-actions { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; border-top: 1px solid var(--memory-line); border-bottom: 1px solid var(--memory-line); }
+.document-modal.is-memory-experience .memory-role-actions div { padding: 12px 14px; border-right: 1px solid var(--memory-line); }
+.document-modal.is-memory-experience .memory-role-actions div:last-child { border-right: 0; }
+.document-modal.is-memory-experience .memory-role-actions strong { display: block; font: 600 13px var(--font-serif); color: var(--accent-green); }
+.document-modal.is-memory-experience .memory-role-actions span { display: block; margin-top: 5px; font: 11px/1.45 var(--font-sans); color: var(--ink-soft); }
+.document-modal.is-memory-experience .memory-features { background: var(--archive-feature); }
+.document-modal.is-memory-experience .memory-features header h3, .document-modal.is-memory-experience .memory-data header h3, .document-modal.is-memory-experience .memory-content header h3 { font-size: 14px; }
+.document-modal.is-memory-experience .memory-feature { min-height: 176px; padding-block: 16px; }
+.document-modal.is-memory-experience .memory-feature h4 { font-size: 17px; }
+.document-modal.is-memory-experience .memory-feature p { font-size: 12px; line-height: 1.5; }
+.document-modal.is-memory-experience .memory-data { background: var(--archive-data); }
+.document-modal.is-memory-experience .memory-content { background: var(--archive-content); }
+.document-modal.is-memory-experience .memory-content-browser { grid-template-columns: 42% 58%; }
+.document-modal.is-memory-experience .memory-content-detail { background: var(--archive-page); }
 .document-modal.is-memory-experience .memory-flow-grid { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: center; }
 .document-modal.is-memory-experience .memory-flow-object { min-height: 92px; padding: 14px 10px; border: 1px solid var(--memory-line); display: flex; flex-direction: column; justify-content: center; text-align: center; }
 .document-modal.is-memory-experience .memory-flow-object strong { font: 600 14px/1.4 var(--font-serif); color: var(--ink-strong); }
@@ -1543,6 +1567,8 @@ button {
   .document-modal.is-memory-experience .memory-kpis { grid-template-columns: repeat(2, 1fr); }
   .document-modal.is-memory-experience .memory-month-row { grid-template-columns: 1fr; gap: 5px; }
   .document-modal.is-memory-experience .memory-path > div { gap: 8px; flex-wrap: wrap; }
+  .document-modal.is-memory-experience .memory-role-actions { grid-template-columns: repeat(2, 1fr); }
+  .document-modal.is-memory-experience .memory-role-actions div:nth-child(2) { border-right: 0; }
   .document-modal.is-memory-experience .memory-section { padding: 24px 18px; }
   .document-modal.is-memory-experience .memory-hero { min-height: auto; grid-template-columns: 1fr; }
   .document-modal.is-memory-experience .memory-feature-list, .document-modal.is-memory-experience .memory-content-browser { grid-template-columns: 1fr; }
