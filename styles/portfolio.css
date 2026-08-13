@@ -869,6 +869,16 @@ button {
   transition: filter 240ms ease, transform 240ms var(--ease-editorial);
 }
 
+.object-directory-row[data-object-id="living-tv"] .directory-thumb img {
+  filter: drop-shadow(0 0 3px rgba(152, 91, 67, 0.24));
+}
+
+.object-directory-row[data-object-id="living-tv"]:hover .directory-thumb img,
+.object-directory-row[data-object-id="living-tv"]:focus-visible .directory-thumb img,
+.object-directory-row[data-object-id="living-tv"].is-active .directory-thumb img {
+  filter: drop-shadow(0 0 7px rgba(152, 91, 67, 0.62));
+}
+
 .directory-row.is-active .directory-thumb img,
 .directory-row:hover .directory-thumb img,
 .directory-row:focus-visible .directory-thumb img {

@@ -566,6 +566,7 @@ export const ROOMS = [
         id: "living-tv",
         number: "01",
         label: "【一期】组织档案沉淀 V2.0",
+        directoryImage: "/assets/rooms/objects/living-tv.png",
         documentId: "living-project-space-introduction",
         path: "M 1398 784 L 1410 777 L 1745 977 L 1745 1226 L 1732 1243 L 1398 1045 Z M 1463 1127 L 1492 1121 L 1621 1215 L 1629 1237 L 1619 1244 L 1605 1243 L 1570 1218 L 1463 1141 Z",
         glowImage: {
