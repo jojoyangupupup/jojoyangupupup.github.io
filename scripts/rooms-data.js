@@ -139,21 +139,6 @@ export const ROOMS = [
     ],
     objectHotspots: [
       {
-        id: "garden-cushion-01",
-        number: "02",
-        label: "AI 知识加工台",
-        ariaLabel: "打开 01 号记忆：AI 知识加工台",
-        documentId: "garden-ai-knowledge-platform",
-        path: "M 1174 883 C 1192 866 1228 864 1252 875 L 1314 892 L 1329 923 L 1325 979 L 1301 1011 L 1238 1014 L 1187 1002 L 1168 972 L 1166 919 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/garden-cushion-01.png",
-          x: 1165,
-          y: 865,
-          width: 170,
-          height: 155,
-        },
-      },
-      {
         id: "garden-bike",
         number: "01",
         label: "《会理财更会生活》",
