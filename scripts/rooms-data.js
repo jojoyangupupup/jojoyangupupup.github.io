@@ -165,8 +165,8 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-cushion-02.png",
         ariaLabel: "打开 02 号经历：模型体验台",
         documentId: "garden-model-experience",
-        path: "M 1328 882 C 1349 867 1386 867 1415 879 L 1470 897 L 1486 928 L 1481 978 L 1451 1012 L 1391 1015 L 1342 998 L 1321 969 L 1320 917 Z",
-        glowImage: { file: "/assets/rooms/objects/garden-cushion-02.png", x: 1316, y: 861, width: 178, height: 166 },
+        path: "M 1246 944 C 1267 929 1304 929 1333 941 L 1388 959 L 1404 990 L 1399 1040 L 1369 1074 L 1309 1077 L 1260 1060 L 1239 1031 L 1238 979 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-02.png", x: 1234, y: 923, width: 178, height: 166 },
       },
       {
         id: "garden-bike",
