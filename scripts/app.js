@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=58";
+} from "/scripts/rooms-data.js?v=59";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -555,6 +555,109 @@ function renderMemoryExperience(documentEntry) {
   </article>`;
 }
 
+function modelDataChartMarkup(card, metric = "uv") {
+  const points = card?.points || [];
+  const max = Math.max(...points.map((point) => point[metric]), 1);
+  return points.map((point) => `
+    <div class="model-data-bar-row">
+      <span>${point.date}</span>
+      <i><b style="width:${Math.max(3, point[metric] / max * 100)}%"></b></i>
+      <strong>${point[metric].toLocaleString()}</strong>
+    </div>
+  `).join("");
+}
+
+function modelStageDetailMarkup(model, index = 0) {
+  const stage = model.stages?.[index] || model.stages?.[0];
+  if (!stage) return "";
+  return `<div class="model-detail-kicker"><span>${stage.number}</span><em>阶段卡片</em></div><h4>${stage.title}</h4><p class="model-detail-summary">${stage.summary}</p><ul>${stage.details.map((detail) => `<li>${detail}</li>`).join("")}</ul>${stage.models ? `<div class="model-model-pool"><div><small>已接入模型</small><p>${stage.models.connected.join(" · ")}</p></div><div><small>持续维护能力</small><p>${stage.models.maintained.join(" · ")}</p></div></div>` : ""}`;
+}
+
+function modelPrdPhase(prd) {
+  if (/^1\.|1\.30/.test(prd.time)) return "1.0";
+  if (/2\.0/.test(prd.time)) return "2.0";
+  if (/3\.|3\.16|4\.13|验收/.test(`${prd.time}${prd.number}`)) return "3.0";
+  if (/7\./.test(prd.time)) return "7月";
+  if (/8\./.test(prd.time)) return "8月";
+  return "阶段性";
+}
+
+function modelPrdCardMarkup(prd, index) {
+  return `<button type="button" class="model-prd-card${index === 0 ? " is-active" : ""}" data-model-prd-index="${index}" data-model-prd-phase="${modelPrdPhase(prd)}"><span>${prd.number}</span><strong>${prd.title}</strong><small>${prd.time} · ${prd.theme}</small><em>已完成 / 已上线</em></button>`;
+}
+
+function modelPrdDetailMarkup(model, index = 0) {
+  const prd = model.prds?.[index] || model.prds?.[0];
+  if (!prd) return "";
+  return `<div class="model-detail-kicker"><span>${prd.number}</span><em>${prd.time} · 已完成 / 已上线</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-detail-grid"><div><small>解决了什么</small><p>${prd.summary}</p></div><div><small>完成内容</small><ul>${prd.details.map((detail) => `<li>${detail}</li>`).join("")}</ul></div><div><small>我的工作</small><p>${prd.role}</p></div><div><small>体验变化</small><p>${prd.impact}</p></div></div>`;
+}
+
+function modelOperationDetailMarkup(model, index = 0) {
+  const operation = model.operations?.[index] || model.operations?.[0];
+  if (!operation) return "";
+  return `<div class="model-detail-kicker"><span>${operation.number}</span><em>运营与运维</em></div><h4>${operation.title}</h4><p class="model-detail-summary">${operation.summary}</p><ul>${operation.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><p class="model-detail-result"><b>作用</b>${operation.outcome}</p>`;
+}
+
+function modelFeedbackDetailMarkup(model, index = 0) {
+  const feedback = model.feedback?.[index] || model.feedback?.[0];
+  if (!feedback) return "";
+  return `<div class="model-feedback-detail-block"><span class="model-feedback-label">用户问题</span><h4>${feedback.question}</h4><div class="model-feedback-step"><small>产品动作</small><p>${feedback.action}</p></div><div class="model-feedback-step is-result"><small>迭代结果</small><p>${feedback.result}</p></div></div>`;
+}
+
+function renderModelExperience(documentEntry) {
+  const model = documentEntry.modelExperience;
+  const phaseFilters = ["全部", "1.0", "2.0", "3.0", "7月", "8月", "阶段性"];
+  return `<article class="model-experience" aria-labelledby="model-title-${documentEntry.id}">
+    <section class="model-section model-hero">
+      <div class="model-hero-copy"><p class="model-eyebrow">产品经历 / Product Experience</p><h2 id="model-title-${documentEntry.id}">${documentEntry.title}</h2><p class="model-hero-subtitle">${model.subtitle}</p><p class="model-hero-summary">${model.summary}</p></div>
+      <div class="model-hero-visual" aria-label="模型池到办公任务的路径示意"><div class="model-hero-flow">${model.intro.flow.map((item, index) => `<span><b>${String(index + 1).padStart(2, "0")}</b>${item}</span>${index < model.intro.flow.length - 1 ? "<i>→</i>" : ""}`).join("")}</div><div class="model-hero-grid"><i></i><i></i><i></i><b></b></div></div>
+    </section>
+    <section class="model-section model-intro-section"><header><span class="model-section-number">01</span><h3>体验台介绍</h3></header><div class="model-intro-grid"><div><p class="model-lead">${model.intro.positioning}</p><p>${model.intro.background}</p></div><div class="model-problem-list"><small>要解决的问题</small><ul>${model.intro.problems.map((problem) => `<li>${problem}</li>`).join("")}</ul><p class="model-vision"><b>产品愿景</b>${model.intro.vision}</p></div></div></section>
+    <section class="model-section model-build-section"><header><span class="model-section-number">02</span><h3>从 0 到 1 搭建</h3><p>先确认问题，再把模型能力组织成可体验、可反馈、可复盘的工作入口。</p></header><div class="model-browser model-stage-browser"><nav aria-label="搭建阶段">${model.stages.map((stage, index) => `<button type="button" class="model-stage-card${index === 0 ? " is-active" : ""}" data-model-stage-index="${index}"><span>${stage.number}</span><strong>${stage.title}</strong><small>${stage.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-stage-detail" aria-live="polite">${modelStageDetailMarkup(model, 0)}</div></div></section>
+    <section class="model-section model-iteration-section"><header><span class="model-section-number">03</span><h3>产品迭代</h3><p>把 16 个 PRD 放进上线阶段，逐项说明问题、动作和体验变化。</p></header><div class="model-phase-filters" role="tablist" aria-label="按迭代阶段筛选">${phaseFilters.map((filter, index) => `<button type="button" class="model-phase-filter${index === 0 ? " is-active" : ""}" data-model-prd-filter="${filter}" role="tab" aria-selected="${index === 0}">${filter}</button>`).join("")}</div><div class="model-browser model-prd-browser"><nav class="model-prd-list" aria-label="产品迭代列表">${model.prds.map((prd, index) => modelPrdCardMarkup(prd, index)).join("")}</nav><div class="model-detail-panel model-prd-detail" aria-live="polite">${modelPrdDetailMarkup(model, 0)}</div></div></section>
+    <section class="model-section model-operations-section"><header><span class="model-section-number">04</span><h3>运营与运维</h3><p>让产品持续被理解、被使用、被反馈，也让上线后的问题有人跟进。</p></header><div class="model-browser model-operation-browser"><nav aria-label="运营渠道">${model.operations.map((operation, index) => `<button type="button" class="model-operation-card${index === 0 ? " is-active" : ""}" data-model-operation-index="${index}"><span>${operation.number}</span><strong>${operation.title}</strong><small>${operation.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-operation-detail" aria-live="polite">${modelOperationDetailMarkup(model, 0)}</div></div><div class="model-loop"><div>${model.operationsLoop.map((item, index) => `<span>${item}</span>${index < model.operationsLoop.length - 1 ? "<i>→</i>" : ""}`).join("")}</div><p>${"我不只负责把需求写进 PRD，也持续参与产品上线后的解释、推广、维护、反馈回收和迭代复盘。"}</p></div></section>
+    <section class="model-section model-data-section"><header><span class="model-section-number">05</span><h3>数据效果</h3><p>用真实的 UV / PV 记录观察体验台从冷启动到运营阶段的变化。</p></header><div class="model-browser model-data-browser"><nav class="model-data-card-list" aria-label="数据阶段">${model.data.cards.map((card, index) => `<button type="button" class="model-data-card${index === 0 ? " is-active" : ""}" data-model-data-card-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${card.title}</strong><small>${card.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-data-detail" aria-live="polite"></div></div><div class="model-data-habit"><div><small>使用习惯</small><ul>${model.data.habit.map((item) => `<li>${item}</li>`).join("")}</ul></div><div><small>数据口径</small><ul>${model.data.definitions.map((item) => `<li>${item}</li>`).join("")}</ul></div></div></section>
+    <section class="model-section model-feedback-section"><header><span class="model-section-number">06</span><h3>用户反馈与复盘</h3><p>把用户问题变成产品动作，再回到可验证的迭代结果。</p></header><div class="model-browser model-feedback-browser"><nav class="model-feedback-list" aria-label="用户问题">${model.feedback.map((feedback, index) => `<button type="button" class="model-feedback-card${index === 0 ? " is-active" : ""}" data-model-feedback-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${feedback.question}</strong></button>`).join("")}</nav><div class="model-detail-panel model-feedback-detail" aria-live="polite">${modelFeedbackDetailMarkup(model, 0)}</div></div></section>
+    <section class="model-section model-outcomes-section"><header><span class="model-section-number">07</span><h3>阶段成果</h3><p>从产品搭建到持续运营，形成一套能够继续运行的产品闭环。</p></header><div class="model-outcome-grid">${model.outcomes.map((outcome) => `<article><span>${outcome.number}</span><h4>${outcome.title}</h4><ul>${outcome.items.map((item) => `<li>${item}</li>`).join("")}</ul></article>`).join("")}</div><p class="model-result-summary">${model.resultSummary}</p></section>
+  </article>`;
+}
+
+function renderModelStageDetail(model, index = 0) {
+  const detail = document.querySelector(".model-stage-detail");
+  if (!detail) return;
+  detail.innerHTML = modelStageDetailMarkup(model, index);
+  document.querySelectorAll(".model-stage-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
+}
+
+function renderModelPrdDetail(model, index = 0) {
+  const detail = document.querySelector(".model-prd-detail");
+  if (!detail) return;
+  detail.innerHTML = modelPrdDetailMarkup(model, index);
+  document.querySelectorAll(".model-prd-card").forEach((card) => card.classList.toggle("is-active", Number(card.dataset.modelPrdIndex) === index));
+}
+
+function renderModelOperationDetail(model, index = 0) {
+  const detail = document.querySelector(".model-operation-detail");
+  if (!detail) return;
+  detail.innerHTML = modelOperationDetailMarkup(model, index);
+  document.querySelectorAll(".model-operation-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
+}
+
+function renderModelFeedbackDetail(model, index = 0) {
+  const detail = document.querySelector(".model-feedback-detail");
+  if (!detail) return;
+  detail.innerHTML = modelFeedbackDetailMarkup(model, index);
+  document.querySelectorAll(".model-feedback-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
+}
+
+function renderModelDataDetail(model, cardIndex = 0, metric = "uv") {
+  const card = model.data.cards?.[cardIndex] || model.data.cards?.[0];
+  const detail = document.querySelector(".model-data-detail");
+  if (!detail || !card) return;
+  detail.innerHTML = `<div class="model-detail-kicker"><span>${String(cardIndex + 1).padStart(2, "0")}</span><em>数据阶段</em></div><h4>${card.title}</h4><p class="model-detail-summary">${card.summary}</p><div class="model-data-metric-tabs" role="tablist" aria-label="切换数据指标"><button type="button" class="${metric === "uv" ? "is-active" : ""}" data-model-metric="uv" role="tab" aria-selected="${metric === "uv"}">UV</button><button type="button" class="${metric === "pv" ? "is-active" : ""}" data-model-metric="pv" role="tab" aria-selected="${metric === "pv"}">PV</button></div><div class="model-data-chart"><div class="model-data-chart-axis"><span>日期</span><span>${metric.toUpperCase()} / 人次</span></div>${modelDataChartMarkup(card, metric)}</div><p class="model-data-note">${card.note}</p>`;
+  document.querySelectorAll(".model-data-card").forEach((button, index) => button.classList.toggle("is-active", index === cardIndex));
+}
+
 function renderMemoryContentDetail(memory, index = 0) {
   const data = memory?.memory || memory;
   const item = data?.contentArchive?.[index] || data?.contentArchive?.[0];
@@ -690,6 +793,9 @@ function renderDocumentPages(documents) {
     }
     if (documentEntry.contentType === "memory") {
       return renderMemoryExperience(documentEntry);
+    }
+    if (documentEntry.contentType === "model-experience") {
+      return renderModelExperience(documentEntry);
     }
     if (documentEntry.contentType === "text") {
       return `
@@ -965,6 +1071,7 @@ function renderDocumentModalView(documents, scrollTop = 0) {
     documents.length > 0 && documents.every((documentEntry) => documentEntry.transparentPages),
   );
   documentModal.classList.toggle("is-memory-experience", documents.some((documentEntry) => documentEntry.contentType === "memory"));
+  documentModal.classList.toggle("is-model-experience", documents.some((documentEntry) => documentEntry.contentType === "model-experience"));
   documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
   documentModalScroll.scrollTop = scrollTop;
   documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
@@ -997,6 +1104,50 @@ function enterMemoryExperience(trigger) {
     documentPages.addEventListener("click", (event) => {
       const tab = event.target.closest?.(".memory-kpi");
       if (tab) renderMemoryMetricDetail(memoryEntry, Number(tab.dataset.memoryKpiIndex));
+    });
+  });
+}
+
+function enterModelExperience(trigger) {
+  const experience = documentPages.querySelector(".model-experience");
+  if (!experience) return;
+  window.requestAnimationFrame(() => {
+    const panel = experience.getBoundingClientRect();
+    const origin = trigger?.getBoundingClientRect();
+    if (origin) {
+      experience.style.setProperty("--model-origin-x", `${origin.left + origin.width / 2 - panel.left}px`);
+      experience.style.setProperty("--model-origin-y", `${origin.top + origin.height / 2 - panel.top}px`);
+    }
+    experience.classList.add("is-entered");
+    const modelEntry = activeModalDocuments.find((entry) => entry.contentType === "model-experience");
+    const model = modelEntry?.modelExperience;
+    if (!model) return;
+    renderModelDataDetail(model, 0, "uv");
+    documentPages.querySelectorAll("[data-model-stage-index]").forEach((button) => button.addEventListener("click", () => renderModelStageDetail(model, Number(button.dataset.modelStageIndex))));
+    documentPages.querySelectorAll("[data-model-prd-index]").forEach((button) => button.addEventListener("click", () => renderModelPrdDetail(model, Number(button.dataset.modelPrdIndex))));
+    documentPages.querySelectorAll("[data-model-prd-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.modelPrdFilter;
+        documentPages.querySelectorAll("[data-model-prd-filter]").forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle("is-active", selected);
+          item.setAttribute("aria-selected", String(selected));
+        });
+        documentPages.querySelectorAll("[data-model-prd-index]").forEach((card) => {
+          card.hidden = filter !== "全部" && card.dataset.modelPrdPhase !== filter;
+        });
+        const firstVisible = [...documentPages.querySelectorAll("[data-model-prd-index]")].find((card) => !card.hidden);
+        if (firstVisible) renderModelPrdDetail(model, Number(firstVisible.dataset.modelPrdIndex));
+      });
+    });
+    documentPages.querySelectorAll("[data-model-operation-index]").forEach((button) => button.addEventListener("click", () => renderModelOperationDetail(model, Number(button.dataset.modelOperationIndex))));
+    documentPages.querySelectorAll("[data-model-feedback-index]").forEach((button) => button.addEventListener("click", () => renderModelFeedbackDetail(model, Number(button.dataset.modelFeedbackIndex))));
+    documentPages.querySelectorAll("[data-model-data-card-index]").forEach((button) => button.addEventListener("click", () => renderModelDataDetail(model, Number(button.dataset.modelDataCardIndex), "uv")));
+    documentPages.addEventListener("click", (event) => {
+      const metric = event.target.closest?.("[data-model-metric]");
+      if (!metric) return;
+      const activeCard = [...documentPages.querySelectorAll("[data-model-data-card-index]")].find((button) => button.classList.contains("is-active"));
+      renderModelDataDetail(model, activeCard ? Number(activeCard.dataset.modelDataCardIndex) : 0, metric.dataset.modelMetric);
     });
   });
 }
@@ -1036,6 +1187,7 @@ function openDocumentModal(room, object, documents, trigger, { pushCurrent = fal
   document.body.classList.add("is-document-open");
   documentModalClose.focus({ preventScroll: true });
   if (documents.some((documentEntry) => documentEntry.contentType === "memory")) enterMemoryExperience(trigger);
+  if (documents.some((documentEntry) => documentEntry.contentType === "model-experience")) enterModelExperience(trigger);
 }
 
 function closeOrReturnDocument() {
@@ -1050,12 +1202,13 @@ function closeOrReturnDocument() {
 
 function closeDocumentModal(restoreFocus = true) {
   if (documentModal.hidden) return;
-  const memoryExperience = documentPages.querySelector(".memory-experience.is-entered");
-  if (memoryExperience && !documentModal.classList.contains("is-memory-closing")) {
-    documentModal.classList.add("is-memory-closing");
-    memoryExperience.classList.remove("is-entered");
+  const experience = documentPages.querySelector(".memory-experience.is-entered, .model-experience.is-entered");
+  const experienceClosingClass = documentModal.classList.contains("is-model-experience") ? "is-model-closing" : "is-memory-closing";
+  if (experience && !documentModal.classList.contains(experienceClosingClass)) {
+    documentModal.classList.add(experienceClosingClass);
+    experience.classList.remove("is-entered");
     window.setTimeout(() => {
-      documentModal.classList.remove("is-memory-closing");
+      documentModal.classList.remove("is-memory-closing", "is-model-closing");
       closeDocumentModal(restoreFocus);
     }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 100 : 400);
     return;
@@ -1064,7 +1217,7 @@ function closeDocumentModal(restoreFocus = true) {
   documentModal.hidden = true;
   documentModal.setAttribute("aria-hidden", "true");
   documentPages.replaceChildren();
-  documentModal.classList.remove("is-transparent-document", "is-memory-experience", "is-memory-closing");
+  documentModal.classList.remove("is-transparent-document", "is-memory-experience", "is-memory-closing", "is-model-experience", "is-model-closing");
   document.body.classList.remove("is-document-open");
   if (restoreFocus) documentReturnFocus?.focus({ preventScroll: true });
   documentReturnFocus = null;
@@ -1568,8 +1721,9 @@ document.addEventListener("keydown", (event) => {
   if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
     console.log("TODO: switch product experience", event.key);
   }
-  if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && event.key === "Tab") {
-    const focusable = [documentModalClose, ...documentModal.querySelectorAll('.memory-experience [tabindex="0"]')];
+  if (!documentModal.hidden && (documentModal.classList.contains("is-memory-experience") || documentModal.classList.contains("is-model-experience")) && event.key === "Tab") {
+    const experience = documentModal.querySelector(".memory-experience, .model-experience");
+    const focusable = [documentModalClose, ...(experience ? experience.querySelectorAll("button, [href], [tabindex=\"0\"]") : [])].filter((element, index, list) => element && !element.disabled && !element.hidden && list.indexOf(element) === index);
     const currentIndex = focusable.indexOf(document.activeElement);
     if (event.shiftKey && currentIndex <= 0) {
       event.preventDefault();

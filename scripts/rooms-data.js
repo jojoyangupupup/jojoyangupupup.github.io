@@ -1,3 +1,5 @@
+import { MODEL_EXPERIENCE_DOCUMENT } from "/scripts/model-experience-data.js?v=1";
+
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-decorated.png?v=2";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
 export const SHOW_HOTSPOTS = false;
@@ -143,6 +145,7 @@ export const ROOMS = [
           ],
         },
       },
+      MODEL_EXPERIENCE_DOCUMENT,
     ],
     objectHotspots: [
       {
@@ -154,6 +157,16 @@ export const ROOMS = [
         documentId: "garden-ai-knowledge-platform",
         path: "M 1174 883 C 1192 866 1228 864 1252 875 L 1314 892 L 1329 923 L 1325 979 L 1301 1011 L 1238 1014 L 1187 1002 L 1168 972 L 1166 919 Z",
         glowImage: { file: "/assets/rooms/objects/garden-cushion-01.png", x: 1165, y: 865, width: 170, height: 155 },
+      },
+      {
+        id: "garden-cushion-02",
+        number: "03",
+        label: "模型体验台",
+        directoryImage: "/assets/rooms/objects/garden-cushion-02.png",
+        ariaLabel: "打开 02 号经历：模型体验台",
+        documentId: "garden-model-experience",
+        path: "M 1328 882 C 1349 867 1386 867 1415 879 L 1470 897 L 1486 928 L 1481 978 L 1451 1012 L 1391 1015 L 1342 998 L 1321 969 L 1320 917 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-02.png", x: 1316, y: 861, width: 178, height: 166 },
       },
       {
         id: "garden-bike",
