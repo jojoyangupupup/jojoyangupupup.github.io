@@ -18,6 +18,7 @@ export const ROOMS = [
     title: "Garden",
     path: "/rooms/garden",
     image: "/assets/rooms/garden-cutout.png",
+    directoryImage: "/assets/rooms/home-directory-flower.png",
     alt: "Isometric garden terrace with plants, wicker seating, and a bicycle",
     description: "A category for experimental image-making and visual studies.",
     projects: [
@@ -183,6 +184,7 @@ export const ROOMS = [
     title: "Kitchen",
     path: "/rooms/kitchen",
     image: "/assets/rooms/kitchen-cutout.png",
+    directoryImage: "/assets/rooms/home-directory-tableware.png",
     alt: "Isometric kitchen and dining room with timber cabinetry and a dining table",
     description: "A category for systems, identity, and structured design practice.",
     projects: [
@@ -526,6 +528,7 @@ export const ROOMS = [
     title: "Living Room",
     path: "/rooms/living",
     image: "/assets/rooms/living-cutout.png",
+    directoryImage: "/assets/rooms/home-directory-sofa.png",
     alt: "Isometric living room with green sofa, media console, and a round coffee table",
     description: "A category for selected visual narratives and interactive work.",
     projects: [
@@ -597,6 +600,7 @@ export const ROOMS = [
     title: "Study",
     path: "/rooms/study",
     image: "/assets/rooms/study-cutout.png",
+    directoryImage: "/assets/rooms/home-directory-book.png",
     alt: "Isometric study with dark timber bookshelves, floral seating, and an easel",
     description: "A category for research-led, editorial, and reflective projects.",
     projects: [
