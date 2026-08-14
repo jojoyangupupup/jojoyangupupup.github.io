@@ -843,6 +843,16 @@ button {
   outline-offset: -2px;
 }
 
+.room-directory-row .directory-thumb img {
+  filter: drop-shadow(0 0 3px rgba(176, 138, 74, 0.22));
+}
+
+.room-directory-row:hover .directory-thumb img,
+.room-directory-row:focus-visible .directory-thumb img,
+.room-directory-row.is-active .directory-thumb img {
+  filter: drop-shadow(0 0 5px rgba(176, 138, 74, 0.48));
+}
+
 .directory-row.is-muted {
   opacity: 0.55;
 }
