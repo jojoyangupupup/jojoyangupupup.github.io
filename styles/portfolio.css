@@ -3480,6 +3480,50 @@ button {
 .model-prd-detail-grid > div { min-width: 0; }
 .model-prd-detail-grid p { margin: 0; font-size: 13px; }
 .model-prd-detail-grid ul { margin-top: 0; }
+.model-prd-prelude-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px 22px;
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px dashed var(--model-line);
+}
+.model-prd-prelude-block { min-width: 0; padding-top: 3px; }
+.model-prd-prelude-block small {
+  display: block;
+  margin-bottom: 7px;
+  font: 10px/1 var(--font-mono, monospace);
+  letter-spacing: .08em;
+  color: var(--model-rust);
+}
+.model-prd-prelude-block h5 {
+  margin: 0 0 8px;
+  font: 600 15px/1.4 var(--font-serif, Georgia, serif);
+  color: var(--model-ink);
+}
+.model-prd-prelude-block ul { margin: 0; padding: 0; list-style: none; }
+.model-prd-prelude-block li {
+  position: relative;
+  margin: 0 0 6px;
+  padding-left: 13px;
+  font: 12px/1.55 var(--font-serif, Georgia, serif);
+  color: var(--model-soft);
+}
+.model-prd-prelude-block li::before {
+  content: "";
+  position: absolute;
+  top: .7em;
+  left: 0;
+  width: 5px;
+  height: 1px;
+  background: var(--model-rust);
+}
+.model-prd-prelude-block:last-child {
+  grid-column: 1 / -1;
+  padding-top: 13px;
+  border-top: 1px dashed var(--model-line);
+}
+.model-prd-prelude-block:last-child h5 { color: var(--model-green); }
 
 .model-operation-card { grid-template-columns: 34px 1fr; gap: 4px 8px; padding: 14px; }
 .model-operation-card small { grid-column: 2; }
@@ -3612,6 +3656,8 @@ button {
   .model-detail-panel { min-height: 300px; padding: 22px 18px; }
   .model-prd-list { grid-template-columns: 1fr; max-height: none; overflow: visible; }
   .model-prd-detail-grid { grid-template-columns: 1fr; gap: 15px; }
+  .model-prd-prelude-grid { grid-template-columns: 1fr; gap: 15px; }
+  .model-prd-prelude-block:last-child { grid-column: auto; }
   .model-feedback-list { grid-template-columns: 1fr; }
   .model-operation-distinction, .model-operation-detail-grid { grid-template-columns: 1fr; }
   .model-operation-mode-panel .model-operation-browser nav { grid-template-columns: 1fr; }
