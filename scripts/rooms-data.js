@@ -148,6 +148,7 @@ export const ROOMS = [
         id: "garden-cushion-01",
         number: "02",
         label: "AI 知识加工台",
+        directoryImage: "/assets/rooms/objects/garden-cushion-01.png",
         ariaLabel: "打开 01 号记忆：AI 知识加工台",
         documentId: "garden-ai-knowledge-platform",
         path: "M 1174 883 C 1192 866 1228 864 1252 875 L 1314 892 L 1329 923 L 1325 979 L 1301 1011 L 1238 1014 L 1187 1002 L 1168 972 L 1166 919 Z",
@@ -157,6 +158,7 @@ export const ROOMS = [
         id: "garden-bike",
         number: "01",
         label: "《会理财更会生活》",
+        directoryImage: "/assets/rooms/objects/garden-bike.png",
         documentIds: ["garden-finance-video", "garden-finance-introduction"],
         path: "M 520 1370 C 522 1328 568 1312 625 1320 L 682 1368 L 817 1360 L 859 1395 L 876 1464 L 900 1533 L 888 1625 L 848 1688 L 789 1695 L 744 1650 L 705 1574 L 650 1542 L 604 1518 L 548 1494 L 520 1438 Z",
         glowImage: {
