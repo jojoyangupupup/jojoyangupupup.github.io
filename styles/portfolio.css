@@ -3677,7 +3677,6 @@ button {
 .model-outcome-grid article { padding: 19px 0 16px; border-top: 1px solid var(--model-line); }
 .model-outcome-grid article > span { font: 11px/1 var(--font-mono, monospace); color: var(--model-rust); }
 .model-outcome-grid h4 { margin: 10px 0 11px; font: 600 17px/1.3 var(--font-serif, Georgia, serif); }
-.model-result-summary { max-width: 62em; margin: 28px 0 0 !important; padding: 18px 0 0; border-top: 1px dashed var(--model-line); font-size: 15px !important; color: var(--model-ink) !important; }
 
 @media (max-width: 767px) {
   .document-modal.is-model-experience .document-modal-scroll { padding: 72px 12px 28px; }
