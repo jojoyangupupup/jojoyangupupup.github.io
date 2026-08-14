@@ -3492,6 +3492,76 @@ button {
 .model-loop i { color: var(--model-rust); font: 12px/1 var(--font-mono, monospace); font-style: normal; }
 .model-loop p { margin: 18px 0 0; font-size: 13px; color: var(--model-soft); }
 
+.model-operation-modes {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(118px, 1fr));
+  margin: -4px 0 18px;
+  border: 1px solid var(--model-line);
+  background: var(--model-warm);
+}
+.model-operation-mode {
+  min-height: 38px;
+  padding: 8px 15px;
+  border: 0;
+  border-right: 1px solid var(--model-line);
+  background: transparent;
+  color: var(--model-soft);
+  cursor: pointer;
+  font: 600 12px/1 var(--font-sans, Arial, sans-serif);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.model-operation-mode:last-child { border-right: 0; }
+.model-operation-mode:hover { color: var(--model-rust); }
+.model-operation-mode.is-active { background: rgba(176, 138, 74, .16); color: var(--model-rust); }
+.model-operation-distinction {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 28px;
+  margin: 0 0 24px;
+}
+.model-operation-distinction p {
+  margin: 0;
+  padding: 10px 13px;
+  border-left: 2px solid var(--model-rust);
+  background: rgba(176, 138, 74, .08);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.model-operation-distinction p + p {
+  border-left-color: var(--model-green);
+  background: rgba(92, 107, 90, .08);
+}
+.model-operation-distinction b { margin-right: 7px; color: var(--model-ink); font-weight: 600; }
+.model-operation-mode-panel[hidden] { display: none; }
+.model-operation-mode-panel[data-model-operation-panel="maintenance"] .model-operation-mode,
+.model-operation-mode-panel[data-model-operation-panel="maintenance"] .model-operation-card.is-active { border-left-color: var(--model-green); }
+.model-operation-mode-panel[data-model-operation-panel="promotion"] .model-operation-card.is-active { border-left-color: var(--model-rust); background: rgba(176, 138, 74, .1); }
+.model-operation-mode-panel[data-model-operation-panel="maintenance"] .model-detail-panel { border-top-color: var(--model-green); background: #f0f2ee; }
+.model-operation-mode-panel[data-model-operation-panel="maintenance"] .model-loop span { background: #f0f2ee; }
+.model-operation-mode-panel .model-operation-browser nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.model-operation-mode-panel .model-operation-card { min-height: 104px; }
+.model-operation-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 22px;
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px dashed var(--model-line);
+}
+.model-operation-detail-field { min-width: 0; }
+.model-operation-detail-field small {
+  display: block;
+  margin-bottom: 7px;
+  font: 10px/1 var(--font-mono, monospace);
+  letter-spacing: .08em;
+  color: var(--model-rust);
+}
+.model-operation-mode-panel[data-model-operation-panel="maintenance"] .model-operation-detail-field small { color: var(--model-green); }
+.model-operation-detail-field p { margin: 0; font-size: 12px; line-height: 1.6; color: var(--model-ink); }
+.model-operation-detail-field ul { margin: 0; }
+.model-operation-detail-field li { margin-bottom: 6px; font-size: 12px; line-height: 1.55; }
+.model-operation-mode-panel .model-operation-browser .model-detail-panel { min-height: 470px; }
+
 .model-data-section { background: #f0f2ee; }
 .model-data-card-list { align-content: start; }
 .model-data-card { grid-template-columns: 32px 1fr; gap: 4px 8px; padding: 16px 14px; }
@@ -3543,6 +3613,9 @@ button {
   .model-prd-list { grid-template-columns: 1fr; max-height: none; overflow: visible; }
   .model-prd-detail-grid { grid-template-columns: 1fr; gap: 15px; }
   .model-feedback-list { grid-template-columns: 1fr; }
+  .model-operation-distinction, .model-operation-detail-grid { grid-template-columns: 1fr; }
+  .model-operation-mode-panel .model-operation-browser nav { grid-template-columns: 1fr; }
+  .model-operation-mode-panel .model-operation-browser .model-detail-panel { min-height: 0; }
   .model-outcome-grid { grid-template-columns: 1fr; gap: 0; }
   .model-loop > div { align-items: flex-start; }
   .model-loop i { padding-top: 7px; }

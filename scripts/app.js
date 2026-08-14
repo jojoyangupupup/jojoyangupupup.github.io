@@ -593,10 +593,31 @@ function modelPrdDetailMarkup(model, index = 0) {
   return `<div class="model-detail-kicker"><span>${prd.number}</span><em>${prd.time} · 已完成 / 已上线</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-detail-grid"><div><small>解决了什么</small><p>${prd.summary}</p></div><div><small>完成内容</small><ul>${prd.details.map((detail) => `<li>${detail}</li>`).join("")}</ul></div><div><small>我的工作</small><p>${prd.role}</p></div><div><small>体验变化</small><p>${prd.impact}</p></div></div>`;
 }
 
-function modelOperationDetailMarkup(model, index = 0) {
-  const operation = model.operations?.[index] || model.operations?.[0];
+function modelOperationDetailMarkup(model, mode = "promotion", index = 0) {
+  const group = model.operationModes?.[mode];
+  const operation = group?.cards?.[index] || group?.cards?.[0];
   if (!operation) return "";
-  return `<div class="model-detail-kicker"><span>${operation.number}</span><em>运营与运维</em></div><h4>${operation.title}</h4><p class="model-detail-summary">${operation.summary}</p><ul>${operation.details.map((detail) => `<li>${detail}</li>`).join("")}</ul><p class="model-detail-result"><b>作用</b>${operation.outcome}</p>`;
+  const detail = operation.detail || {};
+  const fields = mode === "promotion"
+    ? [
+      ["运营目标", detail.goal],
+      ["主要内容", detail.content],
+      ["具体动作", detail.actions],
+      ["用户触点", detail.touchpoint],
+      ["复盘方式", detail.review],
+    ]
+    : [
+      ["维护对象", detail.target],
+      ["维护动作", detail.actions],
+      ["常见问题", detail.issues],
+      ["处理方式", detail.handling],
+      ["最终保障", detail.guarantee],
+    ];
+  const fieldMarkup = fields.map(([label, value]) => {
+    const isList = Array.isArray(value);
+    return `<div class="model-operation-detail-field"><small>${label}</small>${isList ? `<ul>${value.map((item) => `<li>${item}</li>`).join("")}</ul>` : `<p>${String(value || "").replace(/\n/g, "<br>")}</p>`}</div>`;
+  }).join("");
+  return `<div class="model-detail-kicker"><span>${operation.number}</span><em>${group.label}</em></div><h4>${operation.title}</h4><p class="model-detail-summary">${operation.summary}</p><div class="model-operation-detail-grid">${fieldMarkup}</div>`;
 }
 
 function modelFeedbackDetailMarkup(model, index = 0) {
@@ -616,7 +637,7 @@ function renderModelExperience(documentEntry) {
     <section class="model-section model-intro-section"><header><span class="model-section-number">01</span><h3>体验台介绍</h3></header><div class="model-intro-grid"><div><p class="model-lead">${model.intro.positioning}</p><p>${model.intro.background}</p></div><div class="model-problem-list"><small>要解决的问题</small><ul>${model.intro.problems.map((problem) => `<li>${problem}</li>`).join("")}</ul><p class="model-vision"><b>产品愿景</b>${model.intro.vision}</p></div></div></section>
     <section class="model-section model-build-section"><header><span class="model-section-number">02</span><h3>从 0 到 1 搭建</h3><p>先确认问题，再把模型能力组织成可体验、可反馈、可复盘的工作入口。</p></header><div class="model-browser model-stage-browser"><nav aria-label="搭建阶段">${model.stages.map((stage, index) => `<button type="button" class="model-stage-card${index === 0 ? " is-active" : ""}" data-model-stage-index="${index}"><span>${stage.number}</span><strong>${stage.title}</strong><small>${stage.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-stage-detail" aria-live="polite">${modelStageDetailMarkup(model, 0)}</div></div></section>
     <section class="model-section model-iteration-section"><header><span class="model-section-number">03</span><h3>产品迭代</h3><p>把 16 个 PRD 放进上线阶段，逐项说明问题、动作和体验变化。</p></header><div class="model-phase-filters" role="tablist" aria-label="按迭代阶段筛选">${phaseFilters.map((filter, index) => `<button type="button" class="model-phase-filter${index === 0 ? " is-active" : ""}" data-model-prd-filter="${filter}" role="tab" aria-selected="${index === 0}">${filter}</button>`).join("")}</div><div class="model-browser model-prd-browser"><nav class="model-prd-list" aria-label="产品迭代列表">${model.prds.map((prd, index) => modelPrdCardMarkup(prd, index)).join("")}</nav><div class="model-detail-panel model-prd-detail" aria-live="polite">${modelPrdDetailMarkup(model, 0)}</div></div></section>
-    <section class="model-section model-operations-section"><header><span class="model-section-number">04</span><h3>运营与运维</h3><p>让产品持续被理解、被使用、被反馈，也让上线后的问题有人跟进。</p></header><div class="model-browser model-operation-browser"><nav aria-label="运营渠道">${model.operations.map((operation, index) => `<button type="button" class="model-operation-card${index === 0 ? " is-active" : ""}" data-model-operation-index="${index}"><span>${operation.number}</span><strong>${operation.title}</strong><small>${operation.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-operation-detail" aria-live="polite">${modelOperationDetailMarkup(model, 0)}</div></div><div class="model-loop"><div>${model.operationsLoop.map((item, index) => `<span>${item}</span>${index < model.operationsLoop.length - 1 ? "<i>→</i>" : ""}`).join("")}</div><p>${"我不只负责把需求写进 PRD，也持续参与产品上线后的解释、推广、维护、反馈回收和迭代复盘。"}</p></div></section>
+    <section class="model-section model-operations-section"><header><span class="model-section-number">04</span><h3>运营与运维</h3><p>让用户知道模型体验台，也让产品持续稳定地运行。</p></header><div class="model-operation-modes" role="tablist" aria-label="选择工作类型"><button type="button" class="model-operation-mode is-active" data-model-operation-switch="promotion" role="tab" aria-selected="true">运营推广</button><button type="button" class="model-operation-mode" data-model-operation-switch="maintenance" role="tab" aria-selected="false">产品运维</button></div><div class="model-operation-distinction"><p><b>运营推广</b>让用户知道产品、理解功能、愿意尝试和持续使用。</p><p><b>产品运维</b>保证产品持续可用、信息准确、版本稳定、问题被处理。</p></div>${Object.entries(model.operationModes).map(([mode, group]) => `<div class="model-operation-mode-panel${mode === "promotion" ? " is-active" : ""}" data-model-operation-panel="${mode}"${mode === "promotion" ? "" : " hidden"}><div class="model-browser model-operation-browser"><nav aria-label="${group.label}">${group.cards.map((operation, index) => `<button type="button" class="model-operation-card${index === 0 ? " is-active" : ""}" data-model-operation-index="${index}" data-model-operation-mode="${mode}"><span>${operation.number}</span><strong>${operation.title}</strong><small>${operation.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-operation-detail" aria-live="polite">${modelOperationDetailMarkup(model, mode, 0)}</div></div><div class="model-loop"><div>${group.loop.map((item, index) => `<span>${item}</span>${index < group.loop.length - 1 ? "<i>→</i>" : ""}`).join("")}</div></div></div>`).join("")}</section>
     <section class="model-section model-data-section"><header><span class="model-section-number">05</span><h3>数据效果</h3><p>用真实的 UV / PV 记录观察体验台从冷启动到运营阶段的变化。</p></header><div class="model-browser model-data-browser"><nav class="model-data-card-list" aria-label="数据阶段">${model.data.cards.map((card, index) => `<button type="button" class="model-data-card${index === 0 ? " is-active" : ""}" data-model-data-card-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${card.title}</strong><small>${card.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-data-detail" aria-live="polite"></div></div><div class="model-data-habit"><div><small>使用习惯</small><ul>${model.data.habit.map((item) => `<li>${item}</li>`).join("")}</ul></div><div><small>数据口径</small><ul>${model.data.definitions.map((item) => `<li>${item}</li>`).join("")}</ul></div></div></section>
     <section class="model-section model-feedback-section"><header><span class="model-section-number">06</span><h3>用户反馈与复盘</h3><p>把用户问题变成产品动作，再回到可验证的迭代结果。</p></header><div class="model-browser model-feedback-browser"><nav class="model-feedback-list" aria-label="用户问题">${model.feedback.map((feedback, index) => `<button type="button" class="model-feedback-card${index === 0 ? " is-active" : ""}" data-model-feedback-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${feedback.question}</strong></button>`).join("")}</nav><div class="model-detail-panel model-feedback-detail" aria-live="polite">${modelFeedbackDetailMarkup(model, 0)}</div></div></section>
     <section class="model-section model-outcomes-section"><header><span class="model-section-number">07</span><h3>阶段成果</h3><p>从产品搭建到持续运营，形成一套能够继续运行的产品闭环。</p></header><div class="model-outcome-grid">${model.outcomes.map((outcome) => `<article><span>${outcome.number}</span><h4>${outcome.title}</h4><ul>${outcome.items.map((item) => `<li>${item}</li>`).join("")}</ul></article>`).join("")}</div><p class="model-result-summary">${model.resultSummary}</p></section>
@@ -637,11 +658,26 @@ function renderModelPrdDetail(model, index = 0) {
   document.querySelectorAll(".model-prd-card").forEach((card) => card.classList.toggle("is-active", Number(card.dataset.modelPrdIndex) === index));
 }
 
-function renderModelOperationDetail(model, index = 0) {
-  const detail = document.querySelector(".model-operation-detail");
-  if (!detail) return;
-  detail.innerHTML = modelOperationDetailMarkup(model, index);
-  document.querySelectorAll(".model-operation-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
+function renderModelOperationDetail(model, mode = "promotion", index = 0) {
+  const panel = document.querySelector(`[data-model-operation-panel="${mode}"]`);
+  const detail = panel?.querySelector(".model-operation-detail");
+  const cards = panel?.querySelectorAll(".model-operation-card");
+  if (!detail || !cards) return;
+  detail.innerHTML = modelOperationDetailMarkup(model, mode, index);
+  cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
+}
+
+function renderModelOperationMode(mode = "promotion") {
+  document.querySelectorAll("[data-model-operation-switch]").forEach((button) => {
+    const active = button.dataset.modelOperationSwitch === mode;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  document.querySelectorAll("[data-model-operation-panel]").forEach((panel) => {
+    const active = panel.dataset.modelOperationPanel === mode;
+    panel.hidden = !active;
+    panel.classList.toggle("is-active", active);
+  });
 }
 
 function renderModelFeedbackDetail(model, index = 0) {
@@ -1141,7 +1177,8 @@ function enterModelExperience(trigger) {
         if (firstVisible) renderModelPrdDetail(model, Number(firstVisible.dataset.modelPrdIndex));
       });
     });
-    documentPages.querySelectorAll("[data-model-operation-index]").forEach((button) => button.addEventListener("click", () => renderModelOperationDetail(model, Number(button.dataset.modelOperationIndex))));
+    documentPages.querySelectorAll("[data-model-operation-switch]").forEach((button) => button.addEventListener("click", () => renderModelOperationMode(button.dataset.modelOperationSwitch)));
+    documentPages.querySelectorAll("[data-model-operation-index]").forEach((button) => button.addEventListener("click", () => renderModelOperationDetail(model, button.dataset.modelOperationMode, Number(button.dataset.modelOperationIndex))));
     documentPages.querySelectorAll("[data-model-feedback-index]").forEach((button) => button.addEventListener("click", () => renderModelFeedbackDetail(model, Number(button.dataset.modelFeedbackIndex))));
     documentPages.querySelectorAll("[data-model-data-card-index]").forEach((button) => button.addEventListener("click", () => renderModelDataDetail(model, Number(button.dataset.modelDataCardIndex), "uv")));
     documentPages.addEventListener("click", (event) => {
