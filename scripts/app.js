@@ -605,20 +605,34 @@ function modelPrdPhase(prd) {
   return "阶段性";
 }
 
-function modelPrdCardMarkup(prd, index, activeIndex = 3) {
-  return `<button type="button" class="model-prd-card${index === activeIndex ? " is-active" : ""}" data-model-prd-index="${index}" data-model-prd-phase="${modelPrdPhase(prd)}"><span>${prd.number}</span><strong>${prd.title}</strong><small>${prd.time} · ${prd.theme}</small><em>${prd.status || "已完成 / 已上线"}</em></button>`;
+function modelPrdCardMarkup(prd, index, activeIndex = 3, displayNumber = String(index + 1).padStart(2, "0")) {
+  return `<button type="button" class="model-prd-card${index === activeIndex ? " is-active" : ""}" data-model-prd-index="${index}" data-model-prd-phase="${modelPrdPhase(prd)}" data-model-prd-source-number="${prd.number}"><span>${displayNumber}</span><strong>${prd.title}</strong><small>${prd.time} · ${prd.theme}</small><em>${prd.status || "已完成 / 已上线"}</em></button>`;
 }
 
-function modelPrdDetailMarkup(model, index = 0) {
+function updateModelPrdDisplayNumbers(filter = "全部") {
+  const cards = [...document.querySelectorAll("[data-model-prd-index]")];
+  const visibleCards = cards.filter((card) => filter === "全部" || card.dataset.modelPrdPhase === filter);
+  cards.forEach((card) => {
+    const position = visibleCards.indexOf(card);
+    card.querySelector("span").textContent = position >= 0 ? String(position + 1).padStart(2, "0") : card.dataset.modelPrdSourceNumber;
+  });
+}
+
+function modelPrdDisplayNumber(index) {
+  return document.querySelector(`[data-model-prd-index="${index}"] span`)?.textContent || "";
+}
+
+function modelPrdDetailMarkup(model, index = 0, displayNumber = "") {
   const prd = model.prds?.[index] || model.prds?.[0];
   if (!prd) return "";
   const status = prd.status || "已完成 / 已上线";
+  const detailNumber = displayNumber || prd.number;
   const phaseLabel = prd.time?.includes("｜") ? prd.time.split("｜").slice(1).join("｜") : prd.time;
   if (prd.detailSections) {
     const sections = prd.detailSections.map((section) => `<div class="model-prd-prelude-block"><small>${section.label}</small><h5>${section.title}</h5><ul>${section.items.map((item) => `<li>${item}</li>`).join("")}</ul></div>`).join("");
-    return `<div class="model-detail-kicker"><span>${prd.number}</span><em>${phaseLabel} · ${status}</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-prelude-grid">${sections}</div>`;
+    return `<div class="model-detail-kicker"><span>${detailNumber}</span><em>${phaseLabel} · ${status}</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-prelude-grid">${sections}</div>`;
   }
-  return `<div class="model-detail-kicker"><span>${prd.number}</span><em>${phaseLabel} · ${status}</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-detail-grid"><div><small>解决了什么</small><p>${prd.summary}</p></div><div><small>完成内容</small><ul>${prd.details.map((detail) => `<li>${detail}</li>`).join("")}</ul></div><div><small>我的工作</small><p>${prd.role}</p></div><div><small>体验变化</small><p>${prd.impact}</p></div></div>`;
+  return `<div class="model-detail-kicker"><span>${detailNumber}</span><em>${phaseLabel} · ${status}</em></div><h4>${prd.title}</h4><p class="model-detail-summary">${prd.theme}</p><div class="model-prd-detail-grid"><div><small>解决了什么</small><p>${prd.summary}</p></div><div><small>完成内容</small><ul>${prd.details.map((detail) => `<li>${detail}</li>`).join("")}</ul></div><div><small>我的工作</small><p>${prd.role}</p></div><div><small>体验变化</small><p>${prd.impact}</p></div></div>`;
 }
 
 function modelOperationDetailMarkup(model, mode = "promotion", index = 0) {
@@ -664,7 +678,7 @@ function renderModelExperience(documentEntry) {
     </section>
     <section class="model-section model-intro-section"><header><span class="model-section-number">01</span><h3>体验台介绍</h3></header><div class="model-intro-grid"><div><p class="model-lead">${model.intro.positioning}</p><p>${model.intro.background}</p></div><div class="model-problem-list"><small>要解决的问题</small><ul>${model.intro.problems.map((problem) => `<li>${problem}</li>`).join("")}</ul><p class="model-vision"><b>产品愿景</b>${model.intro.vision}</p></div></div></section>
     <section class="model-section model-build-section"><header><span class="model-section-number">02</span><h3>从 0 到 1 搭建</h3><p>先确认问题，再把模型能力组织成可体验、可反馈、可复盘的工作入口。</p></header><div class="model-browser model-stage-browser"><nav aria-label="搭建阶段">${model.stages.map((stage, index) => `<button type="button" class="model-stage-card${index === 0 ? " is-active" : ""}" data-model-stage-index="${index}"><span>${stage.number}</span><strong>${stage.title}</strong><small>${stage.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-stage-detail" aria-live="polite">${modelStageDetailMarkup(model, 0)}</div></div></section>
-    <section class="model-section model-iteration-section"><header><span class="model-section-number">03</span><h3>产品迭代</h3><p>把 19 个 PRD 放进上线阶段，逐项说明问题、动作和体验变化。</p></header><div class="model-phase-filters" role="tablist" aria-label="按迭代阶段筛选">${phaseFilters.map((filter, index) => `<button type="button" class="model-phase-filter${index === 0 ? " is-active" : ""}" data-model-prd-filter="${filter}" role="tab" aria-selected="${index === 0}">${filter}</button>`).join("")}</div><div class="model-browser model-prd-browser"><nav class="model-prd-list" aria-label="产品迭代列表"><div class="model-prd-version-heading"><span>1.0</span><div><strong>模型体验台</strong><small>产品方案 → 多模型体验 → 成本规则 → 功能补全</small></div></div>${model.prds.slice(0, 4).map((prd, index) => modelPrdCardMarkup(prd, index, 3)).join("")}${model.prds.slice(4).map((prd, index) => modelPrdCardMarkup(prd, index + 4, 3)).join("")}</nav><div class="model-detail-panel model-prd-detail" aria-live="polite">${modelPrdDetailMarkup(model, 3)}</div></div></section>
+    <section class="model-section model-iteration-section"><header><span class="model-section-number">03</span><h3>产品迭代</h3><p>把 19 个 PRD 放进上线阶段，逐项说明问题、动作和体验变化。</p></header><div class="model-phase-filters" role="tablist" aria-label="按迭代阶段筛选">${phaseFilters.map((filter, index) => `<button type="button" class="model-phase-filter${index === 0 ? " is-active" : ""}" data-model-prd-filter="${filter}" role="tab" aria-selected="${index === 0}">${filter}</button>`).join("")}</div><div class="model-browser model-prd-browser"><nav class="model-prd-list" aria-label="产品迭代列表"><div class="model-prd-version-rule" aria-hidden="true"></div>${model.prds.map((prd, index) => modelPrdCardMarkup(prd, index, 3, String(index + 1).padStart(2, "0"))).join("")}</nav><div class="model-detail-panel model-prd-detail" aria-live="polite">${modelPrdDetailMarkup(model, 3, "04")}</div></div></section>
     <section class="model-section model-operations-section"><header><span class="model-section-number">04</span><h3>运营与运维</h3><p>让用户知道模型体验台，也让产品持续稳定地运行。</p></header><div class="model-operation-modes" role="tablist" aria-label="选择工作类型"><button type="button" class="model-operation-mode is-active" data-model-operation-switch="promotion" role="tab" aria-selected="true">运营推广</button><button type="button" class="model-operation-mode" data-model-operation-switch="maintenance" role="tab" aria-selected="false">产品运维</button></div><div class="model-operation-distinction"><p><b>运营推广</b>让用户知道产品、理解功能、愿意尝试和持续使用。</p><p><b>产品运维</b>保证产品持续可用、信息准确、版本稳定、问题被处理。</p></div>${Object.entries(model.operationModes).map(([mode, group]) => `<div class="model-operation-mode-panel${mode === "promotion" ? " is-active" : ""}" data-model-operation-panel="${mode}"${mode === "promotion" ? "" : " hidden"}><div class="model-browser model-operation-browser"><nav aria-label="${group.label}">${group.cards.map((operation, index) => `<button type="button" class="model-operation-card${index === 0 ? " is-active" : ""}" data-model-operation-index="${index}" data-model-operation-mode="${mode}"><span>${operation.number}</span><strong>${operation.title}</strong><small>${operation.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-operation-detail" aria-live="polite">${modelOperationDetailMarkup(model, mode, 0)}</div></div><div class="model-loop"><div>${group.loop.map((item, index) => `<span>${item}</span>${index < group.loop.length - 1 ? "<i>→</i>" : ""}`).join("")}</div></div></div>`).join("")}</section>
     <section class="model-section model-data-section"><header><span class="model-section-number">05</span><h3>数据效果</h3><p>从冷启动到规模化使用，产品迭代与运营推广持续推动使用规模增长。</p></header><div class="model-browser model-data-browser"><nav class="model-data-stage-list" aria-label="六个增长阶段">${model.data.stages.map((stage, index) => `<button type="button" class="model-data-card${index === model.data.stages.length - 1 ? " is-active" : ""}" data-model-data-stage-index="${index}"><span>${stage.number}</span><strong>${stage.label}</strong><small>${stage.time}</small><b>${modelDataMetricFormat(stage.pv)} PV</b><em>${stage.resultTag}</em></button>`).join("")}</nav><div class="model-detail-panel model-data-detail" aria-live="polite"></div></div><p class="model-data-summary">${model.data.summary}</p><p class="model-data-source-note">${model.data.note}</p></section>
     <section class="model-section model-feedback-section"><header><span class="model-section-number">06</span><h3>用户反馈与复盘</h3><p>把用户问题变成产品动作，再回到可验证的迭代结果。</p></header><div class="model-browser model-feedback-browser"><nav class="model-feedback-list" aria-label="用户问题">${model.feedback.map((feedback, index) => `<button type="button" class="model-feedback-card${index === 0 ? " is-active" : ""}" data-model-feedback-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${feedback.question}</strong></button>`).join("")}</nav><div class="model-detail-panel model-feedback-detail" aria-live="polite">${modelFeedbackDetailMarkup(model, 0)}</div></div></section>
@@ -679,10 +693,10 @@ function renderModelStageDetail(model, index = 0) {
   document.querySelectorAll(".model-stage-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
 }
 
-function renderModelPrdDetail(model, index = 0) {
+function renderModelPrdDetail(model, index = 0, displayNumber = "") {
   const detail = document.querySelector(".model-prd-detail");
   if (!detail) return;
-  detail.innerHTML = modelPrdDetailMarkup(model, index);
+  detail.innerHTML = modelPrdDetailMarkup(model, index, displayNumber || modelPrdDisplayNumber(index));
   document.querySelectorAll(".model-prd-card").forEach((card) => card.classList.toggle("is-active", Number(card.dataset.modelPrdIndex) === index));
 }
 
@@ -1190,7 +1204,8 @@ function enterModelExperience(trigger) {
     const defaultDataStage = Math.max(0, (model.data.stages?.length || 1) - 1);
     renderModelDataDetail(model, defaultDataStage, "index");
     documentPages.querySelectorAll("[data-model-stage-index]").forEach((button) => button.addEventListener("click", () => renderModelStageDetail(model, Number(button.dataset.modelStageIndex))));
-    documentPages.querySelectorAll("[data-model-prd-index]").forEach((button) => button.addEventListener("click", () => renderModelPrdDetail(model, Number(button.dataset.modelPrdIndex))));
+    updateModelPrdDisplayNumbers("全部");
+    documentPages.querySelectorAll("[data-model-prd-index]").forEach((button) => button.addEventListener("click", () => renderModelPrdDetail(model, Number(button.dataset.modelPrdIndex), button.querySelector("span")?.textContent)));
     documentPages.querySelectorAll("[data-model-prd-filter]").forEach((button) => {
       button.addEventListener("click", () => {
         const filter = button.dataset.modelPrdFilter;
@@ -1202,8 +1217,9 @@ function enterModelExperience(trigger) {
         documentPages.querySelectorAll("[data-model-prd-index]").forEach((card) => {
           card.hidden = filter !== "全部" && card.dataset.modelPrdPhase !== filter;
         });
+        updateModelPrdDisplayNumbers(filter);
         const firstVisible = [...documentPages.querySelectorAll("[data-model-prd-index]")].find((card) => !card.hidden);
-        if (firstVisible) renderModelPrdDetail(model, Number(firstVisible.dataset.modelPrdIndex));
+        if (firstVisible) renderModelPrdDetail(model, Number(firstVisible.dataset.modelPrdIndex), firstVisible.querySelector("span")?.textContent);
       });
     });
     documentPages.querySelectorAll("[data-model-operation-switch]").forEach((button) => button.addEventListener("click", () => renderModelOperationMode(button.dataset.modelOperationSwitch)));
