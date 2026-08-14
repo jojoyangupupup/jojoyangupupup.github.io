@@ -555,16 +555,38 @@ function renderMemoryExperience(documentEntry) {
   </article>`;
 }
 
-function modelDataChartMarkup(card, metric = "uv") {
-  const points = card?.points || [];
-  const max = Math.max(...points.map((point) => point[metric]), 1);
-  return points.map((point) => `
-    <div class="model-data-bar-row">
-      <span>${point.date}</span>
-      <i><b style="width:${Math.max(3, point[metric] / max * 100)}%"></b></i>
-      <strong>${point[metric].toLocaleString()}</strong>
-    </div>
-  `).join("");
+function modelDataMetricValue(stage, metric) {
+  return metric === "index" ? stage.index : metric === "pv" ? stage.pv : stage.active;
+}
+
+function modelDataMetricLabel(metric) {
+  return metric === "index" ? "增长指数" : metric === "pv" ? "累计互动 PV" : "累计活跃人次";
+}
+
+function modelDataMetricFormat(value) {
+  return Number(value).toLocaleString("en-US");
+}
+
+function modelDataChartMarkup(data, selectedIndex = 5, metric = "index") {
+  const stages = data?.stages || [];
+  const values = stages.map((stage) => modelDataMetricValue(stage, metric));
+  const max = Math.max(...values, 1);
+  const logMax = Math.log10(max + 1);
+  const points = stages.map((stage, index) => {
+    const normalized = metric === "index" ? stage.index / max : Math.log10(modelDataMetricValue(stage, metric) + 1) / logMax;
+    return { x: 52 + index * 112, y: 214 - normalized * 168 };
+  });
+  if (!points.length) return "";
+  let linePath = `M ${points[0].x} ${points[0].y}`;
+  for (let index = 1; index < points.length; index += 1) linePath += ` H ${points[index].x} V ${points[index].y}`;
+  const areaPath = `${linePath} H ${points[points.length - 1].x} V 214 H ${points[0].x} Z`;
+  const nodeMarkup = points.map((point, index) => {
+    const stage = stages[index];
+    const active = index === selectedIndex;
+    return `<g class="model-data-trend-node${active ? " is-current" : ""}"><circle cx="${point.x}" cy="${point.y}" r="${active ? 7 : 4.5}" opacity="${0.45 + index * 0.1}"></circle>${active ? `<text x="${point.x}" y="${Math.max(20, point.y - 15)}" text-anchor="middle">${modelDataMetricFormat(modelDataMetricValue(stage, metric))}</text>` : ""}<text class="model-data-trend-label" x="${point.x}" y="246" text-anchor="middle">${stage.label}</text></g>`;
+  }).join("");
+  const scaleNote = metric === "index" ? "增长指数为展示用标准化指标（0—100）" : "累计指标使用对数刻度，便于同时阅读早期与规模化阶段";
+  return `<div class="model-data-trend-wrap"><svg class="model-data-trend" viewBox="0 0 650 270" role="img" aria-label="${modelDataMetricLabel(metric)}六阶段趋势图"><line class="model-data-trend-gridline" x1="52" y1="214" x2="612" y2="214"></line><line class="model-data-trend-gridline" x1="52" y1="130" x2="612" y2="130"></line><line class="model-data-trend-gridline" x1="52" y1="46" x2="612" y2="46"></line><path class="model-data-trend-area" d="${areaPath}"></path><path class="model-data-trend-line" d="${linePath}"></path>${nodeMarkup}</svg><p class="model-data-trend-scale">${scaleNote}</p></div>`;
 }
 
 function modelStageDetailMarkup(model, index = 0) {
@@ -644,7 +666,7 @@ function renderModelExperience(documentEntry) {
     <section class="model-section model-build-section"><header><span class="model-section-number">02</span><h3>从 0 到 1 搭建</h3><p>先确认问题，再把模型能力组织成可体验、可反馈、可复盘的工作入口。</p></header><div class="model-browser model-stage-browser"><nav aria-label="搭建阶段">${model.stages.map((stage, index) => `<button type="button" class="model-stage-card${index === 0 ? " is-active" : ""}" data-model-stage-index="${index}"><span>${stage.number}</span><strong>${stage.title}</strong><small>${stage.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-stage-detail" aria-live="polite">${modelStageDetailMarkup(model, 0)}</div></div></section>
     <section class="model-section model-iteration-section"><header><span class="model-section-number">03</span><h3>产品迭代</h3><p>把 18 个 PRD 放进上线阶段，逐项说明问题、动作和体验变化。</p></header><div class="model-phase-filters" role="tablist" aria-label="按迭代阶段筛选">${phaseFilters.map((filter, index) => `<button type="button" class="model-phase-filter${index === 0 ? " is-active" : ""}" data-model-prd-filter="${filter}" role="tab" aria-selected="${index === 0}">${filter}</button>`).join("")}</div><div class="model-browser model-prd-browser"><nav class="model-prd-list" aria-label="产品迭代列表">${model.prds.map((prd, index) => modelPrdCardMarkup(prd, index)).join("")}</nav><div class="model-detail-panel model-prd-detail" aria-live="polite">${modelPrdDetailMarkup(model, 0)}</div></div></section>
     <section class="model-section model-operations-section"><header><span class="model-section-number">04</span><h3>运营与运维</h3><p>让用户知道模型体验台，也让产品持续稳定地运行。</p></header><div class="model-operation-modes" role="tablist" aria-label="选择工作类型"><button type="button" class="model-operation-mode is-active" data-model-operation-switch="promotion" role="tab" aria-selected="true">运营推广</button><button type="button" class="model-operation-mode" data-model-operation-switch="maintenance" role="tab" aria-selected="false">产品运维</button></div><div class="model-operation-distinction"><p><b>运营推广</b>让用户知道产品、理解功能、愿意尝试和持续使用。</p><p><b>产品运维</b>保证产品持续可用、信息准确、版本稳定、问题被处理。</p></div>${Object.entries(model.operationModes).map(([mode, group]) => `<div class="model-operation-mode-panel${mode === "promotion" ? " is-active" : ""}" data-model-operation-panel="${mode}"${mode === "promotion" ? "" : " hidden"}><div class="model-browser model-operation-browser"><nav aria-label="${group.label}">${group.cards.map((operation, index) => `<button type="button" class="model-operation-card${index === 0 ? " is-active" : ""}" data-model-operation-index="${index}" data-model-operation-mode="${mode}"><span>${operation.number}</span><strong>${operation.title}</strong><small>${operation.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-operation-detail" aria-live="polite">${modelOperationDetailMarkup(model, mode, 0)}</div></div><div class="model-loop"><div>${group.loop.map((item, index) => `<span>${item}</span>${index < group.loop.length - 1 ? "<i>→</i>" : ""}`).join("")}</div></div></div>`).join("")}</section>
-    <section class="model-section model-data-section"><header><span class="model-section-number">05</span><h3>数据效果</h3><p>用真实的 UV / PV 记录观察体验台从冷启动到运营阶段的变化。</p></header><div class="model-browser model-data-browser"><nav class="model-data-card-list" aria-label="数据阶段">${model.data.cards.map((card, index) => `<button type="button" class="model-data-card${index === 0 ? " is-active" : ""}" data-model-data-card-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${card.title}</strong><small>${card.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-data-detail" aria-live="polite"></div></div><div class="model-data-habit"><div><small>使用习惯</small><ul>${model.data.habit.map((item) => `<li>${item}</li>`).join("")}</ul></div><div><small>数据口径</small><ul>${model.data.definitions.map((item) => `<li>${item}</li>`).join("")}</ul></div></div></section>
+    <section class="model-section model-data-section"><header><span class="model-section-number">05</span><h3>数据效果</h3><p>从冷启动到规模化使用，产品迭代与运营推广持续推动使用规模增长。</p></header><div class="model-browser model-data-browser"><nav class="model-data-stage-list" aria-label="六个增长阶段">${model.data.stages.map((stage, index) => `<button type="button" class="model-data-card${index === model.data.stages.length - 1 ? " is-active" : ""}" data-model-data-stage-index="${index}"><span>${stage.number}</span><strong>${stage.label}</strong><small>${stage.time}</small><b>${modelDataMetricFormat(stage.pv)} PV</b><em>${stage.resultTag}</em></button>`).join("")}</nav><div class="model-detail-panel model-data-detail" aria-live="polite"></div></div><p class="model-data-summary">${model.data.summary}</p><p class="model-data-source-note">${model.data.note}</p></section>
     <section class="model-section model-feedback-section"><header><span class="model-section-number">06</span><h3>用户反馈与复盘</h3><p>把用户问题变成产品动作，再回到可验证的迭代结果。</p></header><div class="model-browser model-feedback-browser"><nav class="model-feedback-list" aria-label="用户问题">${model.feedback.map((feedback, index) => `<button type="button" class="model-feedback-card${index === 0 ? " is-active" : ""}" data-model-feedback-index="${index}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${feedback.question}</strong></button>`).join("")}</nav><div class="model-detail-panel model-feedback-detail" aria-live="polite">${modelFeedbackDetailMarkup(model, 0)}</div></div></section>
     <section class="model-section model-outcomes-section"><header><span class="model-section-number">07</span><h3>阶段成果</h3><p>从产品搭建到持续运营，形成一套能够继续运行的产品闭环。</p></header><div class="model-outcome-grid">${model.outcomes.map((outcome) => `<article><span>${outcome.number}</span><h4>${outcome.title}</h4><ul>${outcome.items.map((item) => `<li>${item}</li>`).join("")}</ul></article>`).join("")}</div><p class="model-result-summary">${model.resultSummary}</p></section>
   </article>`;
@@ -693,12 +715,12 @@ function renderModelFeedbackDetail(model, index = 0) {
   document.querySelectorAll(".model-feedback-card").forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === index));
 }
 
-function renderModelDataDetail(model, cardIndex = 0, metric = "uv") {
-  const card = model.data.cards?.[cardIndex] || model.data.cards?.[0];
+function renderModelDataDetail(model, stageIndex = 5, metric = "index") {
+  const stage = model.data.stages?.[stageIndex] || model.data.stages?.[model.data.stages.length - 1];
   const detail = document.querySelector(".model-data-detail");
-  if (!detail || !card) return;
-  detail.innerHTML = `<div class="model-detail-kicker"><span>${String(cardIndex + 1).padStart(2, "0")}</span><em>数据阶段</em></div><h4>${card.title}</h4><p class="model-detail-summary">${card.summary}</p><div class="model-data-metric-tabs" role="tablist" aria-label="切换数据指标"><button type="button" class="${metric === "uv" ? "is-active" : ""}" data-model-metric="uv" role="tab" aria-selected="${metric === "uv"}">UV</button><button type="button" class="${metric === "pv" ? "is-active" : ""}" data-model-metric="pv" role="tab" aria-selected="${metric === "pv"}">PV</button></div><div class="model-data-chart"><div class="model-data-chart-axis"><span>日期</span><span>${metric.toUpperCase()} / 人次</span></div>${modelDataChartMarkup(card, metric)}</div><p class="model-data-note">${card.note}</p>`;
-  document.querySelectorAll(".model-data-card").forEach((button, index) => button.classList.toggle("is-active", index === cardIndex));
+  if (!detail || !stage) return;
+  detail.innerHTML = `<div class="model-detail-kicker"><span>${stage.number}</span><em>${stage.time}</em></div><h4>${stage.title}</h4><p class="model-detail-summary">${stage.label} · ${stage.resultTag}</p><div class="model-data-metrics"><div><small>累计互动 PV</small><strong>${modelDataMetricFormat(stage.pv)}</strong></div><div><small>累计活跃人次</small><strong>${modelDataMetricFormat(stage.active)}</strong></div></div><div class="model-data-chart-head"><div><h5>${model.data.chartTitle}</h5><p>${model.data.chartSubtitle}</p></div><div class="model-data-metric-tabs" role="tablist" aria-label="切换数据指标"><button type="button" class="${metric === "index" ? "is-active" : ""}" data-model-metric="index" role="tab" aria-selected="${metric === "index"}">增长指数</button><button type="button" class="${metric === "pv" ? "is-active" : ""}" data-model-metric="pv" role="tab" aria-selected="${metric === "pv"}">累计互动 PV</button><button type="button" class="${metric === "active" ? "is-active" : ""}" data-model-metric="active" role="tab" aria-selected="${metric === "active"}">累计活跃人次</button></div></div>${modelDataChartMarkup(model.data, stageIndex, metric)}<div class="model-data-narrative"><div><small>阶段说明</small><p>${stage.description}</p></div><div><small>产品动作</small><p>${stage.action}</p></div><div><small>阶段结果</small><p>${stage.result}</p></div></div>`;
+  document.querySelectorAll("[data-model-data-stage-index]").forEach((button, index) => button.classList.toggle("is-active", index === stageIndex));
 }
 
 function renderMemoryContentDetail(memory, index = 0) {
@@ -1165,7 +1187,8 @@ function enterModelExperience(trigger) {
     const modelEntry = activeModalDocuments.find((entry) => entry.contentType === "model-experience");
     const model = modelEntry?.modelExperience;
     if (!model) return;
-    renderModelDataDetail(model, 0, "uv");
+    const defaultDataStage = Math.max(0, (model.data.stages?.length || 1) - 1);
+    renderModelDataDetail(model, defaultDataStage, "index");
     documentPages.querySelectorAll("[data-model-stage-index]").forEach((button) => button.addEventListener("click", () => renderModelStageDetail(model, Number(button.dataset.modelStageIndex))));
     documentPages.querySelectorAll("[data-model-prd-index]").forEach((button) => button.addEventListener("click", () => renderModelPrdDetail(model, Number(button.dataset.modelPrdIndex))));
     documentPages.querySelectorAll("[data-model-prd-filter]").forEach((button) => {
@@ -1186,12 +1209,15 @@ function enterModelExperience(trigger) {
     documentPages.querySelectorAll("[data-model-operation-switch]").forEach((button) => button.addEventListener("click", () => renderModelOperationMode(button.dataset.modelOperationSwitch)));
     documentPages.querySelectorAll("[data-model-operation-index]").forEach((button) => button.addEventListener("click", () => renderModelOperationDetail(model, button.dataset.modelOperationMode, Number(button.dataset.modelOperationIndex))));
     documentPages.querySelectorAll("[data-model-feedback-index]").forEach((button) => button.addEventListener("click", () => renderModelFeedbackDetail(model, Number(button.dataset.modelFeedbackIndex))));
-    documentPages.querySelectorAll("[data-model-data-card-index]").forEach((button) => button.addEventListener("click", () => renderModelDataDetail(model, Number(button.dataset.modelDataCardIndex), "uv")));
+    documentPages.querySelectorAll("[data-model-data-stage-index]").forEach((button) => button.addEventListener("click", () => {
+      const activeMetric = document.querySelector("[data-model-metric].is-active")?.dataset.modelMetric || "index";
+      renderModelDataDetail(model, Number(button.dataset.modelDataStageIndex), activeMetric);
+    }));
     documentPages.addEventListener("click", (event) => {
       const metric = event.target.closest?.("[data-model-metric]");
       if (!metric) return;
-      const activeCard = [...documentPages.querySelectorAll("[data-model-data-card-index]")].find((button) => button.classList.contains("is-active"));
-      renderModelDataDetail(model, activeCard ? Number(activeCard.dataset.modelDataCardIndex) : 0, metric.dataset.modelMetric);
+      const activeStage = [...documentPages.querySelectorAll("[data-model-data-stage-index]")].find((button) => button.classList.contains("is-active"));
+      renderModelDataDetail(model, activeStage ? Number(activeStage.dataset.modelDataStageIndex) : (model.data.stages.length - 1), metric.dataset.modelMetric);
     });
   });
 }
