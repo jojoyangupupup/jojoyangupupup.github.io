@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=60";
+} from "/scripts/rooms-data.js?v=61";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -574,6 +574,7 @@ function modelStageDetailMarkup(model, index = 0) {
 }
 
 function modelPrdPhase(prd) {
+  if (prd.phase) return prd.phase;
   if (/^1\.|1\.30/.test(prd.time)) return "1.0";
   if (/2\.0/.test(prd.time)) return "2.0";
   if (/3\.|3\.16|4\.13|验收/.test(`${prd.time}${prd.number}`)) return "3.0";
@@ -606,7 +607,7 @@ function modelFeedbackDetailMarkup(model, index = 0) {
 
 function renderModelExperience(documentEntry) {
   const model = documentEntry.modelExperience;
-  const phaseFilters = ["全部", "1.0", "2.0", "3.0", "7月", "8月", "阶段性"];
+  const phaseFilters = ["全部", "1.0", "2.0", "3.0", "4.0"];
   return `<article class="model-experience" aria-labelledby="model-title-${documentEntry.id}">
     <section class="model-section model-hero">
       <div class="model-hero-copy"><p class="model-eyebrow">产品经历 / Product Experience</p><h2 id="model-title-${documentEntry.id}">${documentEntry.title}</h2><p class="model-hero-subtitle">${model.subtitle}</p><p class="model-hero-summary">${model.summary}</p></div>
