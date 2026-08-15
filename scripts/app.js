@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=61";
+} from "/scripts/rooms-data.js?v=62";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -686,6 +686,79 @@ function renderModelExperience(documentEntry) {
   </article>`;
 }
 
+function searchImagePlaceholderMarkup(sourceDoc, number = "1") {
+  return `<figure class="search-image-placeholder" role="img" aria-label="${sourceDoc} 产品文档图片待补" data-source-doc="${sourceDoc}" data-source-image="${number}"><span>IMAGE / ${String(number).padStart(2, "0")}</span><strong>图片待补</strong><figcaption>${sourceDoc}<small>产品方案与交互示例</small></figcaption></figure>`;
+}
+
+function searchListMarkup(items) {
+  return `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
+}
+
+function searchDemoResultMarkup(search, index = 0) {
+  const result = search.hero.searches[index] || search.hero.searches[0];
+  if (!result) return "";
+  return `<div class="search-result-head"><div><span class="search-result-ai">AI 总结答案</span><small class="search-result-scope">来源范围 · ${result.scope}</small></div><em>${result.messages.length + result.references.length} 个可验证来源</em></div><p class="search-result-answer">${result.answer}</p><div class="search-result-layout"><div class="search-result-messages"><small>相关消息记录</small>${result.messages.map((message, messageIndex) => `<article><div class="search-result-type"><span>消息</span><em>${message.meta}</em></div><h4>${message.title}</h4><p>${message.excerpt}</p><small>${message.sender}</small><div class="search-result-actions"><button type="button" data-search-result-action="source" data-search-result-index="${messageIndex}">查看原文</button><button type="button" data-search-result-action="context" data-search-result-index="${messageIndex}">查看上下文</button></div></article>`).join("")}</div><aside class="search-result-references"><small>参考来源</small>${result.references.map((reference) => `<button type="button" data-search-reference>${reference}<span aria-hidden="true">↗</span></button>`).join("")}</aside></div><p class="search-demo-status" aria-live="polite">答案由权限内资源生成，可通过原文和上下文进行验证。</p>`;
+}
+
+function searchProblemDetailMarkup(search, index = 0) {
+  const item = search.problems[index] || search.problems[0];
+  if (!item) return "";
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>SEARCH PROBLEM</em></div><h4>${item.title}</h4><p class="search-detail-lead">${item.summary}</p><div class="search-judgment-flow"><div><small>问题现象</small><p>${item.phenomenon}</p></div><div><small>数据证据</small><p>${item.evidence}</p></div><div class="is-judgment"><small>产品判断</small><p>${item.judgment}</p></div><div><small>解决方案</small>${searchListMarkup(item.solutions)}</div></div>`;
+}
+
+function searchWorkDetailMarkup(search, index = 0) {
+  const item = search.coreWork[index] || search.coreWork[0];
+  if (!item) return "";
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>${item.tag}</em></div><h4>${item.title}</h4><p class="search-detail-lead">${item.summary}</p><div class="search-work-detail-grid"><div><small>我的产品动作</small>${searchListMarkup(item.actions)}</div><div><small>核心判断</small><p>${item.judgment}</p><div class="search-detail-result"><small>工作结果</small><p>${item.result}</p></div></div></div>`;
+}
+
+function searchIterationDetailMarkup(search, index = 0) {
+  const item = search.iterations[index] || search.iterations[0];
+  if (!item) return "";
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>${item.status}</em></div><h4>${item.title}</h4><p class="search-detail-lead">${item.summary}</p><div class="search-iteration-detail"><div class="search-iteration-copy"><div><small>解决的问题</small><p>${item.problem}</p></div><div><small>我的产品动作</small>${searchListMarkup(item.actions)}</div><div><small>关键交互</small><p>${item.interaction}</p></div><div class="search-detail-result"><small>迭代结果</small><p>${item.result}</p></div></div>${searchImagePlaceholderMarkup(item.sourceDoc)}</div>`;
+}
+
+function searchMetricMarkup(metric) {
+  return `<div class="search-metric"><small>${metric.label}</small><strong>${metric.value}</strong>${metric.rate ? `<i aria-hidden="true"><span style="width:${metric.rate}%"></span></i>` : ""}</div>`;
+}
+
+function searchDataDetailMarkup(search, index = 0) {
+  const item = search.data[index] || search.data[0];
+  if (!item) return "";
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>SEARCH DATA</em></div><div class="search-data-title"><div><h4>${item.title}</h4><p>${item.unit}</p></div><strong>${item.primary}</strong></div><div class="search-metric-grid">${item.metrics.map(searchMetricMarkup).join("")}</div><div class="search-data-path" aria-label="数据如何进入产品判断"><span>行为数据</span><i>→</i><span>场景判断</span><i>→</i><span>产品动作</span></div><div class="search-data-insight"><div><small>关键洞察</small><p>${item.insight}</p></div><div><small>对应动作</small><p>${item.action}</p></div></div>`;
+}
+
+function searchFeedbackDetailMarkup(search, index = 0) {
+  const item = search.feedback[index] || search.feedback[0];
+  if (!item) return "";
+  const fields = [["用户问题", item.problem], ["数据证据", item.evidence], ["产品判断", item.judgment], ["产品动作", item.action], ["迭代结果", item.result]];
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>FEEDBACK LOOP</em></div><h4>${item.title}</h4><div class="search-feedback-flow">${fields.map(([label, value], fieldIndex) => `<div class="${fieldIndex === fields.length - 1 ? "is-result" : ""}"><small>${label}</small><p>${value}</p></div>${fieldIndex < fields.length - 1 ? `<i aria-hidden="true">→</i>` : ""}`).join("")}</div>`;
+}
+
+function searchFeaturedDetailMarkup(search, index = 0) {
+  const item = search.featured[index] || search.featured[0];
+  if (!item) return "";
+  return `<div class="search-detail-kicker"><span>${String(index + 1).padStart(2, "0")}</span><em>${item.type}</em></div><h4>${item.title}</h4><div class="search-featured-detail"><div class="search-featured-copy"><div><small>需求背景</small><p>${item.background}</p></div><div><small>核心判断</small><p>${item.judgment}</p></div><div><small>关键方案</small>${searchListMarkup(item.solution)}</div><div><small>我的参与</small><p>${item.participation}</p></div><div class="search-detail-result"><small>产品结果</small><p>${item.result}</p></div></div>${searchImagePlaceholderMarkup(item.title)}</div>`;
+}
+
+function renderSearchExperience(documentEntry) {
+  const search = documentEntry.searchExperience;
+  const defaultSearch = search.hero.searches[0];
+  return `<article class="search-experience" aria-labelledby="search-title-${documentEntry.id}">
+    <section class="search-section search-hero">
+      <header class="search-hero-copy"><p class="search-eyebrow">${search.eyebrow}</p><h2 id="search-title-${documentEntry.id}">${documentEntry.title}</h2><p class="search-hero-subtitle">${search.subtitle}</p><p class="search-hero-summary">${search.summary}</p></header>
+      <div class="search-product-demo" aria-label="企业 AI 搜索产品交互示意"><div class="search-demo-top"><span>企业 AI 搜索</span><em>权限内检索</em></div><div class="search-resource-selector" role="group" aria-label="选择搜索资源">${search.hero.resources.map((resource, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-search-resource aria-pressed="${index === 0}">${resource}</button>`).join("")}</div><form class="search-demo-form" data-search-form><label><span class="sr-only">搜索问题</span><input class="search-demo-input" type="search" value="${defaultSearch.question}" autocomplete="off"></label><button type="submit">搜索</button></form><div class="search-suggestions"><span>试试这样搜</span>${search.hero.searches.map((item, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-search-suggestion-index="${index}">${item.question}</button>`).join("")}</div><div class="search-demo-result" aria-live="polite">${searchDemoResultMarkup(search, 0)}</div></div>
+    </section>
+    <section class="search-section search-intro-section"><header><span class="search-section-number">01</span><h3>产品介绍</h3><p>企业资源先被统一理解，用户才能从搜索结果继续走向答案。</p></header><div class="search-intro-grid"><div class="search-intro-copy">${search.intro.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}</div><div class="search-object-grid">${search.intro.objects.map((item) => `<article><span>${item.number}</span><small>${item.signal}</small><h4>${item.title}</h4><p>${item.detail}</p></article>`).join("")}</div></div></section>
+    <section class="search-section search-problem-section"><header><span class="search-section-number">02</span><h3>搜索问题与产品判断</h3><p>把“搜不准”拆成资源、召回、交互与感知问题，才能找到真正的产品动作。</p></header><div class="search-browser"><nav aria-label="搜索问题" role="tablist">${search.problems.map((item, index) => `<button type="button" class="search-nav-card${index === 0 ? " is-active" : ""}" data-search-problem-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.summary}</small></button>`).join("")}</nav><div class="search-detail-panel search-problem-detail" aria-live="polite">${searchProblemDetailMarkup(search, 0)}</div></div></section>
+    <section class="search-section search-work-section"><header><span class="search-section-number">03</span><h3>我的核心工作</h3><p>从资源底座到答案生成，再用数据与反馈把产品推向下一轮。</p></header><div class="search-browser"><nav aria-label="核心工作" role="tablist">${search.coreWork.map((item, index) => `<button type="button" class="search-nav-card${index === 0 ? " is-active" : ""}" data-search-work-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.tag} · ${item.summary}</small></button>`).join("")}</nav><div class="search-detail-panel search-work-detail" aria-live="polite">${searchWorkDetailMarkup(search, 0)}</div></div></section>
+    <section class="search-section search-iteration-section"><header><span class="search-section-number">04</span><h3>产品迭代</h3><p>六个连续阶段把资源治理、消息专项、AI 能力与反馈插件组织成完整搜索链路。</p></header><div class="search-browser search-iteration-browser"><nav aria-label="产品迭代阶段" role="tablist">${search.iterations.map((item, index) => `<button type="button" class="search-nav-card search-iteration-card${index === 0 ? " is-active" : ""}" data-search-iteration-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.summary}</small><em>${item.status}</em></button>`).join("")}</nav><div class="search-detail-panel search-iteration-detail-panel" aria-live="polite">${searchIterationDetailMarkup(search, 0)}</div></div></section>
+    <section class="search-section search-data-section"><header><span class="search-section-number">05</span><h3>数据效果</h3><p>用真实搜索 PV、有点率和点击 PV 定位核心场景，不把流量口径改写成用户数。</p></header><div class="search-browser search-data-browser"><nav aria-label="搜索数据" role="tablist">${search.data.map((item, index) => `<button type="button" class="search-data-card${index === 0 ? " is-active" : ""}" data-search-data-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><b>${item.primary}</b><small>${item.unit}</small></button>`).join("")}</nav><div class="search-detail-panel search-data-detail" aria-live="polite">${searchDataDetailMarkup(search, 0)}</div></div><p class="search-data-note">数据口径：PV 表示搜索或点击次数；页面不将 PV 表述为用户数，也不补充没有来源的 UV、增长率或留存数据。</p></section>
+    <section class="search-section search-feedback-section"><header><span class="search-section-number">06</span><h3>用户反馈与复盘</h3><p>让用户问题、行为数据和产品动作在同一个反馈链路中闭环。</p></header><div class="search-browser"><nav aria-label="用户反馈" role="tablist">${search.feedback.map((item, index) => `<button type="button" class="search-nav-card${index === 0 ? " is-active" : ""}" data-search-feedback-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.problem}</small></button>`).join("")}</nav><div class="search-detail-panel search-feedback-detail" aria-live="polite">${searchFeedbackDetailMarkup(search, 0)}</div></div></section>
+    <section class="search-section search-featured-section"><header><span class="search-section-number">07</span><h3>精选内容</h3><p>选取八份关键文档，按背景、判断、方案、参与和结果快速展开。</p></header><div class="search-browser search-featured-browser"><nav aria-label="精选文档" role="tablist">${search.featured.map((item, index) => `<button type="button" class="search-featured-card${index === 0 ? " is-active" : ""}" data-search-featured-index="${index}" role="tab" aria-selected="${index === 0}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${item.title}</strong><small>${item.type}</small></button>`).join("")}</nav><div class="search-detail-panel search-featured-detail-panel" aria-live="polite">${searchFeaturedDetailMarkup(search, 0)}</div></div></section>
+  </article>`;
+}
+
 function renderModelStageDetail(model, index = 0) {
   const detail = document.querySelector(".model-stage-detail");
   if (!detail) return;
@@ -735,6 +808,58 @@ function renderModelDataDetail(model, stageIndex = 5, metric = "index") {
   if (!detail || !stage) return;
   detail.innerHTML = `<div class="model-detail-kicker"><span>${stage.number}</span><em>${stage.time}</em></div><h4>${stage.title}</h4><p class="model-detail-summary">${stage.label} · ${stage.resultTag}</p><div class="model-data-metrics"><div><small>累计互动 PV</small><strong>${modelDataMetricFormat(stage.pv)}</strong></div><div><small>累计活跃人次</small><strong>${modelDataMetricFormat(stage.active)}</strong></div></div><div class="model-data-chart-head"><div><h5>${model.data.chartTitle}</h5><p>${model.data.chartSubtitle}</p></div><div class="model-data-metric-tabs" role="tablist" aria-label="切换数据指标"><button type="button" class="${metric === "index" ? "is-active" : ""}" data-model-metric="index" role="tab" aria-selected="${metric === "index"}">增长指数</button><button type="button" class="${metric === "pv" ? "is-active" : ""}" data-model-metric="pv" role="tab" aria-selected="${metric === "pv"}">累计互动 PV</button><button type="button" class="${metric === "active" ? "is-active" : ""}" data-model-metric="active" role="tab" aria-selected="${metric === "active"}">累计活跃人次</button></div></div>${modelDataChartMarkup(model.data, stageIndex, metric)}<div class="model-data-narrative"><div><small>阶段说明</small><p>${stage.description}</p></div><div><small>产品动作</small><p>${stage.action}</p></div><div><small>阶段结果</small><p>${stage.result}</p></div></div>`;
   document.querySelectorAll("[data-model-data-stage-index]").forEach((button, index) => button.classList.toggle("is-active", index === stageIndex));
+}
+
+function renderSearchDetail(search, index, buttonSelector, detailSelector, markup) {
+  const experience = documentPages.querySelector(".search-experience");
+  const detail = experience?.querySelector(detailSelector);
+  if (!experience || !detail) return;
+  detail.innerHTML = markup(search, index);
+  experience.querySelectorAll(buttonSelector).forEach((button, buttonIndex) => {
+    const selected = buttonIndex === index;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-selected", String(selected));
+  });
+}
+
+function renderSearchProblemDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-problem-index]", ".search-problem-detail", searchProblemDetailMarkup);
+}
+
+function renderSearchWorkDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-work-index]", ".search-work-detail", searchWorkDetailMarkup);
+}
+
+function renderSearchIterationDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-iteration-index]", ".search-iteration-detail-panel", searchIterationDetailMarkup);
+}
+
+function renderSearchDataDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-data-index]", ".search-data-detail", searchDataDetailMarkup);
+}
+
+function renderSearchFeedbackDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-feedback-index]", ".search-feedback-detail", searchFeedbackDetailMarkup);
+}
+
+function renderSearchFeaturedDetail(search, index = 0) {
+  renderSearchDetail(search, index, "[data-search-featured-index]", ".search-featured-detail-panel", searchFeaturedDetailMarkup);
+}
+
+function renderSearchHeroResult(search, index = 0) {
+  const experience = documentPages.querySelector(".search-experience");
+  const result = search.hero.searches[index] || search.hero.searches[0];
+  const detail = experience?.querySelector(".search-demo-result");
+  if (!experience || !result || !detail) return;
+  detail.innerHTML = searchDemoResultMarkup(search, index);
+  const input = experience.querySelector(".search-demo-input");
+  if (input) input.value = result.question;
+  experience.querySelectorAll("[data-search-suggestion-index]").forEach((button, buttonIndex) => button.classList.toggle("is-active", buttonIndex === index));
+  experience.querySelectorAll("[data-search-resource]").forEach((button) => {
+    const selected = button.textContent.trim() === result.scope;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
 }
 
 function renderMemoryContentDetail(memory, index = 0) {
@@ -875,6 +1000,9 @@ function renderDocumentPages(documents) {
     }
     if (documentEntry.contentType === "model-experience") {
       return renderModelExperience(documentEntry);
+    }
+    if (documentEntry.contentType === "search-experience") {
+      return renderSearchExperience(documentEntry);
     }
     if (documentEntry.contentType === "text") {
       return `
@@ -1151,6 +1279,7 @@ function renderDocumentModalView(documents, scrollTop = 0) {
   );
   documentModal.classList.toggle("is-memory-experience", documents.some((documentEntry) => documentEntry.contentType === "memory"));
   documentModal.classList.toggle("is-model-experience", documents.some((documentEntry) => documentEntry.contentType === "model-experience"));
+  documentModal.classList.toggle("is-search-experience", documents.some((documentEntry) => documentEntry.contentType === "search-experience"));
   documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
   documentModalScroll.scrollTop = scrollTop;
   documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
@@ -1238,6 +1367,79 @@ function enterModelExperience(trigger) {
   });
 }
 
+function enterSearchExperience(trigger) {
+  const experience = documentPages.querySelector(".search-experience");
+  if (!experience) return;
+  window.requestAnimationFrame(() => {
+    const panel = experience.getBoundingClientRect();
+    const origin = trigger?.getBoundingClientRect();
+    if (origin) {
+      experience.style.setProperty("--search-origin-x", `${origin.left + origin.width / 2 - panel.left}px`);
+      experience.style.setProperty("--search-origin-y", `${origin.top + origin.height / 2 - panel.top}px`);
+    }
+    experience.classList.add("is-entered");
+    const searchEntry = activeModalDocuments.find((entry) => entry.contentType === "search-experience");
+    const search = searchEntry?.searchExperience;
+    if (!search) return;
+
+    renderSearchHeroResult(search, 0);
+    const bindings = [
+      ["[data-search-problem-index]", "searchProblemIndex", renderSearchProblemDetail],
+      ["[data-search-work-index]", "searchWorkIndex", renderSearchWorkDetail],
+      ["[data-search-iteration-index]", "searchIterationIndex", renderSearchIterationDetail],
+      ["[data-search-data-index]", "searchDataIndex", renderSearchDataDetail],
+      ["[data-search-feedback-index]", "searchFeedbackIndex", renderSearchFeedbackDetail],
+      ["[data-search-featured-index]", "searchFeaturedIndex", renderSearchFeaturedDetail],
+    ];
+    bindings.forEach(([selector, datasetKey, renderer]) => {
+      experience.querySelectorAll(selector).forEach((button) => button.addEventListener("click", () => renderer(search, Number(button.dataset[datasetKey]))));
+    });
+
+    experience.querySelectorAll("[data-search-suggestion-index]").forEach((button) => {
+      button.addEventListener("click", () => renderSearchHeroResult(search, Number(button.dataset.searchSuggestionIndex)));
+    });
+    experience.querySelectorAll("[data-search-resource]").forEach((button) => {
+      button.addEventListener("click", () => {
+        experience.querySelectorAll("[data-search-resource]").forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle("is-active", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+        const scope = button.textContent.trim();
+        const scopeLabel = experience.querySelector(".search-result-scope");
+        const status = experience.querySelector(".search-demo-status");
+        if (scopeLabel) scopeLabel.textContent = `来源范围 · ${scope}`;
+        if (status) status.textContent = `已将搜索范围切换为“${scope}”，当前答案仍保留原始参考来源。`;
+      });
+    });
+    experience.querySelector("[data-search-form]")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = experience.querySelector(".search-demo-input");
+      const query = input?.value.trim() || search.hero.searches[0].question;
+      const matchedIndex = /笔记本/.test(query) ? 1 : /跨企业|同名|搜人|员工/.test(query) ? 2 : 0;
+      renderSearchHeroResult(search, matchedIndex);
+      if (input) input.value = query;
+      const status = experience.querySelector(".search-demo-status");
+      if (status) status.textContent = "已完成产品交互示意检索；答案保留可验证的消息与知识来源。";
+    });
+    experience.addEventListener("click", (event) => {
+      const action = event.target.closest?.("[data-search-result-action]");
+      const reference = event.target.closest?.("[data-search-reference]");
+      if (!action && !reference) return;
+      const status = experience.querySelector(".search-demo-status");
+      if (!status) return;
+      if (reference) {
+        status.textContent = `已定位参考文档：${reference.textContent.replace("↗", "").trim()}。`;
+        return;
+      }
+      const title = action.closest("article")?.querySelector("h4")?.textContent || "当前消息";
+      status.textContent = action.dataset.searchResultAction === "source"
+        ? `已定位原始消息：${title}。`
+        : `已展开“${title}”所在会话的前后文。`;
+    });
+  });
+}
+
 function animateMemoryNumber(element) {
   const target = Number(element.dataset.value);
   const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 100 : 1500;
@@ -1274,6 +1476,7 @@ function openDocumentModal(room, object, documents, trigger, { pushCurrent = fal
   documentModalClose.focus({ preventScroll: true });
   if (documents.some((documentEntry) => documentEntry.contentType === "memory")) enterMemoryExperience(trigger);
   if (documents.some((documentEntry) => documentEntry.contentType === "model-experience")) enterModelExperience(trigger);
+  if (documents.some((documentEntry) => documentEntry.contentType === "search-experience")) enterSearchExperience(trigger);
 }
 
 function closeOrReturnDocument() {
@@ -1288,13 +1491,17 @@ function closeOrReturnDocument() {
 
 function closeDocumentModal(restoreFocus = true) {
   if (documentModal.hidden) return;
-  const experience = documentPages.querySelector(".memory-experience.is-entered, .model-experience.is-entered");
-  const experienceClosingClass = documentModal.classList.contains("is-model-experience") ? "is-model-closing" : "is-memory-closing";
+  const experience = documentPages.querySelector(".memory-experience.is-entered, .model-experience.is-entered, .search-experience.is-entered");
+  const experienceClosingClass = documentModal.classList.contains("is-model-experience")
+    ? "is-model-closing"
+    : documentModal.classList.contains("is-search-experience")
+      ? "is-search-closing"
+      : "is-memory-closing";
   if (experience && !documentModal.classList.contains(experienceClosingClass)) {
     documentModal.classList.add(experienceClosingClass);
     experience.classList.remove("is-entered");
     window.setTimeout(() => {
-      documentModal.classList.remove("is-memory-closing", "is-model-closing");
+      documentModal.classList.remove("is-memory-closing", "is-model-closing", "is-search-closing");
       closeDocumentModal(restoreFocus);
     }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 100 : 400);
     return;
@@ -1303,7 +1510,7 @@ function closeDocumentModal(restoreFocus = true) {
   documentModal.hidden = true;
   documentModal.setAttribute("aria-hidden", "true");
   documentPages.replaceChildren();
-  documentModal.classList.remove("is-transparent-document", "is-memory-experience", "is-memory-closing", "is-model-experience", "is-model-closing");
+  documentModal.classList.remove("is-transparent-document", "is-memory-experience", "is-memory-closing", "is-model-experience", "is-model-closing", "is-search-experience", "is-search-closing");
   document.body.classList.remove("is-document-open");
   if (restoreFocus) documentReturnFocus?.focus({ preventScroll: true });
   documentReturnFocus = null;
@@ -1807,8 +2014,8 @@ document.addEventListener("keydown", (event) => {
   if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
     console.log("TODO: switch product experience", event.key);
   }
-  if (!documentModal.hidden && (documentModal.classList.contains("is-memory-experience") || documentModal.classList.contains("is-model-experience")) && event.key === "Tab") {
-    const experience = documentModal.querySelector(".memory-experience, .model-experience");
+  if (!documentModal.hidden && (documentModal.classList.contains("is-memory-experience") || documentModal.classList.contains("is-model-experience") || documentModal.classList.contains("is-search-experience")) && event.key === "Tab") {
+    const experience = documentModal.querySelector(".memory-experience, .model-experience, .search-experience");
     const focusable = [documentModalClose, ...(experience ? experience.querySelectorAll("button, [href], [tabindex=\"0\"]") : [])].filter((element, index, list) => element && !element.disabled && !element.hidden && list.indexOf(element) === index);
     const currentIndex = focusable.indexOf(document.activeElement);
     if (event.shiftKey && currentIndex <= 0) {

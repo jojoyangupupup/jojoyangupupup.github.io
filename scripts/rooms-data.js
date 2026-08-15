@@ -1,4 +1,5 @@
 import { MODEL_EXPERIENCE_DOCUMENT } from "/scripts/model-experience-data.js?v=5";
+import { SEARCH_EXPERIENCE_DOCUMENT } from "/scripts/search-experience-data.js?v=1";
 
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-decorated.png?v=2";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
@@ -146,6 +147,7 @@ export const ROOMS = [
         },
       },
       MODEL_EXPERIENCE_DOCUMENT,
+      SEARCH_EXPERIENCE_DOCUMENT,
     ],
     objectHotspots: [
       {
@@ -167,6 +169,16 @@ export const ROOMS = [
         documentId: "garden-model-experience",
         path: "M 1246 944 C 1267 929 1304 929 1333 941 L 1388 959 L 1404 990 L 1399 1040 L 1369 1074 L 1309 1077 L 1260 1060 L 1239 1031 L 1238 979 Z",
         glowImage: { file: "/assets/rooms/objects/garden-cushion-02.png", x: 1234, y: 923, width: 178, height: 166 },
+      },
+      {
+        id: "garden-cushion-03",
+        number: "04",
+        label: "AI 搜索",
+        directoryImage: "/assets/rooms/objects/garden-cushion-03.png",
+        ariaLabel: "打开 03 号经历：AI 搜索",
+        documentId: "garden-ai-search",
+        path: "M 1461 1050 C 1488 1026 1521 1017 1554 1031 L 1602 1072 C 1624 1103 1638 1150 1630 1192 L 1611 1248 C 1596 1286 1573 1324 1540 1348 L 1503 1341 C 1474 1317 1457 1275 1448 1226 L 1440 1157 C 1438 1111 1444 1072 1461 1050 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-03.png", x: 1327, y: 1030, width: 332, height: 336 },
       },
       {
         id: "garden-bike",
