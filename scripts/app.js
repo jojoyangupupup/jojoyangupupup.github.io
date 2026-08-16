@@ -705,16 +705,16 @@ function searchEntryStageMarkup(entry) {
 
 function searchEntryDetailMarkup(entry) {
   if (!entry) return "";
-  return `<div class="search-entry-caption"><div><span>${entry.order}</span><h4>${entry.title}</h4></div><p>${entry.description}</p><div class="search-entry-tags" aria-label="${entry.title}能力标签">${entry.tags.map((tag) => `<span>${tag}</span>`).join("")}</div></div>`;
+  return `<header class="search-entry-detail-header"><span>${entry.order}</span><h4>${entry.title}</h4><p>${entry.description}</p></header><div class="search-entry-detail-content"><div class="search-entry-media">${searchEntryStageMarkup(entry)}</div><div class="search-entry-detail-copy"><div class="search-entry-detail-field"><small>关键能力</small><div class="search-entry-tags" aria-label="${entry.title}能力标签">${entry.tags.map((tag) => `<span>${tag}</span>`).join("")}</div></div><div class="search-entry-detail-field"><small>产品价值</small><p>${entry.value}</p></div><div class="search-entry-source"><small>方案证据</small><p>来源：${entry.source}</p></div></div></div>`;
 }
 
 function renderSearchEntryStage(search, index = 1) {
   const experience = documentPages.querySelector(".search-experience");
   const entries = search?.hero?.entries || [];
   const entry = entries[index] || entries[0];
-  const stage = experience?.querySelector("[data-search-entry-stage]");
-  if (!experience || !entry || !stage) return;
-  stage.innerHTML = `${searchEntryDetailMarkup(entry)}${searchEntryStageMarkup(entry)}`;
+  const detail = experience?.querySelector("[data-search-entry-detail]");
+  if (!experience || !entry || !detail) return;
+  detail.innerHTML = searchEntryDetailMarkup(entry);
   experience.querySelectorAll("[data-search-entry-tab]").forEach((tab, tabIndex) => {
     const selected = tabIndex === index;
     tab.classList.toggle("is-active", selected);
@@ -791,7 +791,7 @@ function renderSearchExperience(documentEntry) {
   return `<article class="search-experience" aria-labelledby="search-title-${documentEntry.id}">
     <section class="search-section search-hero">
       <header class="search-hero-copy"><p class="search-eyebrow">${search.eyebrow}</p><h2 id="search-title-${documentEntry.id}">${documentEntry.title}</h2><p class="search-hero-subtitle">${search.subtitle}</p><p class="search-hero-summary">${search.summary}</p></header>
-      <div class="search-entry-demo" aria-label="真实搜索入口体验"><div class="search-entry-heading"><div><span>SEARCH ENTRY</span><h3>${search.hero.title}</h3></div><p>${search.hero.subtitle}</p></div><div class="search-entry-tabs" role="tablist" aria-label="搜索入口切换">${entries.map((entry, index) => `<button type="button" class="search-entry-tab${index === defaultIndex ? " is-active" : ""}" data-search-entry-tab="${index}" role="tab" aria-selected="${index === defaultIndex}" aria-controls="search-entry-stage-${documentEntry.id}" tabindex="${index === defaultIndex ? "0" : "-1"}"><span>${entry.order}</span>${entry.label}</button>`).join("")}</div><div id="search-entry-stage-${documentEntry.id}" class="search-entry-stage" data-search-entry-stage aria-live="polite">${searchEntryDetailMarkup(entries[defaultIndex])}${searchEntryStageMarkup(entries[defaultIndex])}</div></div>
+      <div class="search-entry-demo" aria-label="真实搜索入口体验"><div class="search-entry-layout"><nav class="search-entry-nav" aria-label="搜索入口导航"><div class="search-entry-heading"><span>SEARCH ENTRY</span><h3>${search.hero.title}</h3><p>${search.hero.subtitle}</p></div><div class="search-entry-tabs" role="tablist" aria-label="搜索入口切换">${entries.map((entry, index) => `<button type="button" class="search-entry-tab${index === defaultIndex ? " is-active" : ""}" data-search-entry-tab="${index}" role="tab" aria-selected="${index === defaultIndex}" aria-controls="search-entry-detail-${documentEntry.id}" tabindex="${index === defaultIndex ? "0" : "-1"}"><span>${entry.order}</span><strong>${entry.label}</strong><small>${entry.navSummary}</small></button>`).join("")}</div></nav><section id="search-entry-detail-${documentEntry.id}" class="search-entry-detail" data-search-entry-detail role="tabpanel" aria-live="polite">${searchEntryDetailMarkup(entries[defaultIndex])}</section></div></div>
     </section>
     <section class="search-section search-intro-section"><header><span class="search-section-number">01</span><h3>产品介绍</h3><p>企业资源先被统一理解，用户才能从搜索结果继续走向答案。</p></header><div class="search-intro-grid"><div class="search-intro-copy">${search.intro.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}</div><div class="search-object-grid">${search.intro.objects.map((item) => `<article><span>${item.number}</span><small>${item.signal}</small><h4>${item.title}</h4><p>${item.detail}</p></article>`).join("")}</div></div></section>
     <section class="search-section search-problem-section"><header><span class="search-section-number">02</span><h3>搜索问题与产品判断</h3><p>把“搜不准”拆成资源、召回、交互与感知问题，才能找到真正的产品动作。</p></header><div class="search-browser"><nav aria-label="搜索问题" role="tablist">${search.problems.map((item, index) => `<button type="button" class="search-nav-card${index === 0 ? " is-active" : ""}" data-search-problem-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.summary}</small></button>`).join("")}</nav><div class="search-detail-panel search-problem-detail" aria-live="polite">${searchProblemDetailMarkup(search, 0)}</div></div></section>
