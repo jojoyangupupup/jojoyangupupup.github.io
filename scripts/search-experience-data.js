@@ -25,6 +25,10 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
           videoSrc: "",
           posterSrc: "",
           posterAlt: "如流搜索中的消息结果、筛选和上下文查看界面",
+          images: [
+            { src: "/assets/works/ai-search-entry-demos/ruliu-search-01.png", alt: "如流搜索消息结果与筛选界面", source: "如流搜索框架优化-2.0｜筛选与上下文体验优化" },
+            { src: "/assets/works/ai-search-entry-demos/ruliu-search-02.png", alt: "如流搜索消息结果上下文界面", source: "如流搜索框架优化-2.0｜筛选与上下文体验优化" },
+          ],
         },
         {
           id: "enterprise-ai-search",
@@ -39,6 +43,10 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
           videoSrc: "",
           posterSrc: "",
           posterAlt: "企业 AI 搜索的答案、参考来源和评分反馈界面",
+          images: [
+            { src: "/assets/works/ai-search-entry-demos/enterprise-ai-search-01.png", alt: "企业 AI 搜索答案与参考来源界面", source: "消息记录支持 AI 搜索｜基于权限内消息记录查找、总结和提炼" },
+            { src: "/assets/works/ai-search-entry-demos/enterprise-ai-search-02.png", alt: "企业 AI 搜索答案反馈界面", source: "消息记录支持 AI 搜索｜基于权限内消息记录查找、总结和提炼" },
+          ],
         },
         {
           id: "digital-employee",
@@ -53,6 +61,10 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
           videoSrc: "",
           posterSrc: "",
           posterAlt: "数字员工中选择消息记录资源并发起提问的界面",
+          images: [
+            { src: "/assets/works/ai-search-entry-demos/digital-employee-01.png", alt: "数字员工选择消息记录资源界面", source: "消息记录支持 AI 搜索｜数字员工资源选择与消息记录问答" },
+            { src: "/assets/works/ai-search-entry-demos/digital-employee-02.png", alt: "数字员工基于消息记录发起提问界面", source: "消息记录支持 AI 搜索｜数字员工资源选择与消息记录问答" },
+          ],
         },
       ],
     },

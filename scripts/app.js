@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=64";
+} from "/scripts/rooms-data.js?v=65";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -557,7 +557,7 @@ function renderMemoryExperience(documentEntry) {
   const memory = documentEntry.memory;
   const highlightBody = (body) => memory.highlights.reduce((text, value) => text.replaceAll(value, `<span class="memory-inline-highlight">${value}</span>`), body);
   return `<article class="memory-experience memory-archive" aria-labelledby="memory-title-${documentEntry.id}">
-    <section class="memory-section memory-hero"><div class="memory-hero-copy"><h2 class="memory-major-title" id="memory-title-${documentEntry.id}">${memory.title}</h2><p class="memory-tagline">把企业里散落的知识、材料和文件，转成能直接使用的工作成果。</p><p class="memory-hero-copy-text">面向办公场景，把周报、会议纪要、知识库文档、本地文件等内容，生成 PPT、信息图、总结、问答等可继续使用的结果。</p></div><div class="memory-interface" aria-label="AI 知识加工台界面示意"><div class="memory-interface-top"><span></span><span></span><span></span></div><div class="memory-interface-body"><i></i><i></i><i></i><b></b></div></div></section>
+    <section class="memory-section memory-hero"><div class="memory-hero-copy"><h2 class="memory-major-title" id="memory-title-${documentEntry.id}">${memory.title}</h2><p class="memory-tagline">把企业里散落的知识、材料和文件，转成能直接使用的工作成果。</p><p class="memory-hero-copy-text">面向办公场景，把周报、会议纪要、知识库文档、本地文件等内容，生成 PPT、信息图、总结、问答等可继续使用的结果。</p></div><div class="memory-interface memory-interface-screenshot" aria-label="AI 知识加工台真实界面"><img src="/assets/works/ai-knowledge-platform/knowledge-platform-top-right.png" alt="AI 知识加工台上传资源与任务处理界面"></div></section>
     <section class="memory-section memory-work"><header><p class="memory-major-title">01 我做了什么</p><h3>把功能迭代变成用户愿意尝试的工作场景</h3></header><div class="memory-role-intro"><p>围绕 AI 知识加工台的重点功能，参与场景提炼、运营内容策划、使用引导和数据复盘。</p><div class="memory-role-actions"><div><strong>场景提炼</strong><span>从真实工作困境里找共鸣切口</span></div><div><strong>内容策划</strong><span>围绕上新、教育和教程做内容</span></div><div><strong>体验转化</strong><span>让用户进入创建、使用、提问</span></div><div><strong>数据复盘</strong><span>根据行为数据调整重点</span></div></div></div><div class="memory-work-label">重点功能内容</div><div class="memory-feature-list">${memory.features.map((feature) => `<article class="memory-feature"><div class="memory-feature-title"><span>${feature.number}</span><h4>${feature.title}</h4></div><p>${feature.iteration}</p><small>运营切口 · ${feature.operation}</small><blockquote>“${feature.expression}”</blockquote></article>`).join("")}</div></section>
     <section class="memory-section memory-data"><header><p class="memory-major-title">02 数据复盘</p><h3>从创建入口，到实际使用，再到持续提问</h3></header><div class="memory-kpis" role="tablist" aria-label="数据指标">${memory.monthly.map((item, index) => `<button type="button" class="memory-kpi" role="tab" aria-selected="${index === 0}" data-memory-kpi-index="${index}"><strong>${item.new}</strong><span>${item.label}</span></button>`).join("")}</div><div class="memory-metric-detail" aria-live="polite"></div><div class="memory-path"><h4>用户行为路径 · UV</h4><div>${memory.path.map((item, index) => `<span><b>${item.count}</b><small>${item.label}</small></span>${index < memory.path.length - 1 ? `<i>→</i>` : ""}`).join("")}</div></div><div class="memory-task-mix"><h4>累计任务分布 · 核心四类</h4>${memory.taskMix.map((item) => `<div><strong>${item.label}</strong><span><i style="width:${parseInt(item.share, 10) * 3}%"></i></span><em>${item.share}</em><small>UV ${item.uv} · PV ${item.pv}</small></div>`).join("")}</div><p class="memory-data-note">数据区间：2026.08.10—2026.08.16，对比 2026.08.03—2026.08.09</p><p class="memory-insight">${memory.insight}</p></section>
     <section class="memory-section memory-content"><header><p class="memory-major-title">03 精选内容</p><h3>用场景内容把功能讲清楚</h3></header><div class="memory-content-browser"><nav aria-label="精选内容目录">${memory.contentArchive.map((item, index) => `<button type="button" class="memory-content-tab${index === 0 ? " is-active" : ""}" data-content-index="${index}"><span>${item.number}</span><strong>${item.type}</strong><small>${item.title}</small></button>`).join("")}</nav><div class="memory-content-detail" aria-live="polite"></div></div></section>
@@ -683,7 +683,7 @@ function renderModelExperience(documentEntry) {
   return `<article class="model-experience" aria-labelledby="model-title-${documentEntry.id}">
     <section class="model-section model-hero">
       <div class="model-hero-copy"><p class="model-eyebrow">产品经历 / Product Experience</p><h2 id="model-title-${documentEntry.id}">${documentEntry.title}</h2><p class="model-hero-subtitle">${model.subtitle}</p><p class="model-hero-summary">${model.summary}</p></div>
-      <div class="model-hero-visual" aria-label="模型池到办公任务的路径示意"><div class="model-hero-flow">${model.intro.flow.map((item, index) => `<span><b>${String(index + 1).padStart(2, "0")}</b>${item}</span>${index < model.intro.flow.length - 1 ? "<i>→</i>" : ""}`).join("")}</div><div class="model-hero-grid"><i></i><i></i><i></i><b></b></div></div>
+      <div class="model-hero-visual model-hero-screenshot-wrap" aria-label="模型体验台真实界面"><img class="model-hero-screenshot" src="/assets/works/model-experience/model-experience-top-right.png" alt="模型体验台模型选择与体验界面"></div>
     </section>
     <section class="model-section model-intro-section"><header><span class="model-section-number">01</span><h3>体验台介绍</h3></header><div class="model-intro-grid"><div><p class="model-lead">${model.intro.positioning}</p><p>${model.intro.background}</p></div><div class="model-problem-list"><small>要解决的问题</small><ul>${model.intro.problems.map((problem) => `<li>${problem}</li>`).join("")}</ul><p class="model-vision"><b>产品愿景</b>${model.intro.vision}</p></div></div></section>
     <section class="model-section model-build-section"><header><span class="model-section-number">02</span><h3>从 0 到 1 搭建</h3><p>先确认问题，再把模型能力组织成可体验、可反馈、可复盘的工作入口。</p></header><div class="model-browser model-stage-browser"><nav aria-label="搭建阶段">${model.stages.map((stage, index) => `<button type="button" class="model-stage-card${index === 0 ? " is-active" : ""}" data-model-stage-index="${index}"><span>${stage.number}</span><strong>${stage.title}</strong><small>${stage.summary}</small></button>`).join("")}</nav><div class="model-detail-panel model-stage-detail" aria-live="polite">${modelStageDetailMarkup(model, 0)}</div></div></section>
@@ -705,6 +705,10 @@ function searchListMarkup(items) {
 
 function searchEntryStageMarkup(entry) {
   if (!entry) return "";
+  if (entry.images?.length) {
+    const image = entry.images[0];
+    return `<div class="search-entry-media-carousel" data-search-media-carousel data-media-index="0" aria-label="${entry.title}产品截图轮播"><div class="search-entry-media-viewport"><img data-search-media-image src="${image.src}" alt="${image.alt}"></div><button type="button" class="search-entry-media-control is-prev" data-search-media-prev aria-label="查看${entry.title}上一张截图">‹</button><button type="button" class="search-entry-media-control is-next" data-search-media-next aria-label="查看${entry.title}下一张截图">›</button><span class="search-entry-media-counter" data-search-media-counter>1 / ${entry.images.length}</span><small class="search-entry-media-source" data-search-media-source>来源：${image.source}</small></div>`;
+  }
   if (!entry.videoSrc) {
     return `<div class="search-entry-video-placeholder" role="img" aria-label="${entry.posterAlt}"><span>VIDEO / ${entry.order}</span><strong>${entry.title}</strong><small>录屏待补</small><em>${entry.posterAlt}</em></div>`;
   }
@@ -731,6 +735,29 @@ function renderSearchEntryStage(search, index = 1) {
     tab.tabIndex = selected ? 0 : -1;
   });
   bindSearchEntryVideo(experience);
+  bindSearchEntryCarousel(experience, entry);
+}
+
+function bindSearchEntryCarousel(experience, entry) {
+  const carousel = experience.querySelector("[data-search-media-carousel]");
+  if (!carousel || !entry?.images?.length) return;
+  const image = carousel.querySelector("[data-search-media-image]");
+  const counter = carousel.querySelector("[data-search-media-counter]");
+  const source = carousel.querySelector("[data-search-media-source]");
+  let index = Number(carousel.dataset.mediaIndex || 0);
+  const update = (nextIndex) => {
+    index = (nextIndex + entry.images.length) % entry.images.length;
+    const item = entry.images[index];
+    carousel.dataset.mediaIndex = String(index);
+    if (image) {
+      image.src = item.src;
+      image.alt = item.alt;
+    }
+    if (counter) counter.textContent = `${index + 1} / ${entry.images.length}`;
+    if (source) source.textContent = `来源：${item.source}`;
+  };
+  carousel.querySelector("[data-search-media-prev]")?.addEventListener("click", () => update(index - 1));
+  carousel.querySelector("[data-search-media-next]")?.addEventListener("click", () => update(index + 1));
 }
 
 function bindSearchEntryVideo(experience) {
@@ -1418,6 +1445,7 @@ function enterSearchExperience(trigger) {
     const searchEntry = activeModalDocuments.find((entry) => entry.contentType === "search-experience");
     const search = searchEntry?.searchExperience;
     if (!search) return;
+    const defaultEntryIndex = Math.max(0, search.hero.entries.findIndex((entry) => entry.id === search.hero.defaultEntryId));
 
     const bindings = [
       ["[data-search-problem-index]", "searchProblemIndex", renderSearchProblemDetail],
@@ -1431,6 +1459,7 @@ function enterSearchExperience(trigger) {
       experience.querySelectorAll(selector).forEach((button) => button.addEventListener("click", () => renderer(search, Number(button.dataset[datasetKey]))));
     });
     bindSearchEntryVideo(experience);
+    bindSearchEntryCarousel(experience, search.hero.entries[defaultEntryIndex]);
     const entryTabs = [...experience.querySelectorAll("[data-search-entry-tab]")];
     const selectEntry = (index, moveFocus = false) => {
       const currentVideo = experience.querySelector("[data-search-video]");
