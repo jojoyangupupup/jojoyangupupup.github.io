@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=63";
+} from "/scripts/rooms-data.js?v=64";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -105,7 +105,16 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || `Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}`}"
                     d="${object.path}"
                   ></path>
-                  ${object.glowImage ? `
+                  ${object.glowPath ? `
+                    <path
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      d="${object.glowPath}"
+                      fill="#ffffff"
+                      aria-hidden="true"
+                    ></path>
+                  ` : object.glowImage ? `
                     <image
                       class="room-object-glow"
                       data-room-id="${room.id}"

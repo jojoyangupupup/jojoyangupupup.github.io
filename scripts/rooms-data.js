@@ -177,8 +177,8 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-cushion-03.png",
         ariaLabel: "打开 03 号经历：AI 搜索",
         documentId: "garden-ai-search",
-        path: "M 1461 1050 C 1488 1026 1521 1017 1554 1031 L 1602 1072 C 1624 1103 1638 1150 1630 1192 L 1611 1248 C 1596 1286 1573 1324 1540 1348 L 1503 1341 C 1474 1317 1457 1275 1448 1226 L 1440 1157 C 1438 1111 1444 1072 1461 1050 Z",
-        glowImage: { file: "/assets/rooms/objects/garden-cushion-03.png", x: 1327, y: 1030, width: 332, height: 336 },
+        path: "M 1535 1028 L 1502 1072 L 1477 1113 L 1476 1127 L 1498 1178 L 1499 1178 L 1525 1152 L 1567 1130 L 1574 1119 L 1574 1107 L 1568 1088 L 1554 1066 L 1535 1028 Z",
+        glowPath: "M 1535 1028 L 1502 1072 L 1477 1113 L 1476 1127 L 1498 1178 L 1499 1178 L 1525 1152 L 1567 1130 L 1574 1119 L 1574 1107 L 1568 1088 L 1554 1066 L 1535 1028 Z",
       },
       {
         id: "garden-bike",
