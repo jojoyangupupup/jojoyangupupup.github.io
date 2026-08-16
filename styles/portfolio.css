@@ -3817,7 +3817,7 @@ button {
 .search-data-note { margin: 22px 0 0 !important; padding-top: 14px; border-top: 1px dashed var(--search-line); font: 10px/1.6 var(--font-sans, Arial, sans-serif) !important; color: var(--search-soft) !important; }
 .search-feedback-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 24px; align-items: start; margin-top: 23px; }
 .search-feedback-flow > div { min-width: 0; padding-top: 13px; border-top: 1px solid var(--search-line); }
-.search-feedback-flow > div.is-result { border-top-color: var(--search-green); }
+.search-feedback-flow > div.is-result { padding: 15px 16px 17px; border-top-color: transparent; border-left: 3px solid var(--search-green); background: #e7efeb; }
 .search-feedback-flow > div.is-result small { color: var(--search-green); }
 .search-feedback-flow > i { display: none; }
 .search-feedback-flow p { width: 100%; max-width: none; white-space: normal; word-break: normal; overflow-wrap: break-word; }
