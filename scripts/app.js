@@ -1436,6 +1436,11 @@ function enterSearchExperience(trigger) {
       tab.addEventListener("click", () => selectEntry(index));
       tab.addEventListener("keydown", (event) => {
         let nextIndex = index;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectEntry(index, true);
+          return;
+        }
         if (event.key === "ArrowRight") nextIndex = (index + 1) % entryTabs.length;
         else if (event.key === "ArrowLeft") nextIndex = (index - 1 + entryTabs.length) % entryTabs.length;
         else if (event.key === "Home") nextIndex = 0;
