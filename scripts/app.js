@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=66";
+} from "/scripts/rooms-data.js?v=67";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -696,7 +696,7 @@ function renderModelExperience(documentEntry) {
 }
 
 function searchImagePlaceholderMarkup(sourceDoc, number = "1", imageSrc = "") {
-  if (imageSrc) return `<figure class="search-image-placeholder has-image" data-source-doc="${sourceDoc}" data-source-image="${number}"><a href="${imageSrc}" target="_blank" rel="noreferrer" aria-label="放大预览${sourceDoc}产品方案图片"><img src="${imageSrc}" alt="${sourceDoc}产品方案与交互示例" loading="lazy"><span class="search-image-zoom">点击放大预览</span></a><figcaption>${sourceDoc}<small>产品方案与交互示例 · 点击图片查看大图</small></figcaption></figure>`;
+  if (imageSrc) return `<figure class="search-image-placeholder has-image" data-source-doc="${sourceDoc}" data-source-image="${number}"><a href="${imageSrc}" data-search-image-preview aria-label="放大预览${sourceDoc}产品方案图片"><img src="${imageSrc}" alt="${sourceDoc}产品方案与交互示例" loading="lazy"><span class="search-image-zoom">点击放大预览</span></a><figcaption>${sourceDoc}<small>产品方案与交互示例 · 点击图片查看大图</small></figcaption></figure>`;
   return `<figure class="search-image-placeholder" role="img" aria-label="${sourceDoc} 产品文档图片待补" data-source-doc="${sourceDoc}" data-source-image="${number}"><span>IMAGE / ${String(number).padStart(2, "0")}</span><strong>图片待补</strong><figcaption>${sourceDoc}<small>产品方案与交互示例</small></figcaption></figure>`;
 }
 
@@ -2061,7 +2061,36 @@ documentModal.addEventListener("click", (event) => {
   closeOrReturnDocument();
 });
 
+function closeSearchImagePreview() {
+  const preview = document.querySelector("[data-search-image-lightbox]");
+  if (!preview) return;
+  preview.remove();
+  document.body.classList.remove("has-search-image-lightbox");
+}
+
+document.addEventListener("click", (event) => {
+  const imageLink = event.target.closest("[data-search-image-preview]");
+  if (imageLink) {
+    event.preventDefault();
+    closeSearchImagePreview();
+    const preview = document.createElement("div");
+    preview.className = "search-image-lightbox";
+    preview.dataset.searchImageLightbox = "true";
+    preview.setAttribute("role", "dialog");
+    preview.setAttribute("aria-modal", "true");
+    preview.setAttribute("aria-label", "图片放大预览");
+    preview.innerHTML = `<button type="button" class="search-image-lightbox-close" data-search-image-lightbox-close aria-label="关闭图片预览">×</button><img src="${imageLink.href}" alt="${imageLink.querySelector("img")?.alt || "产品方案图片"}">`;
+    document.body.append(preview);
+    document.body.classList.add("has-search-image-lightbox");
+    preview.querySelector("[data-search-image-lightbox-close]").focus();
+    return;
+  }
+  const preview = event.target.closest("[data-search-image-lightbox]");
+  if (preview && (event.target === preview || event.target.closest("[data-search-image-lightbox-close]"))) closeSearchImagePreview();
+});
+
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeSearchImagePreview();
   if (event.key === "Escape" && !documentModal.hidden) closeOrReturnDocument();
   if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
     console.log("TODO: switch product experience", event.key);
