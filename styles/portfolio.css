@@ -187,6 +187,14 @@ button {
   transform: scaleX(1);
 }
 
+@media (min-width: 641px) {
+  .top-navigation-link[data-page-id="overview"] {
+    margin-left: -150px;
+    padding-right: 22px;
+    border-right: 1px solid var(--line);
+  }
+}
+
 .site-header[data-locked="true"] .top-navigation-link {
   cursor: wait;
   pointer-events: none;
@@ -896,6 +904,10 @@ button {
   object-fit: contain;
   transform-origin: center;
   transition: filter 240ms ease, transform 240ms var(--ease-editorial);
+}
+
+.object-directory-row[data-object-id="garden-cushion-03"] .directory-thumb img {
+  object-fit: cover;
 }
 
 .object-directory-row[data-object-id="living-tv"] .directory-thumb img {
