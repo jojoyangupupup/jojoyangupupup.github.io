@@ -1,5 +1,5 @@
 import { MODEL_EXPERIENCE_DOCUMENT } from "/scripts/model-experience-data.js?v=5";
-import { SEARCH_EXPERIENCE_DOCUMENT } from "/scripts/search-experience-data.js?v=3";
+import { SEARCH_EXPERIENCE_DOCUMENT } from "/scripts/search-experience-data.js?v=4";
 
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-decorated.png?v=2";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };

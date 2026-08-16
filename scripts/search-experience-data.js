@@ -167,6 +167,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "关键词命中后直接到达正确地域和站点资源，并明确资源类型。",
         result: "搜索从依赖零散配置转向资源可补充、可识别、可持续维护。",
         sourceDoc: "统一搜索官网直达-资源统一与优化",
+        image: "/assets/works/ai-search-iterations/01-resource-foundation.jpg",
       },
       {
         number: "02",
@@ -178,6 +179,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "用户可以在筛选结果中切换展示方式，并从命中消息进入上下文。",
         result: "消息定位链路更短，结果不再是失去语境的孤立文本。",
         sourceDoc: "消息记录搜索-筛选项优化&新功能提示",
+        image: "/assets/works/ai-search-iterations/02-message-search.jpg",
       },
       {
         number: "03",
@@ -189,6 +191,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "通过企业归属、类型标签和筛选条件区分同名人与不同会话对象。",
         result: "人员与会话导航从单一厂内联系人扩展到跨企业和自动化账号。",
         sourceDoc: "支持跨企业搜人",
+        image: "/assets/works/ai-search-iterations/03-people-groups-bots.jpg",
       },
       {
         number: "04",
@@ -200,6 +203,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "推荐问题自动选择消息资源，答案侧同步展示消息、发送人、会话与原文。",
         result: "搜索从返回列表向提供可回溯答案推进。",
         sourceDoc: "消息记录支持 AI 搜索",
+        image: "/assets/works/ai-search-iterations/04-ai-search.jpg",
       },
       {
         number: "05",
@@ -211,6 +215,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "在当前结果页完成范围缩小、类型切换和上下文查看，不反复跳转。",
         result: "综合入口与垂直搜索分工更清晰，高频筛选更容易被发现。",
         sourceDoc: "如流搜索框架优化-2.0",
+        image: "/assets/works/ai-search-iterations/05-search-framework-2.jpg",
       },
       {
         number: "06",
@@ -222,6 +227,7 @@ export const SEARCH_EXPERIENCE_DOCUMENT = {
         interaction: "用户完成评分后选择原因，反馈按规则进入监控与复盘链路。",
         result: "反馈从零散意见转为可以支持下一轮产品判断的结构化信号。",
         sourceDoc: "企业 AI 搜索增加统一评分反馈插件",
+        image: "/assets/works/ai-search-iterations/06-feedback-loop.jpg",
       },
     ],
     data: [

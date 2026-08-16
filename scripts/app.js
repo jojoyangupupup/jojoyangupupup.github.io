@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=65";
+} from "/scripts/rooms-data.js?v=66";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -695,7 +695,8 @@ function renderModelExperience(documentEntry) {
   </article>`;
 }
 
-function searchImagePlaceholderMarkup(sourceDoc, number = "1") {
+function searchImagePlaceholderMarkup(sourceDoc, number = "1", imageSrc = "") {
+  if (imageSrc) return `<figure class="search-image-placeholder has-image" data-source-doc="${sourceDoc}" data-source-image="${number}"><a href="${imageSrc}" target="_blank" rel="noreferrer" aria-label="放大预览${sourceDoc}产品方案图片"><img src="${imageSrc}" alt="${sourceDoc}产品方案与交互示例" loading="lazy"><span class="search-image-zoom">点击放大预览</span></a><figcaption>${sourceDoc}<small>产品方案与交互示例 · 点击图片查看大图</small></figcaption></figure>`;
   return `<figure class="search-image-placeholder" role="img" aria-label="${sourceDoc} 产品文档图片待补" data-source-doc="${sourceDoc}" data-source-image="${number}"><span>IMAGE / ${String(number).padStart(2, "0")}</span><strong>图片待补</strong><figcaption>${sourceDoc}<small>产品方案与交互示例</small></figcaption></figure>`;
 }
 
@@ -794,7 +795,7 @@ function searchWorkDetailMarkup(search, index = 0) {
 function searchIterationDetailMarkup(search, index = 0) {
   const item = search.iterations[index] || search.iterations[0];
   if (!item) return "";
-  return `<div class="search-detail-kicker"><span>${item.number}</span><em>${item.status}</em></div><h4>${item.title}</h4><p class="search-detail-lead">${item.summary}</p><div class="search-iteration-detail"><div class="search-iteration-copy"><div><small>解决的问题</small><p>${item.problem}</p></div><div><small>我的产品动作</small>${searchListMarkup(item.actions)}</div><div><small>关键交互</small><p>${item.interaction}</p></div><div class="search-detail-result"><small>迭代结果</small><p>${item.result}</p></div></div>${searchImagePlaceholderMarkup(item.sourceDoc)}</div>`;
+  return `<div class="search-detail-kicker"><span>${item.number}</span><em>${item.status}</em></div><h4>${item.title}</h4><p class="search-detail-lead">${item.summary}</p><div class="search-iteration-detail"><div class="search-iteration-copy"><div><small>解决的问题</small><p>${item.problem}</p></div><div><small>我的产品动作</small>${searchListMarkup(item.actions)}</div><div><small>关键交互</small><p>${item.interaction}</p></div><div class="search-detail-result"><small>迭代结果</small><p>${item.result}</p></div></div>${searchImagePlaceholderMarkup(item.sourceDoc, "1", item.image)}</div>`;
 }
 
 function searchMetricMarkup(metric) {

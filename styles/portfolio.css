@@ -3810,6 +3810,11 @@ button {
 .search-image-placeholder > strong { margin-top: 11px; font: 600 18px/1.2 var(--font-serif, Georgia, serif); color: var(--search-ink); }
 .search-image-placeholder figcaption { margin-top: 16px; font: 10px/1.45 var(--font-sans, Arial, sans-serif); color: var(--search-soft); }
 .search-image-placeholder figcaption small { display: block; margin-top: 4px; color: var(--search-green); }
+.search-image-placeholder.has-image { display: block; min-height: 0; padding: 10px; text-align: left; }
+.search-image-placeholder.has-image a { position: relative; display: block; overflow: hidden; border: 1px solid var(--search-line); background: #fff; }
+.search-image-placeholder.has-image img { display: block; width: 100%; height: auto; max-height: 620px; object-fit: contain; transition: transform 180ms ease; }
+.search-image-placeholder.has-image a:hover img { transform: scale(1.015); }
+.search-image-zoom { position: absolute; right: 10px; bottom: 10px; padding: 5px 8px; border-radius: 4px; background: rgba(29, 38, 39, .72); color: #fff; font: 10px/1.2 var(--font-sans, Arial, sans-serif); }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
 .search-data-card { grid-template-columns: 34px 1fr auto; gap: 4px 8px; min-height: 91px; padding: 14px; }
