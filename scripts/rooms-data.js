@@ -157,8 +157,8 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-cushion-01.png",
         ariaLabel: "打开 01 号记忆：AI 知识加工台",
         documentId: "garden-ai-knowledge-platform",
-        glowMode: "path",
         path: "M 1174 883 C 1192 866 1228 864 1252 875 L 1314 892 L 1329 923 L 1325 979 L 1301 1011 L 1238 1014 L 1187 1002 L 1168 972 L 1166 919 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-01.png", x: 1165, y: 865, width: 170, height: 155 },
       },
       {
         id: "garden-cushion-02",
@@ -167,8 +167,8 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-cushion-02.png",
         ariaLabel: "打开 02 号经历：模型体验台",
         documentId: "garden-model-experience",
-        glowMode: "path",
         path: "M 1246 944 C 1267 929 1304 929 1333 941 L 1388 959 L 1404 990 L 1399 1040 L 1369 1074 L 1309 1077 L 1260 1060 L 1239 1031 L 1238 979 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-02.png", x: 1234, y: 923, width: 178, height: 166 },
       },
       {
         id: "garden-cushion-03",
@@ -177,8 +177,8 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-cushion-03.png",
         ariaLabel: "打开 03 号经历：AI 搜索",
         documentId: "garden-ai-search",
-        glowMode: "path",
         path: "M 1461 1050 C 1488 1026 1521 1017 1554 1031 L 1602 1072 C 1624 1103 1638 1150 1630 1192 L 1611 1248 C 1596 1286 1573 1324 1540 1348 L 1503 1341 C 1474 1317 1457 1275 1448 1226 L 1440 1157 C 1438 1111 1444 1072 1461 1050 Z",
+        glowImage: { file: "/assets/rooms/objects/garden-cushion-03.png", x: 1327, y: 1030, width: 332, height: 336 },
       },
       {
         id: "garden-bike",
