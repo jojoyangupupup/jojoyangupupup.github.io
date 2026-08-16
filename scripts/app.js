@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=62";
+} from "/scripts/rooms-data.js?v=63";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -93,6 +93,20 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
+                <filter id="room-object-edge-glow-path-tight" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="3" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
+                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
+                  <feGaussianBlur in="edge" stdDeviation="3" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.66" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
               </defs>
               ${ROOMS.flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
@@ -105,7 +119,15 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || `Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}`}"
                     d="${object.path}"
                   ></path>
-                  ${object.glowImage ? `
+                  ${object.glowMode === "path" ? `
+                    <path
+                      class="room-object-glow room-object-glow-path"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      d="${object.path}"
+                      aria-hidden="true"
+                    ></path>
+                  ` : object.glowImage ? `
                     <image
                       class="room-object-glow"
                       data-room-id="${room.id}"

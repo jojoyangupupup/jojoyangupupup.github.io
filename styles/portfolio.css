@@ -483,6 +483,14 @@ button {
   filter: url(#room-object-edge-glow-tight);
 }
 
+.room-object-glow-path[data-object-id^="garden-cushion-"] {
+  fill: none;
+  stroke: rgba(255, 247, 223, 0.98);
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+  filter: url(#room-object-edge-glow-path-tight);
+}
+
 .room-object-glow[data-object-id="garden-bike"] {
   filter: url(#room-object-edge-glow-tight);
 }
