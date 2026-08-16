@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=62";
+} from "/scripts/rooms-data.js?v=63";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -694,10 +694,53 @@ function searchListMarkup(items) {
   return `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
 }
 
-function searchDemoResultMarkup(search, index = 0) {
-  const result = search.hero.searches[index] || search.hero.searches[0];
-  if (!result) return "";
-  return `<div class="search-result-head"><div><span class="search-result-ai">AI 总结答案</span><small class="search-result-scope">来源范围 · ${result.scope}</small></div><em>${result.messages.length + result.references.length} 个可验证来源</em></div><p class="search-result-answer">${result.answer}</p><div class="search-result-layout"><div class="search-result-messages"><small>相关消息记录</small>${result.messages.map((message, messageIndex) => `<article><div class="search-result-type"><span>消息</span><em>${message.meta}</em></div><h4>${message.title}</h4><p>${message.excerpt}</p><small>${message.sender}</small><div class="search-result-actions"><button type="button" data-search-result-action="source" data-search-result-index="${messageIndex}">查看原文</button><button type="button" data-search-result-action="context" data-search-result-index="${messageIndex}">查看上下文</button></div></article>`).join("")}</div><aside class="search-result-references"><small>参考来源</small>${result.references.map((reference) => `<button type="button" data-search-reference>${reference}<span aria-hidden="true">↗</span></button>`).join("")}</aside></div><p class="search-demo-status" aria-live="polite">答案由权限内资源生成，可通过原文和上下文进行验证。</p>`;
+function searchEntryStageMarkup(entry) {
+  if (!entry) return "";
+  if (!entry.videoSrc) {
+    return `<div class="search-entry-video-placeholder" role="img" aria-label="${entry.posterAlt}"><span>VIDEO / ${entry.order}</span><strong>${entry.title}</strong><small>录屏待补</small><em>${entry.posterAlt}</em></div>`;
+  }
+  const poster = entry.posterSrc ? ` poster="${entry.posterSrc}"` : "";
+  return `<div class="search-entry-video-shell"><video data-search-video src="${entry.videoSrc}"${poster} controls playsinline preload="metadata" aria-label="${entry.posterAlt}"></video><button type="button" class="search-entry-play" data-search-video-play aria-label="播放${entry.title}"><span aria-hidden="true">▶</span></button><div class="search-entry-video-error" data-search-video-error hidden>录屏加载失败</div></div>`;
+}
+
+function searchEntryDetailMarkup(entry) {
+  if (!entry) return "";
+  return `<div class="search-entry-caption"><div><span>${entry.order}</span><h4>${entry.title}</h4></div><p>${entry.description}</p><div class="search-entry-tags" aria-label="${entry.title}能力标签">${entry.tags.map((tag) => `<span>${tag}</span>`).join("")}</div></div>`;
+}
+
+function renderSearchEntryStage(search, index = 1) {
+  const experience = documentPages.querySelector(".search-experience");
+  const entries = search?.hero?.entries || [];
+  const entry = entries[index] || entries[0];
+  const stage = experience?.querySelector("[data-search-entry-stage]");
+  if (!experience || !entry || !stage) return;
+  stage.innerHTML = `${searchEntryStageMarkup(entry)}${searchEntryDetailMarkup(entry)}`;
+  experience.querySelectorAll("[data-search-entry-tab]").forEach((tab, tabIndex) => {
+    const selected = tabIndex === index;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+  bindSearchEntryVideo(experience);
+}
+
+function bindSearchEntryVideo(experience) {
+  const video = experience.querySelector("[data-search-video]");
+  const play = experience.querySelector("[data-search-video-play]");
+  const error = experience.querySelector("[data-search-video-error]");
+  if (!video) return;
+  play?.addEventListener("click", () => video.play().catch(() => {}));
+  video.addEventListener("play", () => {
+    experience.querySelector(".search-entry-video-shell")?.classList.add("is-playing");
+  });
+  video.addEventListener("pause", () => {
+    experience.querySelector(".search-entry-video-shell")?.classList.remove("is-playing");
+  });
+  video.addEventListener("error", () => {
+    if (error) error.hidden = false;
+    video.hidden = true;
+    if (play) play.hidden = true;
+  });
 }
 
 function searchProblemDetailMarkup(search, index = 0) {
@@ -743,11 +786,12 @@ function searchFeaturedDetailMarkup(search, index = 0) {
 
 function renderSearchExperience(documentEntry) {
   const search = documentEntry.searchExperience;
-  const defaultSearch = search.hero.searches[0];
+  const entries = search.hero.entries || [];
+  const defaultIndex = Math.max(0, entries.findIndex((entry) => entry.id === search.hero.defaultEntryId));
   return `<article class="search-experience" aria-labelledby="search-title-${documentEntry.id}">
     <section class="search-section search-hero">
       <header class="search-hero-copy"><p class="search-eyebrow">${search.eyebrow}</p><h2 id="search-title-${documentEntry.id}">${documentEntry.title}</h2><p class="search-hero-subtitle">${search.subtitle}</p><p class="search-hero-summary">${search.summary}</p></header>
-      <div class="search-product-demo" aria-label="企业 AI 搜索产品交互示意"><div class="search-demo-top"><span>企业 AI 搜索</span><em>权限内检索</em></div><div class="search-resource-selector" role="group" aria-label="选择搜索资源">${search.hero.resources.map((resource, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-search-resource aria-pressed="${index === 0}">${resource}</button>`).join("")}</div><form class="search-demo-form" data-search-form><label><span class="sr-only">搜索问题</span><input class="search-demo-input" type="search" value="${defaultSearch.question}" autocomplete="off"></label><button type="submit">搜索</button></form><div class="search-suggestions"><span>试试这样搜</span>${search.hero.searches.map((item, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-search-suggestion-index="${index}">${item.question}</button>`).join("")}</div><div class="search-demo-result" aria-live="polite">${searchDemoResultMarkup(search, 0)}</div></div>
+      <div class="search-entry-demo" aria-label="真实搜索入口体验"><div class="search-entry-heading"><div><span>SEARCH ENTRY</span><h3>${search.hero.title}</h3></div><p>${search.hero.subtitle}</p></div><div class="search-entry-tabs" role="tablist" aria-label="搜索入口切换">${entries.map((entry, index) => `<button type="button" class="search-entry-tab${index === defaultIndex ? " is-active" : ""}" data-search-entry-tab="${index}" role="tab" aria-selected="${index === defaultIndex}" aria-controls="search-entry-stage-${documentEntry.id}" tabindex="${index === defaultIndex ? "0" : "-1"}"><span>${entry.order}</span>${entry.label}</button>`).join("")}</div><div id="search-entry-stage-${documentEntry.id}" class="search-entry-stage" data-search-entry-stage aria-live="polite">${searchEntryStageMarkup(entries[defaultIndex])}${searchEntryDetailMarkup(entries[defaultIndex])}</div></div>
     </section>
     <section class="search-section search-intro-section"><header><span class="search-section-number">01</span><h3>产品介绍</h3><p>企业资源先被统一理解，用户才能从搜索结果继续走向答案。</p></header><div class="search-intro-grid"><div class="search-intro-copy">${search.intro.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}</div><div class="search-object-grid">${search.intro.objects.map((item) => `<article><span>${item.number}</span><small>${item.signal}</small><h4>${item.title}</h4><p>${item.detail}</p></article>`).join("")}</div></div></section>
     <section class="search-section search-problem-section"><header><span class="search-section-number">02</span><h3>搜索问题与产品判断</h3><p>把“搜不准”拆成资源、召回、交互与感知问题，才能找到真正的产品动作。</p></header><div class="search-browser"><nav aria-label="搜索问题" role="tablist">${search.problems.map((item, index) => `<button type="button" class="search-nav-card${index === 0 ? " is-active" : ""}" data-search-problem-index="${index}" role="tab" aria-selected="${index === 0}"><span>${item.number}</span><strong>${item.title}</strong><small>${item.summary}</small></button>`).join("")}</nav><div class="search-detail-panel search-problem-detail" aria-live="polite">${searchProblemDetailMarkup(search, 0)}</div></div></section>
@@ -844,22 +888,6 @@ function renderSearchFeedbackDetail(search, index = 0) {
 
 function renderSearchFeaturedDetail(search, index = 0) {
   renderSearchDetail(search, index, "[data-search-featured-index]", ".search-featured-detail-panel", searchFeaturedDetailMarkup);
-}
-
-function renderSearchHeroResult(search, index = 0) {
-  const experience = documentPages.querySelector(".search-experience");
-  const result = search.hero.searches[index] || search.hero.searches[0];
-  const detail = experience?.querySelector(".search-demo-result");
-  if (!experience || !result || !detail) return;
-  detail.innerHTML = searchDemoResultMarkup(search, index);
-  const input = experience.querySelector(".search-demo-input");
-  if (input) input.value = result.question;
-  experience.querySelectorAll("[data-search-suggestion-index]").forEach((button, buttonIndex) => button.classList.toggle("is-active", buttonIndex === index));
-  experience.querySelectorAll("[data-search-resource]").forEach((button) => {
-    const selected = button.textContent.trim() === result.scope;
-    button.classList.toggle("is-active", selected);
-    button.setAttribute("aria-pressed", String(selected));
-  });
 }
 
 function renderMemoryContentDetail(memory, index = 0) {
@@ -1382,7 +1410,6 @@ function enterSearchExperience(trigger) {
     const search = searchEntry?.searchExperience;
     if (!search) return;
 
-    renderSearchHeroResult(search, 0);
     const bindings = [
       ["[data-search-problem-index]", "searchProblemIndex", renderSearchProblemDetail],
       ["[data-search-work-index]", "searchWorkIndex", renderSearchWorkDetail],
@@ -1394,48 +1421,29 @@ function enterSearchExperience(trigger) {
     bindings.forEach(([selector, datasetKey, renderer]) => {
       experience.querySelectorAll(selector).forEach((button) => button.addEventListener("click", () => renderer(search, Number(button.dataset[datasetKey]))));
     });
-
-    experience.querySelectorAll("[data-search-suggestion-index]").forEach((button) => {
-      button.addEventListener("click", () => renderSearchHeroResult(search, Number(button.dataset.searchSuggestionIndex)));
-    });
-    experience.querySelectorAll("[data-search-resource]").forEach((button) => {
-      button.addEventListener("click", () => {
-        experience.querySelectorAll("[data-search-resource]").forEach((item) => {
-          const selected = item === button;
-          item.classList.toggle("is-active", selected);
-          item.setAttribute("aria-pressed", String(selected));
-        });
-        const scope = button.textContent.trim();
-        const scopeLabel = experience.querySelector(".search-result-scope");
-        const status = experience.querySelector(".search-demo-status");
-        if (scopeLabel) scopeLabel.textContent = `来源范围 · ${scope}`;
-        if (status) status.textContent = `已将搜索范围切换为“${scope}”，当前答案仍保留原始参考来源。`;
-      });
-    });
-    experience.querySelector("[data-search-form]")?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const input = experience.querySelector(".search-demo-input");
-      const query = input?.value.trim() || search.hero.searches[0].question;
-      const matchedIndex = /笔记本/.test(query) ? 1 : /跨企业|同名|搜人|员工/.test(query) ? 2 : 0;
-      renderSearchHeroResult(search, matchedIndex);
-      if (input) input.value = query;
-      const status = experience.querySelector(".search-demo-status");
-      if (status) status.textContent = "已完成产品交互示意检索；答案保留可验证的消息与知识来源。";
-    });
-    experience.addEventListener("click", (event) => {
-      const action = event.target.closest?.("[data-search-result-action]");
-      const reference = event.target.closest?.("[data-search-reference]");
-      if (!action && !reference) return;
-      const status = experience.querySelector(".search-demo-status");
-      if (!status) return;
-      if (reference) {
-        status.textContent = `已定位参考文档：${reference.textContent.replace("↗", "").trim()}。`;
-        return;
+    bindSearchEntryVideo(experience);
+    const entryTabs = [...experience.querySelectorAll("[data-search-entry-tab]")];
+    const selectEntry = (index, moveFocus = false) => {
+      const currentVideo = experience.querySelector("[data-search-video]");
+      if (currentVideo) {
+        currentVideo.pause();
+        currentVideo.currentTime = 0;
       }
-      const title = action.closest("article")?.querySelector("h4")?.textContent || "当前消息";
-      status.textContent = action.dataset.searchResultAction === "source"
-        ? `已定位原始消息：${title}。`
-        : `已展开“${title}”所在会话的前后文。`;
+      renderSearchEntryStage(search, index);
+      if (moveFocus) experience.querySelector(`[data-search-entry-tab="${index}"]`)?.focus();
+    };
+    entryTabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => selectEntry(index));
+      tab.addEventListener("keydown", (event) => {
+        let nextIndex = index;
+        if (event.key === "ArrowRight") nextIndex = (index + 1) % entryTabs.length;
+        else if (event.key === "ArrowLeft") nextIndex = (index - 1 + entryTabs.length) % entryTabs.length;
+        else if (event.key === "Home") nextIndex = 0;
+        else if (event.key === "End") nextIndex = entryTabs.length - 1;
+        else return;
+        event.preventDefault();
+        selectEntry(nextIndex, true);
+      });
     });
   });
 }
