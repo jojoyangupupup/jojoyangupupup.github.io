@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=70";
+} from "/scripts/rooms-data.js?v=71";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -2088,7 +2088,33 @@ function closeSearchImagePreview() {
   document.body.classList.remove("has-search-image-lightbox");
 }
 
+function closeBloggerBookPreview() {
+  document.querySelector("[data-blogger-book-overlay]")?.remove();
+  document.body.classList.remove("has-blogger-book-overlay");
+}
+
 document.addEventListener("click", (event) => {
+  const bloggerBookButton = event.target.closest(".bili-entry-button");
+  if (bloggerBookButton) {
+    event.preventDefault();
+    closeBloggerBookPreview();
+    const overlay = document.createElement("div");
+    overlay.className = "blogger-book-overlay";
+    overlay.dataset.bloggerBookOverlay = "true";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "博主图鉴预览");
+    overlay.innerHTML = `<div class="blogger-book-window"><button type="button" class="blogger-book-close" data-blogger-book-close aria-label="关闭博主图鉴">×</button><iframe src="/blogger-book/index.html" title="博主图鉴实时选品系统"></iframe></div>`;
+    document.body.append(overlay);
+    document.body.classList.add("has-blogger-book-overlay");
+    overlay.querySelector("[data-blogger-book-close]").focus();
+    return;
+  }
+  const bloggerBookOverlay = event.target.closest("[data-blogger-book-overlay]");
+  if (bloggerBookOverlay && (event.target === bloggerBookOverlay || event.target.closest("[data-blogger-book-close]"))) {
+    closeBloggerBookPreview();
+    return;
+  }
   const imageLink = event.target.closest("[data-search-image-preview]");
   if (imageLink) {
     event.preventDefault();
@@ -2110,7 +2136,10 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeSearchImagePreview();
+  if (event.key === "Escape") {
+    closeSearchImagePreview();
+    closeBloggerBookPreview();
+  }
   if (event.key === "Escape" && !documentModal.hidden) closeOrReturnDocument();
   if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
     console.log("TODO: switch product experience", event.key);

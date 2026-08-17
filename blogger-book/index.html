@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博主图鉴 · 搬运手账</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f0e8;--cs:0 4px 20px rgba(0,0,0,.08);--tm:#3d3530;--mu:#8c7b72;--sep:#e8ddd4}
+body{background:var(--bg);min-height:100vh;font-family:"PingFang SC","Hiragino Sans GB",system-ui,sans-serif;color:var(--tm)}
+.list-page{max-width:1200px;margin:0 auto;padding:48px 24px 80px}
+.list-header{text-align:center;margin-bottom:40px}
+.eyebrow{font-family:'Caveat',cursive;font-size:13px;color:var(--mu);letter-spacing:3px;display:block;margin-bottom:10px}
+h1{font-size:clamp(26px,4vw,40px);font-weight:700}
+h1 span{font-family:'Caveat',cursive;font-weight:400;color:#a89888}
+.sub{font-family:'Caveat',cursive;font-size:17px;color:var(--mu);margin-top:8px}
+.banner{display:flex;justify-content:center;gap:36px;background:#fff;border-radius:18px;padding:18px 32px;box-shadow:var(--cs);margin:0 auto 36px;max-width:540px}
+.bv{font-size:30px;font-weight:700;font-family:'Caveat',cursive;text-align:center}
+.bl{font-size:11px;color:var(--mu);margin-top:2px}
+.filter-bar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+.fbtn{padding:6px 16px;border-radius:100px;border:1.5px solid rgba(0,0,0,.12);background:transparent;font-size:13px;color:var(--mu);cursor:pointer;font-family:inherit;transition:all .18s}
+.fbtn:hover,.fbtn.active{background:var(--tm);border-color:var(--tm);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--cs);cursor:pointer;position:relative;opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s cubic-bezier(.34,1.2,.64,1),box-shadow .22s}
+.card.vis{opacity:1;transform:none}
+.card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 14px 36px rgba(0,0,0,.13)}
+.cbar{height:6px}.cbody{padding:20px 20px 16px}
+.chead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ava{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.ctitle h2{font-size:16px;font-weight:700}
+.ctitle p{font-size:12px;color:var(--mu);font-family:'Caveat',cursive;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.tag{padding:3px 10px;border-radius:100px;font-size:12px;font-weight:500}
+.vibe{font-family:'Caveat',cursive;font-size:15px;color:#a89888;border-left:2px solid var(--sep);padding-left:9px;margin-bottom:14px;min-height:38px}
+.cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:12px;border-top:1px dashed var(--sep)}
+.sv{font-size:19px;font-weight:700;font-family:'Caveat',cursive;text-align:center}
+.sl{font-size:11px;color:var(--mu);text-align:center;margin-top:2px}
+.loc{position:absolute;top:14px;right:14px;font-family:'Caveat',cursive;font-size:11px;color:var(--mu);opacity:.7}
+.badge{position:absolute;top:12px;left:12px;background:#e07060;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;z-index:2}
+/* detail page */
+.detail-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto}
+.detail-page.open{display:block}
+.detail-top{padding:16px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;background:rgba(245,240,232,.95);backdrop-filter:blur(8px);z-index:10;border-bottom:1px solid var(--sep)}
+.back-btn{background:none;border:1.5px solid var(--sep);border-radius:100px;padding:6px 16px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--tm);transition:all .18s}
+.back-btn:hover{background:var(--tm);color:#fff;border-color:var(--tm)}
+.dtop-info{display:flex;align-items:center;gap:12px}
+.d-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dtop-name{font-size:16px;font-weight:700}
+.dtop-sub{font-size:12px;color:var(--mu);font-family:'Caveat',cursive}
+.detail-body{padding:28px;max-width:900px;margin:0 auto}
+/* tabs */
+.tab-nav{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.tab-btn{padding:8px 20px;border-radius:100px;border:1.5px solid var(--sep);background:transparent;font-size:13px;color:var(--mu);cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap}
+.tab-btn.active{background:var(--tm);border-color:var(--tm);color:#fff}
+.tab-panel{display:none}.tab-panel.active{display:block}
+/* sections */
+.sec{background:#fff;border-radius:18px;padding:24px;margin-bottom:20px;box-shadow:var(--cs)}
+.sec-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.sec-num{font-size:12px;font-weight:700;color:#c4a882;letter-spacing:1px}
+.sec-en{font-family:'Caveat',cursive;font-size:13px;color:var(--mu)}
+.sec h3{font-size:17px;font-weight:700;margin-bottom:2px}
+.sub-sec{margin-bottom:18px}.sub-sec:last-child{margin-bottom:0}
+.sub-sec h4{font-size:12px;font-weight:600;color:var(--mu);display:flex;align-items:center;gap:5px;margin-bottom:10px}
+/* palette */
+.palette{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.swatch{border-radius:12px;height:72px;flex:1;min-width:52px;position:relative}
+.swatch .shex{position:absolute;bottom:6px;left:7px;font-size:10px;color:rgba(255,255,255,.85);font-family:'Caveat',cursive}
+.swatch .spct{position:absolute;top:6px;left:7px;font-size:10px;color:rgba(255,255,255,.7)}
+.palette-note{font-size:12px;color:var(--mu);line-height:1.7;background:#f9f5ef;border-radius:10px;padding:10px 14px}
+/* bar chart */
+.bar-chart{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{width:44px;font-size:12px;color:var(--mu);flex-shrink:0;text-align:right}
+.bar-track{flex:1;background:#f0ebe3;border-radius:100px;height:18px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;display:flex;align-items:center;padding-left:8px;transition:width .6s cubic-bezier(.34,1.2,.64,1)}
+.bar-val{font-size:11px;color:rgba(255,255,255,.9);font-weight:600}
+/* frames */
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.frame{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9}
+.frame-bg{width:100%;height:100%}
+.frame-label{position:absolute;top:7px;left:7px;background:rgba(255,255,255,.9);border-radius:5px;padding:2px 7px;font-size:11px;font-weight:600;color:var(--tm)}
+.frame-note{position:absolute;bottom:0;left:0;right:0;background:rgba(40,30,25,.65);color:#fff;font-size:11px;padding:6px 9px;line-height:1.4}
+/* canvas charts */
+.chart-wrap{position:relative;height:150px;margin-bottom:6px}
+canvas{width:100%;height:100%;display:block}
+.chart-note{font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px;margin-top:4px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+/* bgm */
+.bgm-list{display:flex;flex-direction:column;gap:8px}
+.bgm-item{background:#f9f5ef;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.bgm-icon{font-size:18px;flex-shrink:0}
+.bgm-title{font-size:13px;font-weight:600}
+.bgm-sub{font-size:12px;color:var(--mu);margin-top:1px}
+.bgm-pct{margin-left:auto;font-family:'Caveat',cursive;font-size:18px;font-weight:700;color:var(--tm)}
+/* segment bar */
+.seg-bar{display:flex;height:34px;border-radius:10px;overflow:hidden;margin-bottom:10px}
+.seg{display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.9);font-weight:600}
+.seg-legend{display:flex;flex-wrap:wrap;gap:8px}
+.seg-dot{width:10px;height:10px;border-radius:3px}
+.seg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mu)}
+/* word cloud */
+.wordcloud{display:flex;flex-wrap:wrap;gap:7px;align-items:center;padding:4px 0}
+.wword{border-radius:100px;padding:4px 12px;font-weight:600;cursor:default;transition:transform .15s}
+.wword:hover{transform:scale(1.09)}
+/* formula */
+.formula{display:flex;flex-wrap:wrap;gap:8px}
+.formula-item{border-radius:12px;padding:12px 14px;text-align:center;flex:1;min-width:90px}
+.f-pct{font-size:22px;font-weight:700;font-family:'Caveat',cursive}
+.f-name{font-size:12px;color:var(--mu);margin-top:3px}
+/* handbook */
+.title-cards{display:flex;flex-direction:column;gap:8px}
+.tc{background:#f9f5ef;border-radius:12px;padding:13px 15px}
+.tc-num{font-size:11px;font-weight:700;color:#c4a882;margin-bottom:4px}
+.tc-formula{font-size:14px;font-weight:600;margin-bottom:4px}
+.tc-eg{font-size:12px;color:var(--mu);font-style:italic}
+.cover-steps{display:flex;flex-direction:column;gap:7px}
+.cs{display:flex;align-items:flex-start;gap:9px;background:#f9f5ef;border-radius:12px;padding:11px 14px}
+.cs-n{width:20px;height:20px;background:var(--tm);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px}
+.cs-text{font-size:13px;line-height:1.6}
+.time-slots{display:flex;gap:8px;flex-wrap:wrap}
+.ts{background:#f9f5ef;border-radius:12px;padding:12px 14px;flex:1;min-width:110px;text-align:center}
+.ts-time{font-size:18px;font-weight:700;font-family:'Caveat',cursive}
+.ts-label{font-size:11px;color:var(--mu);margin-top:3px}
+.ml-list{display:flex;flex-direction:column;gap:7px}
+.ml{display:flex;gap:8px;align-items:flex-start;background:#f9f5ef;border-radius:10px;padding:10px 14px}
+.ml-icon{font-size:16px;flex-shrink:0}
+.ml-text{font-size:13px;line-height:1.6}
+/* ref */
+.sim-list{display:flex;flex-direction:column;gap:8px}
+.sim-item{background:#f9f5ef;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.sim-ava{font-size:24px}
+.sim-info h4{font-size:13px;font-weight:600}
+.sim-info p{font-size:12px;color:var(--mu);margin-top:2px}
+.sim-score{margin-left:auto;text-align:center}
+.sim-pct{font-size:20px;font-weight:700;font-family:'Caveat',cursive}
+.sim-sl{font-size:10px;color:var(--mu)}
+.combo-box{background:#f9f5ef;border-radius:12px;padding:14px;margin-bottom:10px}
+.combo-title{font-size:14px;font-weight:700;margin-bottom:5px}
+.combo-sub{font-size:12px;color:var(--mu);line-height:1.7}
+.ob-rows{display:flex;flex-direction:column;gap:7px}
+.ob-row{display:flex;align-items:center;gap:8px}
+.ob-label{width:78px;font-size:12px;color:var(--mu);flex-shrink:0}
+.ob-track{flex:1;background:#f0ebe3;border-radius:100px;height:14px;overflow:hidden}
+.ob-fill{height:100%;border-radius:100px}
+.ob-val{width:34px;font-size:12px;font-family:'Caveat',cursive;font-weight:700}
+/* notes */
+.notes-area{display:flex;flex-direction:column}
+.note-line{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid var(--sep)}
+.note-icon{font-size:15px;margin-top:2px;flex-shrink:0}
+.note-content{flex:1}
+.note-textarea{font-size:13px;color:var(--tm);line-height:1.6;min-height:22px;outline:none;border:none;background:transparent;width:100%;resize:none;font-family:inherit;field-sizing:content}
+.note-textarea:focus{background:rgba(196,168,136,.08);border-radius:6px;padding:3px 6px;margin:-3px -6px}
+.note-meta{font-size:11px;color:var(--mu);margin-top:2px;font-family:'Caveat',cursive}
+.add-note-btn{display:flex;align-items:center;gap:7px;padding:10px 0;cursor:pointer;color:var(--mu);font-size:13px;background:none;border:none;font-family:inherit}
+.add-note-btn:hover{color:var(--tm)}
+/* editable */
+[contenteditable]{outline:none;border-radius:4px;transition:background .15s}
+[contenteditable]:hover{background:rgba(196,168,136,.1)}
+[contenteditable]:focus{background:rgba(196,168,136,.18);padding:2px 5px;margin:-2px -5px}
+.edit-hint{position:fixed;bottom:20px;right:20px;background:rgba(40,30,25,.8);color:#fff;font-size:12px;padding:8px 14px;border-radius:100px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.edit-hint.show{opacity:1}
+@media(max-width:640px){
+  .frames{grid-template-columns:1fr}
+  .detail-body{padding:18px 16px 60px}
+  .detail-top{padding:12px 16px}
+  .formula-item{min-width:76px}
+  .tab-btn{font-size:12px;padding:7px 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LIST PAGE ══ -->
+<div class="list-page" id="listPage">
+  <div class="list-header">
+    <span class="eyebrow">✦ My Creator Atlas ✦</span>
+    <h1>博主图鉴 <span>手账</span></h1>
+    <p class="sub">那些陪我度过深夜搬运时光的人们 ☕</p>
+  </div>
+  <div class="banner">
+    <div><div class="bv">6</div><div class="bl">常驻博主</div></div>
+    <div><div class="bv">127</div><div class="bl">已搬运期数</div></div>
+    <div><div class="bv">340h</div><div class="bl">深夜时光</div></div>
+  </div>
+  <div class="filter-bar">
+    <button class="fbtn active" data-filter="all">全部</button>
+    <button class="fbtn" data-filter="治愈">☁️ 治愈</button>
+    <button class="fbtn" data-filter="生活流">🍳 生活流</button>
+    <button class="fbtn" data-filter="旅拍">✈️ 旅拍</button>
+    <button class="fbtn" data-filter="美食">🍜 美食</button>
+    <button class="fbtn" data-filter="ins风">📸 ins风</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ══ DETAIL PAGE ══ -->
+<div class="detail-page" id="detailPage">
+  <div class="detail-top">
+    <button class="back-btn" id="backBtn">← 返回图鉴</button>
+    <div class="dtop-info">
+      <div class="d-ava" id="dtAvatar"></div>
+      <div>
+        <div class="dtop-name" id="dtName"></div>
+        <div class="dtop-sub" id="dtSub"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="dna">① 风格档案</button>
+      <button class="tab-btn" data-tab="sop">② 搬运手册</button>
+      <button class="tab-btn" data-tab="ref">③ 横向参考</button>
+      <button class="tab-btn" data-tab="notes">④ 我的笔记</button>
+    </div>
+
+    <!-- ① 风格档案 -->
+    <div class="tab-panel active" id="tab-dna">
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">01.</div><h3 id="d-palette-title">视觉 DNA</h3></div><div class="sec-en">Visual DNA</div></div>
+        <div class="sub-sec">
+          <h4>🎨 提取色板（基于 12 期画面）</h4>
+          <div class="palette" id="d-palette"></div>
+          <div class="palette-note" id="d-palette-note" contenteditable="true"></div>
+        </div>
+        <div class="sub-sec">
+          <h4>📷 镜头偏好（12 期统计）</h4>
+          <div class="bar-chart" id="d-lens-chart"></div>
+        </div>
+        <div class="sub-sec">
+          <h4>🖼 代表帧构图拆解（精选 4 帧）</h4>
+          <div class="frames" id="d-frames"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">02.</div><h3>节奏与剪辑</h3></div><div class="sec-en">Rhythm &amp; Editing</div></div>
+        <div class="sub-sec">
+          <h4>⏱ 平均镜头停留时长（秒）</h4>
+          <div class="chart-wrap"><canvas id="d-rhythm-chart"></canvas></div>
+          <div class="chart-note" id="d-rhythm-note"><span class="dot" style="background:#c4a882"></span><span contenteditable="true"></span></div>
+        </div>
+        <div class="sub-sec">
+          <h4>🎵 BGM 风格偏好</h4>
+          <div class="bgm-list" id="d-bgm"></div>
+        </div>
+        <div class="sub-sec">
+          <h4>📐 8 分钟视频段落结构</h4>
+          <div class="seg-bar" id="d-seg-bar"></div>
+          <div class="seg-legend" id="d-seg-legend"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">03.</div><h3>叙事与情感</h3></div><div class="sec-en">Narrative &amp; Emotion</div></div>
+        <div class="sub-sec">
+          <h4>🌐 主题关键词云</h4>
+          <div class="wordcloud" id="d-wordcloud"></div>
+        </div>
+        <div class="sub-sec">
+          <h4>📈 情感曲线</h4>
+          <div class="chart-wrap"><canvas id="d-emotion-chart"></canvas></div>
+        </div>
+        <div class="sub-sec">
+          <h4>✍️ 可复用叙事句式</h4>
+          <div class="title-cards" id="d-sentences"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">04.</div><h3>氛围配方</h3></div><div class="sec-en">Vibe Formula</div></div>
+        <div class="formula" id="d-formula"></div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">05.</div><h3>数据档案</h3></div><div class="sec-en">Data Archive</div></div>
+        <div class="sub-sec">
+          <h4>📊 近 12 期播放量趋势</h4>
+          <div class="chart-wrap"><canvas id="d-trend-chart"></canvas></div>
+        </div>
+        <div class="sub-sec">
+          <h4>🔥 弹幕热词 TOP 12</h4>
+          <div class="topwords" id="d-topwords"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 搬运手册 -->
+    <div class="tab-panel" id="tab-sop">
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">01.</div><h3>标题公式</h3></div><div class="sec-en">Title Formula</div></div>
+        <div class="title-cards" id="d-title-cards"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">02.</div><h3>封面选择 4 步法</h3></div><div class="sec-en">Cover Steps</div></div>
+        <div class="cover-steps" id="d-cover-steps"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">03.</div><h3>字幕 &amp; 剪辑建议</h3></div><div class="sec-en">Subtitle Strategy</div></div>
+        <div id="d-subtitle-tips"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">04.</div><h3>发布时间表</h3></div><div class="sec-en">Post Schedule</div></div>
+        <div class="time-slots" id="d-time-slots"></div>
+        <div style="margin-top:14px">
+          <div style="font-size:12px;color:var(--mu);margin-bottom:8px;font-weight:600">推荐标签</div>
+          <div class="topwords" id="d-hashtags"></div>
+        </div>
+        <div style="margin-top:14px">
+          <div style="font-size:12px;color:var(--mu);margin-bottom:8px;font-weight:600">📝 评论区文案模板</div>
+          <div class="palette-note" id="d-comment-template" contenteditable="true"></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">05.</div><h3>变现友好提示</h3></div><div class="sec-en">Monetize</div></div>
+        <div class="ml-list" id="d-monetize"></div>
+      </div>
+    </div>
+
+    <!-- ③ 横向参考 -->
+    <div class="tab-panel" id="tab-ref">
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">01.</div><h3>风格相近博主</h3></div><div class="sec-en">Similar Creators</div></div>
+        <div class="sim-list" id="d-sim-list"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">02.</div><h3>互补拼盘组合</h3></div><div class="sec-en">Combo Strategy</div></div>
+        <div id="d-combos"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">03.</div><h3>观众重叠度</h3></div><div class="sec-en">Audience Overlap</div></div>
+        <div class="ob-rows" id="d-overlap"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">04.</div><h3>选题灵感源</h3></div><div class="sec-en">Topic Ideas</div></div>
+        <div class="palette-note" id="d-topics" contenteditable="true"></div>
+      </div>
+    </div>
+
+    <!-- ④ 我的笔记 -->
+    <div class="tab-panel" id="tab-notes">
+      <div class="sec">
+        <div class="sec-hd"><div><div class="sec-num">04.</div><h3>我的笔记</h3></div><div class="sec-en">My Notes</div></div>
+        <div class="notes-area" id="d-notes-area"></div>
+        <button class="add-note-btn" id="addNoteBtn">＋ 添加灵感</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="edit-hint" id="editHint">✏️ 点击任意文字即可编辑，内容会自动保存在本机</div>
+
+<script>
+const COLORS=[
+ {bar:'linear-gradient(90deg,#c4b4a3,#d4c4b3)',bg:'#f5ede3',text:'#7a6558'},
+ {bar:'linear-gradient(90deg,#a3b5a3,#b3c8b3)',bg:'#e8f0e8',text:'#587358'},
+ {bar:'linear-gradient(90deg,#a3b5c8,#b3c5d8)',bg:'#e3ecf5',text:'#4a6880'},
+ {bar:'linear-gradient(90deg,#c8a3b5,#d8b3c5)',bg:'#f5e3ed',text:'#804a68'},
+ {bar:'linear-gradient(90deg,#b5a3c8,#c5b3d8)',bg:'#ede3f5',text:'#68487a'},
+ {bar:'linear-gradient(90deg,#c8b8a3,#d8c8a3)',bg:'#f5ede0',text:'#7a6548'}
+];
+const baseData=[
+{name:'Erin丨生活诗',channel:'Erin in Somewhere',emoji:'☁️',location:'🇫🇷 Paris',tags:['☁️ 治愈','📸 ins风'],vibe:'每次看她的视频都会觉得，生活应该可以慢一点点',stats:{videos:28,avgPlay:'4.2w',rate:'98%'},color:0,isNew:false},
+{name:'Matilda厨房',channel:'Matilda\'s Kitchen',emoji:'🍳',location:'🇯🇵 Tokyo',tags:['🍳 生活流','🍜 美食'],vibe:'她做饭的声音让我觉得冰箱里什么都有',stats:{videos:31,avgPlay:'6.8w',rate:'97%'},color:1,isNew:false},
+{name:'Thomas & Road',channel:'Thomas on the Road',emoji:'✈️',location:'🌍 World',tags:['✈️ 旅拍','📸 ins风'],vibe:'看完一期就像去过了那个地方',stats:{videos:19,avgPlay:'11.3w',rate:'96%'},color:2,isNew:false},
+{name:'Léa·清晨计划',channel:'Morning with Léa',emoji:'🌿',location:'🇸🇪 Stockholm',tags:['☁️ 治愈','🍳 生活流'],vibe:'她的 morning routine 让我相信早起不是惩罚',stats:{videos:22,avgPlay:'3.5w',rate:'99%'},color:3,isNew:false},
+{name:'Suki书单角',channel:'Suki Reads',emoji:'📚',location:'🇬🇧 London',tags:['☁️ 治愈','📸 ins风'],vibe:'每本书她都能找到最美的那一面',stats:{videos:15,avgPlay:'2.1w',rate:'98%'},color:4,isNew:true},
+{name:'Oona下午茶',channel:'Oona\'s Afternoon',emoji:'🍰',location:'🇦🇺 Melbourne',tags:['🍜 美食','🍳 生活流'],vibe:'墨尔本的阳光里，好像永远是下午三点',stats:{videos:12,avgPlay:'1.8w',rate:'97%'},color:5,isNew:true}
+];
+function makeAnalysis(i){
+ const c=baseData[i], col=COLORS[c.color];
+ const warm=i%3===0, food=c.tags.join('').includes('美食')||c.tags.join('').includes('生活流'), travel=c.tags.join('').includes('旅拍');
+ return {
+  palette:[['#E8D5C4',warm?32:27],['#C5B595',24],['#8C6F55',18],['#BBC6A5',warm?14:22],['#5A4F3F',12]],
+  paletteNote:'特征总结：整体偏暖米色 + 抹茶绿点缀，色调饱和度低、对比柔和，适合营造“清晨/午后”的稳定氛围；这类博主最值得搬的是有仪式感的生活片段。',
+  lens:[['远景',travel?26:18],['中景',food?30:22],['近景',food?24:12],['特写',food?28:18],['空镜',travel?24:20]],
+  frames:[['#03 · 厨房','三分构图 · 前景木桌占 2/3 · 人物在右上 1/3 黄金点'],['#07 · 庭院','中心对称 · 茶碗居中 · 背景虚化做“留白”'],['#09 · 街道','引导线构图 · 巷子延伸 · 人物远景背影'],['#11 · 窗边','框架式构图 · 窗框做画框 · 内外明暗对比']],
+  rhythm:{labels:['开篇','1min','2min','3min','4min','5min','6min','7min','结尾'],values:travel?[4,3,2,3,2,3,5,6,7]:[6,4,3,5,4,2,4,6,7],note:'中等长镜头为主（4-7 秒），关键转场切到特写（1-2 秒）。'},
+  bgm: food ? [['🎹','钢琴独奏','占比 42% · Yiruma / 坂本龙一风','42%'],['🌿','环境音','占比 32% · 雨声 / 厨房声 / 翻书声','32%'],['☕','Lo-fi Beat','占比 26% · 慢拍鼓点','26%']] : [['🎹','钢琴独奏','占比 48% · Yiruma / 坂本龙一风','48%'],['🌿','环境音','占比 28% · 雨声 / 鸟鸣 / 房间声','28%'],['🎻','弦乐铺底','占比 24% · 轻古典','24%']],
+  seg:[['开场氛围',15,'#c4b4a3'],['日常铺陈',30,'#bbc6a5'],['核心片段',30,'#8c6f55'],['情绪回落',15,'#c8a3b5'],['结尾留白',10,'#5a4f3f']],
+  words:['治愈','松弛感','清晨','窗边','咖啡','慢生活','好想去','像电影','氛围','配色','手部特写','收藏'],
+  emotion:{labels:['开场','铺垫','转折','高潮','回落','结尾'],values:[48,56,45,74,62,82]},
+  sentences:['今天没有宏大的事，只是把普通的一天过得很慢。','如果你也需要一点安静，这支 vlog 可以陪你待一会儿。','从清晨的第一杯咖啡开始，生活又被重新整理了一遍。','她镜头里的城市不吵，只剩下光、风和刚好的距离。'],
+  formula:[['35%','暖米色调'],['25%','慢镜头'],['20%','钢琴/环境音'],['10%','手部特写'],['10%','低声旁白']],
+  trend:[2.1,2.7,3.4,3.0,4.2,4.8,3.9,5.2,5.8,4.9,6.3,7.1],
+  titleCards:[['情绪 + 场景 + 结果','一个人在巴黎的雨天，把日子过成电影感'],['博主人设 + 高光片段','她的厨房太治愈了，连切菜声都像白噪音'],['时间锚点 + 生活方式','8分钟沉浸式清晨 routine，看完想立刻整理房间']],
+  coverSteps:['优先选开头 15-40 秒或 5 分钟情绪峰值处的画面。','画面里要有 1 个明确主体：手、咖啡杯、窗边、背影、餐桌。','标题字控制在 8-12 个汉字，避开主体脸和画面黄金点。','封面整体对比度提升 8%-12%，但不要破坏低饱和氛围。'],
+  subtitleTips:['字体：霞鹜文楷 / 思源宋体；字号中小，保持“低打扰”。','位置：下 1/4 居中，遇到餐桌/手部特写时上移。','颜色：奶白字 + 20% 棕色阴影，不建议纯黑描边。','剪辑：保留环境音，转场不要太花，宁愿慢半拍。'],
+  slots:[['20:30','晚饭后松弛时段'],['22:45','睡前陪伴最高'],['周日 15:00','下午茶收藏率高']],
+  hashtags:['#治愈系vlog','#独居日常','#ins风生活','#慢生活','#生活美学','#陪伴感'],
+  comment:'原视频简介翻译：这一期记录了一个很慢的下午，没有计划，只是把房间整理好、做一顿饭、听一首歌。你最近有没有也想把生活调慢一点？',
+  monetize:['适合挂：咖啡杯 / 香薰 / 手账本 / 桌面收纳。','适合做合集：睡前治愈、清晨 routine、一个人生活。','变现话术：不要硬卖，用“视频里同款氛围感小物”更自然。'],
+  similar:[['🌙','Aoi Room','同为低饱和独居日常，节奏更慢',92],['🍵','Kenji Days','同样是生活流，但更偏男性极简',84],['📷','Mina Lens','画面构图相似，文案更小红书',79],['🥐','Nora Table','美食场景相近，适合拼盘',76]],
+  combos:['Aoi × Kenji：动静结合，适合做“一个人的周末”拼盘。','Nora × 当前博主：餐桌与房间切换，适合做“从早餐到夜晚”的完整日常。'],
+  overlap:[['Aoi Room',72],['Kenji Days',58],['Mina Lens',46],['Nora Table',39]],
+  topics:'选题灵感：1）一个人生活的 5 个治愈瞬间；2）窗边/厨房/街道三类镜头的氛围拼盘；3）同样是清晨 routine，比较东京、巴黎、伦敦的差异；4）把观众留言里的“想去/想学/想买”整理成下一期标题。',
+  notes:['剪辑灵感：这类视频开头不要急着进主题，先保留 5 秒环境音。','运营：标题里“一个人”“慢下来”“清晨”三个词点击率稳定。','拼盘：可以和节奏稍快的城市街拍放一起，避免全程太慢。','学习：封面最好选有窗光的画面，收藏率更高。']
+ }
+}
+const creators=baseData.map((c,i)=>({...c,analysis:makeAnalysis(i)}));
+let current=0, hintTimer;
+function showHint(){const h=document.getElementById('editHint');h.classList.add('show');clearTimeout(hintTimer);hintTimer=setTimeout(()=>h.classList.remove('show'),1800)}
+function saveEdited(){if(current==null)return;const data={};document.querySelectorAll('[data-save]').forEach(el=>data[el.dataset.save]=el.innerText||el.value||'');document.querySelectorAll('[data-note]').forEach(el=>data[el.dataset.note]=el.value);localStorage.setItem('creatorAtlasEdit_'+current,JSON.stringify(data));showHint()}
+function loadEdited(){const raw=localStorage.getItem('creatorAtlasEdit_'+current);if(!raw)return;const data=JSON.parse(raw);Object.keys(data).forEach(k=>{const el=document.querySelector(`[data-save="${k}"]`)||document.querySelector(`[data-note="${k}"]`);if(el){if(el.tagName==='TEXTAREA')el.value=data[k];else el.innerText=data[k]}})}
+function renderCards(filter='all'){const grid=document.getElementById('grid');grid.innerHTML='';creators.forEach((c,i)=>{if(filter!=='all'&&!c.tags.some(t=>t.includes(filter)))return;const col=COLORS[c.color];const card=document.createElement('div');card.className='card';card.style.transitionDelay=(i*45)+'ms';card.innerHTML=`${c.isNew?'<div class="badge">NEW</div>':''}<div class="cbar" style="background:${col.bar}"></div><div class="cbody"><div class="loc">${c.location}</div><div class="chead"><div class="ava" style="background:${col.bg}">${c.emoji}</div><div class="ctitle"><h2>${c.name}</h2><p>${c.channel}</p></div></div><div class="tags">${c.tags.map(t=>`<span class="tag" style="background:${col.bg};color:${col.text}">${t}</span>`).join('')}</div><div class="vibe">“${c.vibe}”</div><div class="cstats"><div><div class="sv" style="color:${col.text}">${c.stats.videos}</div><div class="sl">已搬运期</div></div><div><div class="sv" style="color:${col.text}">${c.stats.avgPlay}</div><div class="sl">均播放量</div></div><div><div class="sv" style="color:${col.text}">${c.stats.rate}</div><div class="sl">好评率</div></div></div></div>`;card.onclick=()=>openDetail(i);grid.appendChild(card);requestAnimationFrame(()=>requestAnimationFrame(()=>card.classList.add('vis')))} )}
+function openDetail(i){current=i;const c=creators[i], a=c.analysis, col=COLORS[c.color];document.getElementById('dtAvatar').style.background=col.bg;document.getElementById('dtAvatar').textContent=c.emoji;document.getElementById('dtName').textContent=c.name;document.getElementById('dtSub').textContent=c.channel+' · '+c.location;document.getElementById('detailPage').classList.add('open');document.body.style.overflow='hidden';renderDetail(c,a,col);setTimeout(loadEdited,30)}
+function closeDetail(){document.getElementById('detailPage').classList.remove('open');document.body.style.overflow=''}
+function renderDetail(c,a,col){
+ document.getElementById('d-palette').innerHTML=a.palette.map(([hex,p])=>`<div class="swatch" style="background:${hex}"><span class="spct">${p}%</span><span class="shex">${hex}</span></div>`).join('');
+ document.getElementById('d-palette-note').innerText=a.paletteNote;document.getElementById('d-palette-note').dataset.save='paletteNote';
+ document.getElementById('d-lens-chart').innerHTML=a.lens.map(([l,v])=>`<div class="bar-row"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${v*2.3}%;background:${col.bar}"><span class="bar-val">${v}%</span></div></div></div>`).join('');
+ document.getElementById('d-frames').innerHTML=a.frames.map((f,idx)=>`<div class="frame"><div class="frame-bg" style="background:linear-gradient(${120+idx*25}deg,${a.palette[idx%5][0]},${a.palette[(idx+2)%5][0]})"></div><div class="frame-label">${f[0]}</div><div class="frame-note" contenteditable="true" data-save="frame${idx}">${f[1]}</div></div>`).join('');
+ drawLine('d-rhythm-chart',a.rhythm.labels,a.rhythm.values,col.text,0,8);document.querySelector('#d-rhythm-note span:last-child').innerText=a.rhythm.note;document.querySelector('#d-rhythm-note span:last-child').dataset.save='rhythmNote';
+ document.getElementById('d-bgm').innerHTML=a.bgm.map((b,i)=>`<div class="bgm-item"><div class="bgm-icon">${b[0]}</div><div><div class="bgm-title" contenteditable="true" data-save="bgmTitle${i}">${b[1]}</div><div class="bgm-sub" contenteditable="true" data-save="bgmSub${i}">${b[2]}</div></div><div class="bgm-pct">${b[3]}</div></div>`).join('');
+ document.getElementById('d-seg-bar').innerHTML=a.seg.map(s=>`<div class="seg" style="width:${s[1]}%;background:${s[2]}">${s[0]}</div>`).join('');
+ document.getElementById('d-seg-legend').innerHTML=a.seg.map(s=>`<div class="seg-item"><span class="seg-dot" style="background:${s[2]}"></span>${s[0]} ${s[1]}%</div>`).join('');
+ document.getElementById('d-wordcloud').innerHTML=a.words.map((w,i)=>`<span class="wword" contenteditable="true" data-save="word${i}" style="font-size:${12+(i%5)*3}px;background:${COLORS[i%6].bg};color:${COLORS[i%6].text}">${w}</span>`).join('');
+ drawLine('d-emotion-chart',a.emotion.labels,a.emotion.values,'#c8a3b5',35,90);
+ document.getElementById('d-sentences').innerHTML=a.sentences.map((s,i)=>`<div class="tc"><div class="tc-num">句式 0${i+1}</div><div class="tc-formula" contenteditable="true" data-save="sentence${i}">${s}</div></div>`).join('');
+ document.getElementById('d-formula').innerHTML=a.formula.map((f,i)=>`<div class="formula-item" style="background:${COLORS[i%6].bg}"><div class="f-pct" style="color:${COLORS[i%6].text}">${f[0]}</div><div class="f-name" contenteditable="true" data-save="formula${i}">${f[1]}</div></div>`).join('');
+ drawLine('d-trend-chart',a.trend.map((_,i)=>String(i+1)),a.trend,'#8c6f55',0,8);
+ document.getElementById('d-topwords').innerHTML=a.words.slice(0,12).map(w=>`<span class="tw">${w}</span>`).join('');
+ document.getElementById('d-title-cards').innerHTML=a.titleCards.map((t,i)=>`<div class="tc"><div class="tc-num">公式 0${i+1}</div><div class="tc-formula" contenteditable="true" data-save="titleFormula${i}">${t[0]}</div><div class="tc-eg" contenteditable="true" data-save="titleEg${i}">${t[1]}</div></div>`).join('');
+ document.getElementById('d-cover-steps').innerHTML=a.coverSteps.map((s,i)=>`<div class="cs"><div class="cs-n">${i+1}</div><div class="cs-text" contenteditable="true" data-save="coverStep${i}">${s}</div></div>`).join('');
+ document.getElementById('d-subtitle-tips').innerHTML=`<div class="ml-list">${a.subtitleTips.map((s,i)=>`<div class="ml"><div class="ml-icon">✦</div><div class="ml-text" contenteditable="true" data-save="subTip${i}">${s}</div></div>`).join('')}</div>`;
+ document.getElementById('d-time-slots').innerHTML=a.slots.map((s,i)=>`<div class="ts"><div class="ts-time" contenteditable="true" data-save="slotTime${i}">${s[0]}</div><div class="ts-label" contenteditable="true" data-save="slotLabel${i}">${s[1]}</div></div>`).join('');
+ document.getElementById('d-hashtags').innerHTML=a.hashtags.map((h,i)=>`<span class="tw" contenteditable="true" data-save="hashtag${i}">${h}</span>`).join('');
+ document.getElementById('d-comment-template').innerText=a.comment;document.getElementById('d-comment-template').dataset.save='commentTemplate';
+ document.getElementById('d-monetize').innerHTML=a.monetize.map((m,i)=>`<div class="ml"><div class="ml-icon">💡</div><div class="ml-text" contenteditable="true" data-save="money${i}">${m}</div></div>`).join('');
+ document.getElementById('d-sim-list').innerHTML=a.similar.map((s,i)=>`<div class="sim-item"><div class="sim-ava">${s[0]}</div><div class="sim-info"><h4 contenteditable="true" data-save="simName${i}">${s[1]}</h4><p contenteditable="true" data-save="simNote${i}">${s[2]}</p></div><div class="sim-score"><div class="sim-pct">${s[3]}%</div><div class="sim-sl">相似度</div></div></div>`).join('');
+ document.getElementById('d-combos').innerHTML=a.combos.map((s,i)=>`<div class="combo-box"><div class="combo-title">组合 0${i+1}</div><div class="combo-sub" contenteditable="true" data-save="combo${i}">${s}</div></div>`).join('');
+ document.getElementById('d-overlap').innerHTML=a.overlap.map(o=>`<div class="ob-row"><div class="ob-label">${o[0]}</div><div class="ob-track"><div class="ob-fill" style="width:${o[1]}%;background:${col.bar}"></div></div><div class="ob-val">${o[1]}%</div></div>`).join('');
+ document.getElementById('d-topics').innerText=a.topics;document.getElementById('d-topics').dataset.save='topics';
+ renderNotes(a.notes);
+ bindEditable();
+}
+function renderNotes(notes){const box=document.getElementById('d-notes-area');box.innerHTML=notes.map((n,i)=>`<div class="note-line"><div class="note-icon">${['✂️','📈','🧩','📚'][i%4]}</div><div class="note-content"><textarea class="note-textarea" data-note="note${i}">${n}</textarea><div class="note-meta">idea note 0${i+1}</div></div></div>`).join('')}
+function drawLine(id,labels,values,color,min,max){const cv=document.getElementById(id),ctx=cv.getContext('2d'),w=cv.clientWidth,h=cv.clientHeight,dpr=window.devicePixelRatio||1;cv.width=w*dpr;cv.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const pad={l:36,r:12,t:12,b:28},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;ctx.strokeStyle='#ded3c7';ctx.lineWidth=1;ctx.font='11px sans-serif';ctx.fillStyle='#8c7b72';for(let i=0;i<5;i++){const y=pad.t+ch*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke()}const range=max-min;const pts=values.map((v,i)=>[pad.l+cw*i/(values.length-1),pad.t+ch-(v-min)/range*ch]);ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);pts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();ctx.lineTo(pts[pts.length-1][0],pad.t+ch);ctx.lineTo(pts[0][0],pad.t+ch);ctx.closePath();ctx.fillStyle=color+'22';ctx.fill();pts.forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(p[0],p[1],2,0,Math.PI*2);ctx.fill()});labels.forEach((l,i)=>{ctx.fillStyle='#6f625a';ctx.textAlign='center';ctx.fillText(l,pad.l+cw*i/(labels.length-1),h-8)})}
+function bindEditable(){document.querySelectorAll('[contenteditable],[data-note]').forEach(el=>{el.oninput=saveEdited;el.onfocus=showHint})}
+document.getElementById('backBtn').onclick=closeDetail;document.getElementById('addNoteBtn').onclick=()=>{const box=document.getElementById('d-notes-area');const i=box.children.length;box.insertAdjacentHTML('beforeend',`<div class="note-line"><div class="note-icon">💭</div><div class="note-content"><textarea class="note-textarea" data-note="note${i}">新的灵感笔记...</textarea><div class="note-meta">new idea</div></div></div>`);bindEditable();saveEdited()};
+document.querySelectorAll('.fbtn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCards(btn.dataset.filter)});
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active');setTimeout(()=>openDetail(current),0)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('detailPage').classList.contains('open'))closeDetail()});
+window.addEventListener('resize',()=>{if(document.getElementById('detailPage').classList.contains('open'))openDetail(current)});
+renderCards();
+</script>
+
+</body>
+</html>

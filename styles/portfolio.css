@@ -3842,10 +3842,12 @@ button {
 .bili-hero-grid { display: grid; grid-template-columns: minmax(220px, .34fr) minmax(0, .66fr); gap: 26px; align-items: stretch; margin: 20px 0 24px; }
 .bili-identity { display: flex; min-height: 270px; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 8px 0; }
 .bili-identity h2 { margin: 0; font: 700 clamp(30px, 4vw, 50px)/1.08 Georgia, serif; letter-spacing: 0; }
-.bili-profile-id { color: var(--bili-accent); font: 700 16px/1.3 var(--font-mono, monospace); text-decoration: none; }
+.bili-profile-id { margin: -8px; padding: 8px; border-radius: 7px; color: var(--bili-accent); font: 700 16px/1.3 var(--font-mono, monospace); text-decoration: none; transition: background .18s ease, color .18s ease; }
+.bili-profile-id:hover { background: #f1e2d6; color: #99543e; }
 .bili-profile-id::before { content: "UID"; display: block; margin-bottom: 6px; color: var(--bili-muted); font-size: 10px; letter-spacing: .08em; }
 .bili-profile-image-link { display: block; overflow: hidden; min-width: 0; border: 1px solid var(--bili-line); border-radius: 10px; background: #f4f1ed; }
 .bili-profile-image-link img { display: block; width: 100%; height: 100%; min-height: 270px; object-fit: contain; transition: transform .24s ease; }
+.bili-profile-image-link:hover { background: #efe3d7; border-color: #cda58f; }
 .bili-profile-image-link:hover img { transform: scale(1.035); }
 .bili-kicker, .bili-section-heading em, .bili-stat-grid small, .bili-blogger-entry small { color: var(--bili-muted); font: 11px/1.4 var(--font-mono, monospace); letter-spacing: .08em; text-transform: uppercase; }
 .bili-title-row { display: flex; align-items: start; justify-content: space-between; gap: 20px; margin: 18px 0 20px; }
@@ -3897,6 +3899,12 @@ button {
 .bili-roadmap h4 { margin: 10px 0 12px; font-size: 17px; }
 .bili-roadmap p, .bili-roadmap li { color: #62665f; font-size: 13px; line-height: 1.65; }
 .bili-roadmap ul { margin: 0; padding-left: 18px; }
+.has-blogger-book-overlay { overflow: hidden; }
+.blogger-book-overlay { position: fixed; z-index: 1200; inset: 0; display: grid; place-items: center; padding: clamp(18px, 4vw, 56px); background: rgba(38, 34, 30, .66); }
+.blogger-book-window { position: relative; width: min(92vw, 1120px); height: min(82vh, 760px); overflow: hidden; border: 1px solid #d5c8bb; border-radius: 14px; background: #f5f0e8; box-shadow: 0 20px 70px rgba(24, 20, 17, .28); }
+.blogger-book-window iframe { display: block; width: 100%; height: 100%; border: 0; background: #f5f0e8; }
+.blogger-book-close { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; width: 38px; height: 38px; place-items: center; padding: 0 0 3px; border: 1px solid rgba(255,255,255,.9); border-radius: 50%; background: rgba(48, 42, 38, .82); color: #fff; font: 27px/1 Arial, sans-serif; cursor: pointer; }
+.blogger-book-close:hover { background: #a65e48; }
 @media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-hero-grid { grid-template-columns: 1fr; }.bili-identity { min-height: 0; gap: 15px; }.bili-profile-image-link img { min-height: 0; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list, .bili-roadmap { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
