@@ -3832,6 +3832,57 @@ button {
 .search-image-lightbox img { display: block; max-width: min(94vw, 1800px); max-height: 92vh; width: auto; height: auto; object-fit: contain; box-shadow: 0 18px 60px rgba(0, 0, 0, .28); cursor: default; }
 .search-image-lightbox-close { position: absolute; top: 18px; right: 22px; display: grid; width: 42px; height: 42px; place-items: center; padding: 0 0 4px; border: 1px solid rgba(255, 255, 255, .68); border-radius: 50%; background: rgba(20, 26, 27, .72); color: #fff; font: 30px/1 Arial, sans-serif; cursor: pointer; }
 .search-image-lightbox-close:hover { background: var(--search-blue); }
+
+/* Bilibili creator archive */
+.is-bilibili-experience .document-modal-dialog { background: #f7f3ec; }
+.bilibili-experience { --bili-ink: #2d302d; --bili-muted: #7c817b; --bili-line: #ded8ce; --bili-accent: #c9785d; max-width: 1120px; margin: 0 auto; padding: 38px clamp(18px, 4vw, 58px) 72px; color: var(--bili-ink); font-family: var(--font-sans, Arial, sans-serif); }
+.bili-profile-card, .bili-section { border: 1px solid var(--bili-line); border-radius: 14px; background: #fffdfa; }
+.bili-profile-card { padding: clamp(24px, 4vw, 44px); }
+.bili-kicker, .bili-section-heading em, .bili-stat-grid small, .bili-blogger-entry small { color: var(--bili-muted); font: 11px/1.4 var(--font-mono, monospace); letter-spacing: .08em; text-transform: uppercase; }
+.bili-title-row { display: flex; align-items: start; justify-content: space-between; gap: 20px; margin: 18px 0 20px; }
+.bili-title-row h2 { margin: 0; font: 700 clamp(30px, 4vw, 54px)/1.08 Georgia, serif; letter-spacing: 0; }
+.bili-role { margin: 12px 0 0; color: var(--bili-muted); }
+.bili-uid { flex: 0 0 auto; color: var(--bili-accent); font: 12px/1.4 var(--font-mono, monospace); letter-spacing: .08em; text-decoration: none; }
+.bili-uid strong { display: block; margin-top: 5px; font-size: 16px; color: var(--bili-ink); }
+.bili-intro { max-width: 790px; margin: 0; color: #50554f; font-size: 17px; line-height: 1.85; }
+.bili-intro strong { color: var(--bili-ink); font-weight: 700; }
+.bili-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--bili-line); color: var(--bili-muted); font-size: 12px; }
+.bili-meta strong { display: block; margin-top: 7px; color: var(--bili-ink); font-weight: 500; }
+.bili-section { margin-top: 24px; padding: clamp(22px, 3vw, 34px); }
+.bili-section-heading { display: flex; align-items: baseline; gap: 13px; margin-bottom: 20px; }
+.bili-section-heading span { display: inline-grid; width: 34px; height: 30px; place-items: center; border-radius: 8px; background: #efe6dc; color: var(--bili-accent); font: 700 14px/1 var(--font-mono, monospace); }
+.bili-section-heading h3 { margin: 0; font-size: clamp(21px, 2vw, 28px); }
+.bili-section-heading em { margin-left: auto; font-style: normal; }
+.bili-subtitle, .bili-copy, .bili-note, .bili-footnote { color: #62675f; line-height: 1.75; }
+.bili-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.bili-stat-grid > div { min-height: 128px; padding: 17px; border: 1px solid var(--bili-line); border-radius: 10px; background: #faf7f2; }
+.bili-stat-grid strong { display: block; margin: 15px 0 6px; font: 700 27px/1.1 Georgia, serif; }
+.bili-stat-grid p { margin: 0; color: var(--bili-muted); font-size: 12px; line-height: 1.5; }
+.bili-direction-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.bili-direction-grid > div { padding: 13px; border-bottom: 1px solid var(--bili-line); }
+.bili-direction-grid strong { display: block; font-size: 14px; }
+.bili-direction-grid span { display: block; margin-top: 8px; color: var(--bili-muted); font-size: 11px; }
+.bili-direction-grid b { color: var(--bili-accent); letter-spacing: 2px; }
+.bili-highlight-grid, .bili-income-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+.bili-highlight-grid > div { padding: 18px; border-left: 3px solid #bd8f75; background: #f4ece3; }
+.bili-highlight-grid p { margin: 8px 0 0; color: #64665f; line-height: 1.6; }
+.bili-blogger-entry { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-top: 24px; padding: 22px; border: 1px dashed #cdbca9; border-radius: 12px; background: #fcf8f1; }
+.bili-blogger-entry h4 { margin: 7px 0; font-size: 20px; }
+.bili-blogger-entry p { max-width: 650px; margin: 0; color: #666a63; line-height: 1.6; }
+.bili-blogger-entry div div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.bili-blogger-entry div span, .bili-income-grid small { display: inline-block; padding: 5px 9px; border: 1px solid #d8cabb; border-radius: 999px; color: #77756e; font-size: 11px; }
+.bili-entry-button { flex: 0 0 auto; padding: 12px 16px; border: 1px solid #b8755c; border-radius: 8px; color: #a55f49; font-weight: 700; text-decoration: none; transition: background .18s, color .18s; }
+.bili-entry-button:hover { background: #b8755c; color: #fff; }
+.bili-language-bars { display: grid; gap: 15px; }
+.bili-language-bars > div { display: grid; grid-template-columns: 80px minmax(160px, 1fr) 90px; gap: 14px; align-items: center; }
+.bili-language-bars label { font-weight: 700; }.bili-language-bars label b { float: right; color: var(--bili-accent); font: 12px var(--font-mono, monospace); }
+.bili-language-bars span { height: 8px; overflow: hidden; border-radius: 99px; background: #ebe5dd; }.bili-language-bars i { display: block; height: 100%; border-radius: inherit; background: #c9785d; }.bili-language-bars > div:nth-child(2) i { background: #8295a1; }.bili-language-bars > div:nth-child(3) i { background: #849b7a; }.bili-language-bars > div:nth-child(4) i { background: #c49aa2; }
+.bili-language-bars small { color: var(--bili-muted); font-size: 11px; }
+.bili-flow, .bili-tool-flow { display: flex; align-items: stretch; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+.bili-flow > div, .bili-tool-flow span { min-width: 130px; padding: 14px; border: 1px solid var(--bili-line); border-radius: 10px; background: #faf7f2; }.bili-flow b { display: block; color: var(--bili-accent); font: 10px var(--font-mono, monospace); }.bili-flow strong { display: block; margin: 10px 0 7px; font-size: 13px; }.bili-flow small, .bili-tool-flow small { display: block; color: var(--bili-muted); font-size: 11px; line-height: 1.45; }.bili-flow > span, .bili-tool-flow i { align-self: center; color: #9b9a93; font-style: normal; }.bili-step-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 20px; margin-top: 20px; }.bili-step-list p { margin: 0; color: #62665f; font-size: 13px; line-height: 1.55; }.bili-step-list b { display: inline-block; min-width: 47px; color: var(--bili-accent); font: 11px var(--font-mono, monospace); }.bili-section blockquote { margin: 22px 0 0; padding: 12px 16px; border-left: 3px solid #c8b8a9; color: #787970; font-size: 13px; line-height: 1.65; }
+.bili-tool-flow { margin: 20px 0; }.bili-tool-flow span { flex: 1; min-width: 190px; }.bili-tool-flow i { flex: 0 0 auto; }.bili-income-grid > div { padding: 20px; border: 1px solid var(--bili-line); border-radius: 10px; background: #faf7f2; }.bili-income-grid h4 { margin: 0 0 10px; font-size: 17px; }.bili-income-grid p { margin: 0 0 14px; color: #62665f; line-height: 1.65; }.bili-income-grid small { border-radius: 5px; }
+.bili-income-table { display: grid; grid-template-columns: 1fr 1fr 1.4fr; margin-top: 20px; border: 1px solid var(--bili-line); font-size: 12px; }.bili-income-table div { padding: 10px; border-right: 1px solid var(--bili-line); border-bottom: 1px solid var(--bili-line); }.bili-income-table div:nth-child(-n+3) { background: #eee7dd; font-weight: 700; }
+@media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
 .search-data-card { grid-template-columns: 34px 1fr auto; gap: 4px 8px; min-height: 91px; padding: 14px; }

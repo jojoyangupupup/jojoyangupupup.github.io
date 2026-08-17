@@ -1,5 +1,6 @@
 import { MODEL_EXPERIENCE_DOCUMENT } from "/scripts/model-experience-data.js?v=5";
 import { SEARCH_EXPERIENCE_DOCUMENT } from "/scripts/search-experience-data.js?v=6";
+import { BILIBILI_DOCUMENT } from "/scripts/bilibili-experience-data.js?v=1";
 
 export const OVERVIEW_IMAGE = "/assets/rooms/home-overview-decorated.png?v=2";
 export const OVERVIEW_SIZE = { width: 1487, height: 1058 };
@@ -148,6 +149,7 @@ export const ROOMS = [
       },
       MODEL_EXPERIENCE_DOCUMENT,
       SEARCH_EXPERIENCE_DOCUMENT,
+      BILIBILI_DOCUMENT,
     ],
     objectHotspots: [
       {
@@ -194,6 +196,16 @@ export const ROOMS = [
           width: 380,
           height: 380,
         },
+      },
+      {
+        id: "garden-book",
+        number: "05",
+        label: "B站 UP 主自述档案",
+        directoryImage: "/assets/rooms/objects/garden-book.png",
+        ariaLabel: "打开 B站 UP 主自述档案",
+        documentId: "garden-bilibili-profile",
+        path: "M 760 925 L 938 925 L 981 1004 L 884 1068 L 742 1010 Z",
+        glowPath: "M 760 925 L 938 925 L 981 1004 L 884 1068 L 742 1010 Z",
       },
     ],
     hotspotPath: "M478 360 L512 391 L744 498 L540 617 L540 789 L309 613 L309 596 L337 580 L337 523 L360 510 L371 474 L411 466 L430 438 L461 421 Z",
