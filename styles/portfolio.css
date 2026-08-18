@@ -3907,51 +3907,42 @@ button {
 .blogger-book-close:hover { background: #a65e48; }
 
 /* Final doorstep page */
-.portfolio-main[data-page="doorstep"] { max-width: 1200px; min-height: calc(100vh - 84px); grid-template-columns: 1fr; gap: 0; padding: clamp(42px, 6vh, 72px) clamp(28px, 5vw, 64px); background: #f5efe6; }
-.portfolio-main[data-page="doorstep"] .visual-column { display: none; }
-.portfolio-main[data-page="doorstep"] .room-detail { min-width: 0; padding: 0; border-left: 0; }
-.doorstep-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(48px, 6vw, 78px); align-items: start; color: #3d3d3d; animation: doorstep-enter .8s ease-out both; }
-.doorstep-about { min-width: 0; }
-.doorstep-polaroid { position: relative; width: 280px; margin: 0 auto 54px; padding: 14px 14px 45px; border: 1px solid #eee5d9; border-radius: 3px; background: #fbf8f3; box-shadow: 0 30px 60px -15px rgba(60, 40, 20, .25); transform: rotate(-4deg); transition: transform .3s ease, box-shadow .3s ease; animation: doorstep-photo-enter 1.05s .12s ease-out both; }
-.doorstep-polaroid::after { content: ""; position: absolute; z-index: -1; left: 10%; right: 10%; bottom: -28px; height: 24px; border-radius: 50%; background: rgba(72, 53, 37, .12); filter: blur(12px); }
-.doorstep-polaroid:hover { transform: rotate(-2deg); box-shadow: 0 34px 66px -13px rgba(60, 40, 20, .31); }
-.doorstep-polaroid img { display: block; width: 100%; height: 276px; object-fit: cover; object-position: center; background: #f0e8dc; }
-.doorstep-polaroid figcaption { position: absolute; right: 17px; bottom: 13px; left: 17px; color: #8b7b6b; font: 18px/1.2 "Bradley Hand", "Kaiti SC", cursive; text-align: center; }
-.doorstep-about-copy { max-width: 395px; margin: 0 auto; }
-.doorstep-hello { margin: 0 0 12px; color: #5c4a3a; font: italic 24px/1.35 Georgia, "Songti SC", serif; }
-.doorstep-about-copy h2 { margin: 0 0 10px; color: #3d3d3d; font-size: 20px; font-weight: 650; }
-.doorstep-meta, .doorstep-interests { margin: 5px 0; color: #8b7b6b; font-size: 16px; line-height: 1.55; }
-.doorstep-about-copy > i { display: block; width: 24px; height: 1px; margin: 22px 0; background: #d8cfc0; }
-.doorstep-about-copy > p:not(.doorstep-hello):not(.doorstep-meta):not(.doorstep-interests) { margin: 0 0 14px; font-size: 16px; line-height: 1.7; }
-.doorstep-content { min-width: 0; padding-top: 22px; }
-.doorstep-content > header h1 { margin: 0; color: #5c4a3a; font: 500 clamp(46px, 5vw, 56px)/1.08 Georgia, "Songti SC", serif; letter-spacing: 0; }
-.doorstep-content > header p { margin: 8px 0 14px; color: #8b7b6b; font: italic 18px/1.4 Georgia, serif; }
-.doorstep-content > header i { display: block; width: 48px; height: 1px; background: #d8cfc0; }
-.doorstep-closing { max-width: 440px; margin: 42px 0 30px; }
-.doorstep-closing p { margin: 0 0 12px; font-size: 18px; line-height: 1.8; }
-.doorstep-closing strong { display: block; margin-top: 20px; color: #5c4a3a; font-size: 18px; line-height: 1.6; }
-.doorstep-contact-list { border-top: 1px solid #d8cfc0; }
-.doorstep-contact-list > button, .doorstep-contact-list > a { display: grid; width: 100%; min-height: 58px; grid-template-columns: 32px 56px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border: 0; border-bottom: 1px solid #f0e8dc; border-radius: 0; background: #fffdf9; color: #3d3d3d; font: inherit; text-align: left; text-decoration: none; cursor: pointer; transition: background .18s ease, transform .1s ease; }
-.doorstep-contact-list > button:hover, .doorstep-contact-list > a:hover { background: #faf6ee; }
-.doorstep-contact-list > button:active, .doorstep-contact-list > a:active { transform: scale(.98); }
-.doorstep-contact-icon { color: #8b7b6b; font: 600 18px/1 var(--font-mono, monospace); text-align: center; }
-.doorstep-contact-label { color: #8b7b6b; font-size: 13px; }
-.doorstep-contact-list b { min-width: 0; overflow-wrap: anywhere; font-size: 14px; font-weight: 550; }
-.doorstep-contact-list small { color: #a5998c; font-size: 11px; opacity: .55; transition: opacity .18s ease; }
-.doorstep-contact-list > :hover small, .doorstep-contact-list > :focus-visible small { opacity: 1; }
-.doorstep-contact-list > .is-primary { margin-top: 8px; border-bottom: 0; border-radius: 4px; background: #5c4a3a; color: #fbf8f3; }
-.doorstep-contact-list > .is-primary:hover { background: #4e3e31; }
-.doorstep-contact-list > .is-primary .doorstep-contact-icon, .doorstep-contact-list > .is-primary .doorstep-contact-label, .doorstep-contact-list > .is-primary small { color: #f5efe6; }
-.doorstep-farewell { margin: 34px 0 0; color: #8b7b6b; font: 18px/1.65 "Bradley Hand", "Kaiti SC", cursive; }
+.portfolio-main[data-page="doorstep"] { display: grid; width: 100%; min-height: calc(100svh - var(--header-height)); grid-template-columns: minmax(0, 1fr) minmax(420px, 1fr); gap: clamp(32px, 5vw, 96px); align-items: center; padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 64px); overflow: hidden; background: #f5efe6; }
+.portfolio-main[data-page="doorstep"] .visual-column { display: grid; min-width: 0; align-self: start; margin-top: clamp(110px, 18vh, 180px); padding: 0; overflow: visible; background: transparent; }
+.portfolio-main[data-page="doorstep"] .visual-frame { width: 100%; max-height: none; }
+.portfolio-main[data-page="doorstep"] .visual-stage { width: 100%; aspect-ratio: 2848 / 1496; overflow: visible; background: transparent; }
+.portfolio-main[data-page="doorstep"] .visual-layer { object-fit: contain; }
+.portfolio-main[data-page="doorstep"] .room-object-map { display: none; }
+.portfolio-main[data-page="doorstep"] .room-detail { display: grid; max-height: none; min-width: 0; place-items: center; padding: 0; border: 0; overflow: visible; }
+.doorstep-page { width: 100%; max-width: 520px; color: #3d3d3d; animation: doorstep-enter .8s ease-out both; }
+.doorstep-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.doorstep-photo { width: min(82%, 420px); margin: 0 auto; padding: 8px 8px 30px; border: 1px solid #e4d9cb; border-radius: 2px; background: #fbf8f3; box-shadow: 0 20px 45px -18px rgba(60, 40, 20, .28); animation: doorstep-photo-enter 1s .1s ease-out both; }
+.doorstep-photo img { display: block; width: 100%; height: auto; object-fit: contain; background: #f0e8dc; }
+.doorstep-photo figcaption { margin-top: 11px; color: #8b7b6b; font: 14px/1.2 "YouYuan", "幼圆", "Yuanti SC", "PingFang SC", sans-serif; text-align: center; }
+.doorstep-copy { max-width: 500px; margin: clamp(32px, 5vh, 48px) auto 0; color: #3d3d3d; font-family: "YouYuan", "幼圆", "Yuanti SC", "STYuanti-TC", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: clamp(16px, 1.3vw, 18px); font-weight: 400; line-height: 1.8; letter-spacing: 0; }
+.doorstep-copy p { margin: 0 0 22px; }
+.doorstep-farewell { margin: 40px 0 0 !important; color: #8b7b6b; font: inherit; font-size: 18px; font-style: normal; }
+.doorstep-hotspot-layer { position: absolute; z-index: 9; inset: 0; display: none; pointer-events: none; }
+.visual-stage[data-view="room"][data-room-id="doorstep"] .doorstep-hotspot-layer { display: block; pointer-events: auto; }
+.doorstep-hotspot { position: absolute; display: block; min-width: 44px; min-height: 44px; padding: 0; border: 1px solid transparent; border-radius: 10px; background: rgba(255, 252, 246, .01); color: #5c4a3a; cursor: pointer; outline: none; text-decoration: none; transform: translate(-50%, -50%); transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 100ms ease; }
+.doorstep-hotspot:hover, .doorstep-hotspot:focus-visible { border-color: rgba(255, 244, 221, .82); background: rgba(255, 249, 236, .17); box-shadow: 0 0 18px rgba(255, 226, 177, .58); }
+.doorstep-hotspot:focus-visible { outline: 2px solid #8b6e52; outline-offset: 3px; }
+.doorstep-hotspot:active { transform: translate(-50%, -50%) scale(.97); }
+.doorstep-hotspot > span { position: absolute; left: 50%; bottom: calc(100% + 8px); width: max-content; max-width: 140px; padding: 6px 8px; border: 1px solid rgba(92, 74, 58, .16); border-radius: 4px; background: rgba(251, 248, 243, .96); color: #5c4a3a; font: 12px/1.2 "YouYuan", "幼圆", "PingFang SC", sans-serif; opacity: 0; pointer-events: none; transform: translate(-50%, 5px); transition: opacity 160ms ease, transform 160ms ease; }
+.doorstep-hotspot:hover > span, .doorstep-hotspot:focus-visible > span { opacity: 1; transform: translate(-50%, 0); }
+.doorstep-hotspot.is-bilibili { left: 46.8%; top: 21%; width: 5.2%; height: 12%; }
+.doorstep-hotspot.is-resume { left: 53.5%; top: 41%; width: 11.5%; height: 26%; }
+.doorstep-hotspot.is-wechat { left: 65.2%; top: 37%; width: 8%; height: 18%; }
+.doorstep-hotspot.is-email { left: 70.7%; top: 67%; width: 7%; height: 16%; }
 .doorstep-toast { position: fixed; z-index: 1400; right: 22px; bottom: 22px; padding: 11px 15px; border-radius: 5px; background: #3d3d3d; color: #fbf8f3; font-size: 13px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .22s ease, transform .22s ease; }
 .doorstep-toast.is-visible { opacity: 1; transform: translateY(0); }
 .room-exit-link { display: inline-block; margin: 26px 0 12px; color: var(--active, #9a5b43); font-size: 13px; font-weight: 650; text-decoration: none; }
 .room-exit-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 @keyframes doorstep-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes doorstep-photo-enter { from { opacity: 0; transform: translateY(30px) rotate(-4deg); } to { opacity: 1; transform: translateY(0) rotate(-4deg); } }
-@media (min-width: 768px) and (max-width: 1024px) { .portfolio-main[data-page="doorstep"] { padding: 48px 30px; }.doorstep-page { gap: 38px; }.doorstep-polaroid { width: 250px; }.doorstep-polaroid img { height: 246px; }.doorstep-content > header h1 { font-size: 48px; }.doorstep-contact-list > button, .doorstep-contact-list > a { grid-template-columns: 28px 48px minmax(0, 1fr); }.doorstep-contact-list small { display: none; } }
-@media (max-width: 767px) { .portfolio-main[data-page="doorstep"] { min-height: auto; padding: 34px 20px 58px; }.doorstep-page { grid-template-columns: 1fr; gap: 52px; }.doorstep-polaroid { width: min(240px, calc(100vw - 70px)); }.doorstep-polaroid img { height: 236px; }.doorstep-polaroid:hover { transform: rotate(-4deg); box-shadow: 0 30px 60px -15px rgba(60, 40, 20, .25); }.doorstep-about-copy { max-width: none; }.doorstep-content { padding-top: 0; }.doorstep-content > header h1 { font-size: 44px; }.doorstep-contact-list > button, .doorstep-contact-list > a { grid-template-columns: 28px 48px minmax(0, 1fr); min-height: 62px; padding-inline: 8px; }.doorstep-contact-list small { display: none; }.doorstep-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); } }
-@media (prefers-reduced-motion: reduce) { .doorstep-page, .doorstep-polaroid { animation: none; }.doorstep-polaroid, .doorstep-contact-list > button, .doorstep-contact-list > a, .doorstep-toast { transition-duration: .01ms; } }
+@keyframes doorstep-photo-enter { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 768px) and (max-width: 1024px) { .portfolio-main[data-page="doorstep"] { grid-template-columns: minmax(0, 1fr) minmax(360px, .9fr); gap: 36px; padding: 36px 28px; }.portfolio-main[data-page="doorstep"] .visual-column { margin-top: 100px; }.doorstep-photo { width: min(88%, 360px); }.doorstep-copy { font-size: 16px; }.doorstep-copy p { margin-bottom: 18px; } }
+@media (max-width: 767px) { .portfolio-main[data-page="doorstep"] { display: block; min-height: auto; padding: 24px 16px 58px; overflow: visible; }.portfolio-main[data-page="doorstep"] .visual-column { display: block; margin-top: 0; }.portfolio-main[data-page="doorstep"] .visual-stage { width: 100%; }.portfolio-main[data-page="doorstep"] .room-detail { display: block; padding: 44px 4px 0; }.doorstep-page { max-width: none; }.doorstep-photo { width: min(88vw, 420px); }.doorstep-copy { max-width: 500px; margin-top: 34px; font-size: 16px; }.doorstep-farewell { margin-top: 34px !important; }.doorstep-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); }.doorstep-hotspot > span { display: none; } }
+@media (prefers-reduced-motion: reduce) { .doorstep-page, .doorstep-photo { animation: none; }.doorstep-hotspot, .doorstep-toast { transition-duration: .01ms; } }
 @media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-hero-grid { grid-template-columns: 1fr; }.bili-identity { min-height: 0; gap: 15px; }.bili-profile-image-link img { min-height: 0; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list, .bili-roadmap { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }

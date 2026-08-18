@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=80";
+} from "/scripts/rooms-data.js?v=81";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -19,15 +19,12 @@ const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 
 const ROOM_SWITCH_MS = 300;
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
 const DOORSTEP_PROFILE = {
-  name: "杨昕乔",
   displayName: "JoJo",
-  meta: "东北师大 · 新传硕 24 级",
   email: "15945158337@163.com",
   wechat: "ledwechat15945158337",
   bilibiliUrl: "https://space.bilibili.com/702930217",
-  bilibiliLabel: "JoJo · UID 702930217",
   resumeUrl: "/assets/resume.pdf",
-  portraitUrl: "/assets/rooms/doorstep-character.png",
+  portraitUrl: "/assets/rooms/doorstep-personal.jpg",
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
@@ -142,6 +139,20 @@ app.innerHTML = `
                 </g>
               `)).join("")}
             </svg>
+            <div class="doorstep-hotspot-layer" aria-label="门廊联系方式">
+              <a class="doorstep-hotspot is-bilibili" href="${DOORSTEP_PROFILE.bilibiliUrl}" target="_blank" rel="noopener noreferrer" aria-label="打开 JoJo 的 B 站主页，新窗口打开">
+                <span role="tooltip">打开 B 站主页</span>
+              </a>
+              <button class="doorstep-hotspot is-resume" type="button" data-download-resume aria-label="下载简历 PDF">
+                <span role="tooltip">下载简历</span>
+              </button>
+              <button class="doorstep-hotspot is-wechat" type="button" data-copy-wechat aria-label="复制微信号 ${DOORSTEP_PROFILE.wechat}">
+                <span role="tooltip">复制微信号</span>
+              </button>
+              <button class="doorstep-hotspot is-email" type="button" data-copy-email aria-label="复制邮箱 ${DOORSTEP_PROFILE.email}">
+                <span role="tooltip">复制邮箱</span>
+              </button>
+            </div>
           </div>
 
         </div>
@@ -429,9 +440,15 @@ async function copyDoorstepValue(value, successMessage) {
 }
 
 function bindDoorstepInteractions() {
-  detail.querySelector("[data-copy-email]")?.addEventListener("click", () => copyDoorstepValue(DOORSTEP_PROFILE.email, "邮箱已复制"));
-  detail.querySelector("[data-copy-wechat]")?.addEventListener("click", () => copyDoorstepValue(DOORSTEP_PROFILE.wechat, "微信号已复制"));
-  detail.querySelector("[data-download-resume]")?.addEventListener("click", async () => {
+  const bindOnce = (selector, handler) => {
+    const control = document.querySelector(selector);
+    if (!control || control.dataset.doorstepBound) return;
+    control.dataset.doorstepBound = "true";
+    control.addEventListener("click", handler);
+  };
+  bindOnce("[data-copy-email]", () => copyDoorstepValue(DOORSTEP_PROFILE.email, "邮箱已复制"));
+  bindOnce("[data-copy-wechat]", () => copyDoorstepValue(DOORSTEP_PROFILE.wechat, "微信号已复制"));
+  bindOnce("[data-download-resume]", async () => {
     try {
       const response = await fetch(DOORSTEP_PROFILE.resumeUrl, { method: "HEAD", cache: "no-store" });
       if (!response.ok) throw new Error("missing");
@@ -451,7 +468,7 @@ function renderDetail(room, { entering = false } = {}) {
   if (room.isDoorstep) {
     detail.dataset.directoryLevel = "doorstep";
     detail.classList.remove("is-level-entering");
-    detail.innerHTML = `<article class="doorstep-page"><section class="doorstep-about" aria-labelledby="doorstep-about-title"><figure class="doorstep-polaroid"><img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo standing in the warm doorway"><figcaption>${DOORSTEP_PROFILE.displayName} · 2026</figcaption></figure><div class="doorstep-about-copy"><p class="doorstep-hello" id="doorstep-about-title">你好，我是 ${DOORSTEP_PROFILE.displayName}</p><h2>${DOORSTEP_PROFILE.name}</h2><p class="doorstep-meta">${DOORSTEP_PROFILE.meta}</p><p class="doorstep-interests">兴趣爱好：钢琴、摄影、阅读</p><i aria-hidden="true"></i><p>这间小屋是我在互联网上的家，也是我尝试过的所有事。</p><p>逛到这里，说明你也愿意看到最后。</p><p>很高兴认识你。</p></div></section><section class="doorstep-content" aria-labelledby="doorstep-title"><header><h1 id="doorstep-title">门廊</h1><p>Doorstep</p><i aria-hidden="true"></i></header><div class="doorstep-closing"><p>谢谢你逛完这间小屋。</p><p>14 件作品都在这里了——</p><strong>如果你也感兴趣——</strong></div><div class="doorstep-contact-list" aria-label="联系方式"><button type="button" data-copy-email aria-label="复制邮箱 ${DOORSTEP_PROFILE.email}"><span class="doorstep-contact-icon" aria-hidden="true">@</span><span class="doorstep-contact-label">邮箱</span><b>${DOORSTEP_PROFILE.email}</b><small>点击复制</small></button><a href="${DOORSTEP_PROFILE.bilibiliUrl}" target="_blank" rel="noopener noreferrer" aria-label="打开 B 站主页，新窗口打开"><span class="doorstep-contact-icon" aria-hidden="true">▶</span><span class="doorstep-contact-label">B 站</span><b>${DOORSTEP_PROFILE.bilibiliLabel}</b><small>打开主页</small></a><button type="button" data-copy-wechat aria-label="复制微信号 ${DOORSTEP_PROFILE.wechat}"><span class="doorstep-contact-icon" aria-hidden="true">#</span><span class="doorstep-contact-label">微信</span><b>${DOORSTEP_PROFILE.wechat}</b><small>点击复制</small></button><button class="is-primary" type="button" data-download-resume aria-label="下载简历 PDF"><span class="doorstep-contact-icon" aria-hidden="true">↓</span><span class="doorstep-contact-label">简历</span><b>PDF 下载</b><small>下载简历</small></button></div><p class="doorstep-farewell">小屋还会继续盖，<br>欢迎回来坐坐。</p></section></article>`;
+    detail.innerHTML = `<article class="doorstep-page"><h1 class="doorstep-visually-hidden">门廊</h1><figure class="doorstep-photo"><img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在晚霞中的个人照片"><figcaption>${DOORSTEP_PROFILE.displayName} · 2026</figcaption></figure><section class="doorstep-copy" aria-label="门廊结束语"><p>谢谢你逛完这间小屋。</p><p>14 件作品都在这里了——<br>客厅是兴趣，<br>书房是学业，<br>厨房是搬运，<br>花园是杂学。</p><p>这里是最后一站，<br>也是我留在网上的一扇门。</p><p class="doorstep-farewell">小屋还会继续盖，<br>欢迎回来坐坐。</p></section></article>`;
     bindDoorstepInteractions();
     return;
   }
@@ -1677,6 +1694,10 @@ function openRoomObject(roomId, objectId, trigger) {
 }
 
 function updateVisualControls(pageId) {
+  if (pageId === "doorstep") {
+    roomSwitchControls.hidden = true;
+    return;
+  }
   const { previous, next } = adjacentPages(pageId);
   previousButton.dataset.pageId = previous.id;
   previousButton.setAttribute("aria-label", `Previous page: ${previous.accessibleLabel}`);
