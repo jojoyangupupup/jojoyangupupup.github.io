@@ -943,6 +943,25 @@ export const ROOMS = [
       detailInitial: { x: 0, y: -24, scale: 0.54, blur: 6 },
     },
   },
+  {
+    id: "doorstep",
+    number: "05",
+    title: "Doorstep",
+    path: "/rooms/doorstep",
+    image: "/assets/rooms/doorstep.jpg",
+    alt: "A quiet isometric entryway with an open wooden door, shoes, plants, and a mailbox",
+    description: "A quiet goodbye at the doorstep.",
+    isDoorstep: true,
+    projects: [],
+    documents: [],
+    objectHotspots: [],
+    hotspotPath: "M 0 0 Z",
+    hotspotCenter: { x: 0, y: 0 },
+    transition: {
+      sourceFinal: { x: 0.5, y: 0.5, scale: 1, blur: 0 },
+      detailInitial: { x: 0.5, y: 0.5, scale: 1, blur: 0 },
+    },
+  },
 ];
 
 // Top tabs and Previous/Next arrows share this single cyclic page order.
@@ -952,6 +971,7 @@ export const PAGE_NAVIGATION = [
   { id: "study", label: "书房", accessibleLabel: "Study", path: "/rooms/study", type: "room", roomId: "study" },
   { id: "kitchen", label: "厨房", accessibleLabel: "Kitchen", path: "/rooms/kitchen", type: "room", roomId: "kitchen" },
   { id: "garden", label: "花园", accessibleLabel: "Garden", path: "/rooms/garden", type: "room", roomId: "garden" },
+  { id: "doorstep", label: "门廊", accessibleLabel: "Doorstep", path: "/rooms/doorstep", type: "room", roomId: "doorstep" },
 ];
 
 export function roomFromPath(pathname) {

@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=78";
+} from "/scripts/rooms-data.js?v=80";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -18,6 +18,17 @@ const FOCUS_TIMING = {
 const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 };
 const ROOM_SWITCH_MS = 300;
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
+const DOORSTEP_PROFILE = {
+  name: "杨昕乔",
+  displayName: "JoJo",
+  meta: "东北师大 · 新传硕 24 级",
+  email: "15945158337@163.com",
+  wechat: "ledwechat15945158337",
+  bilibiliUrl: "https://space.bilibili.com/702930217",
+  bilibiliLabel: "JoJo · UID 702930217",
+  resumeUrl: "/assets/resume.pdf",
+  portraitUrl: "/assets/rooms/doorstep-character.png",
+};
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
 
@@ -378,7 +389,72 @@ function renderOverviewDirectory({ entering = false } = {}) {
   bindDirectoryInteractions();
 }
 
+let doorstepToastTimer = 0;
+
+function showDoorstepToast(message) {
+  let toast = document.querySelector("[data-doorstep-toast]");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "doorstep-toast";
+    toast.dataset.doorstepToast = "true";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    document.body.append(toast);
+  }
+  window.clearTimeout(doorstepToastTimer);
+  toast.textContent = message;
+  toast.classList.remove("is-visible");
+  requestAnimationFrame(() => toast.classList.add("is-visible"));
+  doorstepToastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 2000);
+}
+
+async function copyDoorstepValue(value, successMessage) {
+  try {
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+    else {
+      const field = document.createElement("textarea");
+      field.value = value;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.append(field);
+      field.select();
+      document.execCommand("copy");
+      field.remove();
+    }
+    showDoorstepToast(successMessage);
+  } catch {
+    showDoorstepToast("复制失败，请稍后重试");
+  }
+}
+
+function bindDoorstepInteractions() {
+  detail.querySelector("[data-copy-email]")?.addEventListener("click", () => copyDoorstepValue(DOORSTEP_PROFILE.email, "邮箱已复制"));
+  detail.querySelector("[data-copy-wechat]")?.addEventListener("click", () => copyDoorstepValue(DOORSTEP_PROFILE.wechat, "微信号已复制"));
+  detail.querySelector("[data-download-resume]")?.addEventListener("click", async () => {
+    try {
+      const response = await fetch(DOORSTEP_PROFILE.resumeUrl, { method: "HEAD", cache: "no-store" });
+      if (!response.ok) throw new Error("missing");
+      const link = document.createElement("a");
+      link.href = DOORSTEP_PROFILE.resumeUrl;
+      link.download = "杨昕乔-简历.pdf";
+      document.body.append(link);
+      link.click();
+      link.remove();
+    } catch {
+      showDoorstepToast("简历文件暂未上传");
+    }
+  });
+}
+
 function renderDetail(room, { entering = false } = {}) {
+  if (room.isDoorstep) {
+    detail.dataset.directoryLevel = "doorstep";
+    detail.classList.remove("is-level-entering");
+    detail.innerHTML = `<article class="doorstep-page"><section class="doorstep-about" aria-labelledby="doorstep-about-title"><figure class="doorstep-polaroid"><img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo standing in the warm doorway"><figcaption>${DOORSTEP_PROFILE.displayName} · 2026</figcaption></figure><div class="doorstep-about-copy"><p class="doorstep-hello" id="doorstep-about-title">你好，我是 ${DOORSTEP_PROFILE.displayName}</p><h2>${DOORSTEP_PROFILE.name}</h2><p class="doorstep-meta">${DOORSTEP_PROFILE.meta}</p><p class="doorstep-interests">兴趣爱好：钢琴、摄影、阅读</p><i aria-hidden="true"></i><p>这间小屋是我在互联网上的家，也是我尝试过的所有事。</p><p>逛到这里，说明你也愿意看到最后。</p><p>很高兴认识你。</p></div></section><section class="doorstep-content" aria-labelledby="doorstep-title"><header><h1 id="doorstep-title">门廊</h1><p>Doorstep</p><i aria-hidden="true"></i></header><div class="doorstep-closing"><p>谢谢你逛完这间小屋。</p><p>14 件作品都在这里了——</p><strong>如果你也感兴趣——</strong></div><div class="doorstep-contact-list" aria-label="联系方式"><button type="button" data-copy-email aria-label="复制邮箱 ${DOORSTEP_PROFILE.email}"><span class="doorstep-contact-icon" aria-hidden="true">@</span><span class="doorstep-contact-label">邮箱</span><b>${DOORSTEP_PROFILE.email}</b><small>点击复制</small></button><a href="${DOORSTEP_PROFILE.bilibiliUrl}" target="_blank" rel="noopener noreferrer" aria-label="打开 B 站主页，新窗口打开"><span class="doorstep-contact-icon" aria-hidden="true">▶</span><span class="doorstep-contact-label">B 站</span><b>${DOORSTEP_PROFILE.bilibiliLabel}</b><small>打开主页</small></a><button type="button" data-copy-wechat aria-label="复制微信号 ${DOORSTEP_PROFILE.wechat}"><span class="doorstep-contact-icon" aria-hidden="true">#</span><span class="doorstep-contact-label">微信</span><b>${DOORSTEP_PROFILE.wechat}</b><small>点击复制</small></button><button class="is-primary" type="button" data-download-resume aria-label="下载简历 PDF"><span class="doorstep-contact-icon" aria-hidden="true">↓</span><span class="doorstep-contact-label">简历</span><b>PDF 下载</b><small>下载简历</small></button></div><p class="doorstep-farewell">小屋还会继续盖，<br>欢迎回来坐坐。</p></section></article>`;
+    bindDoorstepInteractions();
+    return;
+  }
   const rooms = directoryRooms();
   const roomIndex = rooms.findIndex(({ room: item }) => item.id === room.id);
   const page = rooms[roomIndex]?.page;
@@ -425,6 +501,7 @@ function renderDetail(room, { entering = false } = {}) {
           }).join("")}
         </ol>
       ` : `<p class="directory-empty">尚无作品</p>`}
+      <a class="room-exit-link" href="/rooms/doorstep/">走出这间房 →</a>
     </section>
   `;
   bindDirectoryInteractions();
