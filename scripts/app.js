@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=81";
+} from "/scripts/rooms-data.js?v=82";
 
 const FOCUS_TIMING = {
   expandStart: 80,
@@ -468,7 +468,7 @@ function renderDetail(room, { entering = false } = {}) {
   if (room.isDoorstep) {
     detail.dataset.directoryLevel = "doorstep";
     detail.classList.remove("is-level-entering");
-    detail.innerHTML = `<article class="doorstep-page"><h1 class="doorstep-visually-hidden">门廊</h1><figure class="doorstep-photo"><img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在晚霞中的个人照片"><figcaption>${DOORSTEP_PROFILE.displayName} · 2026</figcaption></figure><section class="doorstep-copy" aria-label="门廊结束语"><p>谢谢你逛完这间小屋。</p><p>14 件作品都在这里了——<br>客厅是兴趣，<br>书房是学业，<br>厨房是搬运，<br>花园是杂学。</p><p>这里是最后一站，<br>也是我留在网上的一扇门。</p><p class="doorstep-farewell">小屋还会继续盖，<br>欢迎回来坐坐。</p></section></article>`;
+    detail.innerHTML = `<article class="doorstep-page"><h1 class="doorstep-visually-hidden">门廊</h1><figure class="doorstep-photo"><img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在晚霞中的个人照片"><figcaption>${DOORSTEP_PROFILE.displayName} · 2026</figcaption></figure><section class="doorstep-copy" aria-label="门廊结束语"><p>谢谢你逛完这间小屋。</p><p>这里是最后一站，<br>也是我留在网上的一扇门。</p><p class="doorstep-farewell">小屋还会继续盖，<br>欢迎回来坐坐。</p></section></article>`;
     bindDoorstepInteractions();
     return;
   }
