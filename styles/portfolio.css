@@ -3952,7 +3952,7 @@ button {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  background: #ebdcd3;
+  background: #f5efe6;
 }
 .portfolio-main[data-page="doorstep"] .visual-column {
   display: grid;
@@ -3962,7 +3962,7 @@ button {
   place-items: center;
   padding: 0;
   overflow: hidden;
-  background: #ebdcd3;
+  background: #f5efe6;
 }
 .portfolio-main[data-page="doorstep"] .visual-frame,
 .portfolio-main[data-page="doorstep"] .visual-stage {
@@ -3970,13 +3970,14 @@ button {
   height: 100%;
   max-height: none;
   aspect-ratio: auto;
-  background: #ebdcd3;
+  background: #f5efe6;
 }
 .portfolio-main[data-page="doorstep"] .visual-layer {
   object-fit: contain;
   object-position: center;
   mix-blend-mode: normal;
   opacity: 1;
+  transform: translateX(clamp(-150px, -8vw, -72px));
 }
 .portfolio-main[data-page="doorstep"] .focus-room-layer,
 .portfolio-main[data-page="doorstep"] .hotspot-map,
@@ -3989,7 +3990,7 @@ button {
 body.is-doorstep-image { overflow: hidden; }
 body.is-doorstep-image,
 body.is-doorstep-image #app,
-body.is-doorstep-image .portfolio-shell { background: #ebdcd3; }
+body.is-doorstep-image .portfolio-shell { background: #f5efe6; }
 @media (max-width: 767px) {
   .portfolio-main[data-page="doorstep"] {
     height: calc(100svh - 98px);
@@ -3997,6 +3998,7 @@ body.is-doorstep-image .portfolio-shell { background: #ebdcd3; }
     padding: 0;
     overflow: hidden;
   }
+  .portfolio-main[data-page="doorstep"] .visual-layer { transform: translateX(-3vw); }
 }
 @media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-hero-grid { grid-template-columns: 1fr; }.bili-identity { min-height: 0; gap: 15px; }.bili-profile-image-link img { min-height: 0; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list, .bili-roadmap { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
 .search-data-section { background: #f5f8f6; }
