@@ -3943,6 +3943,58 @@ button {
 @media (min-width: 768px) and (max-width: 1024px) { .portfolio-main[data-page="doorstep"] { grid-template-columns: minmax(0, 1fr) minmax(300px, .34fr); gap: 32px; padding: 24px 28px; }.doorstep-photo { width: min(100%, 220px); }.doorstep-copy { font-size: 15px; line-height: 1.6; }.doorstep-copy p { margin-bottom: 10px; }.doorstep-farewell { margin-top: 18px !important; } }
 @media (max-width: 767px) { .portfolio-main[data-page="doorstep"] { display: block; height: auto; min-height: auto; padding: 24px 16px 58px; overflow: visible; }.portfolio-main[data-page="doorstep"] .visual-column { display: block; margin-top: 0; }.portfolio-main[data-page="doorstep"] .visual-stage { width: 100%; }.portfolio-main[data-page="doorstep"] .room-detail { display: block; padding: 44px 4px 0; }.doorstep-page { max-width: none; }.doorstep-photo { width: min(88vw, 420px); }.doorstep-copy { max-width: 500px; margin-top: 34px; font-size: 16px; }.doorstep-farewell { margin-top: 34px !important; }.doorstep-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); }.doorstep-hotspot > span { display: none; } }
 @media (prefers-reduced-motion: reduce) { .doorstep-page, .doorstep-photo { animation: none; }.doorstep-hotspot, .doorstep-toast { transition-duration: .01ms; } }
+
+/* Doorstep keeps the shared navigation and uses the supplied scene as its full content area. */
+.portfolio-main[data-page="doorstep"] {
+  display: block;
+  width: 100%;
+  height: calc(100svh - var(--header-height));
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #f5efe6;
+}
+.portfolio-main[data-page="doorstep"] .visual-column {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  place-items: center;
+  padding: 0;
+  overflow: hidden;
+  background: #f5efe6;
+}
+.portfolio-main[data-page="doorstep"] .visual-frame,
+.portfolio-main[data-page="doorstep"] .visual-stage {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  background: #f5efe6;
+}
+.portfolio-main[data-page="doorstep"] .visual-layer {
+  object-fit: contain;
+  object-position: center;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+.portfolio-main[data-page="doorstep"] .focus-room-layer,
+.portfolio-main[data-page="doorstep"] .hotspot-map,
+.portfolio-main[data-page="doorstep"] .room-object-map,
+.portfolio-main[data-page="doorstep"] .doorstep-hotspot-layer,
+.portfolio-main[data-page="doorstep"] .room-detail,
+.portfolio-main[data-page="doorstep"] .room-switch-controls {
+  display: none !important;
+}
+body.is-doorstep-image { overflow: hidden; }
+@media (max-width: 767px) {
+  .portfolio-main[data-page="doorstep"] {
+    height: calc(100svh - 98px);
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
 @media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-hero-grid { grid-template-columns: 1fr; }.bili-identity { min-height: 0; gap: 15px; }.bili-profile-image-link img { min-height: 0; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list, .bili-roadmap { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
