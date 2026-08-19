@@ -3952,7 +3952,7 @@ button {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  background: #f5efe6;
+  background: #ebdcd3;
 }
 .portfolio-main[data-page="doorstep"] .visual-column {
   display: grid;
@@ -3962,7 +3962,7 @@ button {
   place-items: center;
   padding: 0;
   overflow: hidden;
-  background: #f5efe6;
+  background: #ebdcd3;
 }
 .portfolio-main[data-page="doorstep"] .visual-frame,
 .portfolio-main[data-page="doorstep"] .visual-stage {
@@ -3970,7 +3970,7 @@ button {
   height: 100%;
   max-height: none;
   aspect-ratio: auto;
-  background: #f5efe6;
+  background: #ebdcd3;
 }
 .portfolio-main[data-page="doorstep"] .visual-layer {
   object-fit: contain;
@@ -3987,6 +3987,9 @@ button {
   display: none !important;
 }
 body.is-doorstep-image { overflow: hidden; }
+body.is-doorstep-image,
+body.is-doorstep-image #app,
+body.is-doorstep-image .portfolio-shell { background: #ebdcd3; }
 @media (max-width: 767px) {
   .portfolio-main[data-page="doorstep"] {
     height: calc(100svh - 98px);
