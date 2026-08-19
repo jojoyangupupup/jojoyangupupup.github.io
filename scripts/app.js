@@ -139,20 +139,6 @@ app.innerHTML = `
                 </g>
               `)).join("")}
             </svg>
-            <div class="doorstep-hotspot-layer" aria-label="门廊联系方式">
-              <a class="doorstep-hotspot is-bilibili" href="${DOORSTEP_PROFILE.bilibiliUrl}" target="_blank" rel="noopener noreferrer" aria-label="打开 JoJo 的 B 站主页，新窗口打开">
-                <span role="tooltip">打开 B 站主页</span>
-              </a>
-              <button class="doorstep-hotspot is-resume" type="button" data-download-resume aria-label="下载简历 PDF">
-                <span role="tooltip">下载简历</span>
-              </button>
-              <button class="doorstep-hotspot is-wechat" type="button" data-copy-wechat aria-label="复制微信号 ${DOORSTEP_PROFILE.wechat}">
-                <span role="tooltip">复制微信号</span>
-              </button>
-              <button class="doorstep-hotspot is-email" type="button" data-copy-email aria-label="复制邮箱 ${DOORSTEP_PROFILE.email}">
-                <span role="tooltip">复制邮箱</span>
-              </button>
-            </div>
           </div>
 
         </div>
@@ -474,23 +460,19 @@ function renderDetail(room, { entering = false } = {}) {
         <figure class="doorstep-polaroid">
           <div class="doorstep-tape" aria-hidden="true"></div>
           <img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在城市暮色中拿着手机的背影照片" width="5712" height="4284">
-          <figcaption>somewhere under the evening sky</figcaption>
         </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-intro-block">
-            <h1>你好，我是 JoJo</h1>
+            <h1>你好，我是</h1>
             <p class="doorstep-name">杨昕乔</p>
             <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
-          </section>
-          <section class="doorstep-note-block doorstep-home-block">
-            <p>这间小屋是我在互联网上的家，<br>也是我尝试过的所有事。</p>
-            <p>逛到这里，说明你也愿意看到最后。<br>很高兴认识你。</p>
+            <p class="doorstep-tagline">创意多多，热爱捕捉细碎有趣的表达</p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
             <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
             <p>14 件作品都在这里了——<br>客厅是兴趣、书房是学业，<br>厨房是搬运、花园是杂学。</p>
-            <p class="doorstep-interest">如果你也感兴趣—— <span aria-hidden="true">⌁</span></p>
             <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
+            <p class="doorstep-signature">JoJo</p>
           </section>
         </div>
       </section>

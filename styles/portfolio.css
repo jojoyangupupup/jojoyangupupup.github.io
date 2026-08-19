@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=LXGW+WenKai:wght@400;500&display=swap");
 
 :root {
   --paper: #f1f0eb;
@@ -3945,7 +3945,7 @@ button {
 @keyframes doorstep-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes doorstep-photo-enter { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @media (min-width: 768px) and (max-width: 1024px) { .portfolio-main[data-page="doorstep"] { grid-template-columns: minmax(0, 1fr) minmax(300px, .34fr); gap: 32px; padding: 24px 28px; }.doorstep-photo { width: min(100%, 220px); }.doorstep-copy { font-size: 15px; line-height: 1.6; }.doorstep-copy p { margin-bottom: 10px; }.doorstep-farewell { margin-top: 18px !important; } }
-@media (max-width: 767px) { .portfolio-main[data-page="doorstep"] { display: block; height: auto; min-height: auto; padding: 24px 16px 58px; overflow: visible; }.portfolio-main[data-page="doorstep"] .visual-column { display: block; margin-top: 0; }.portfolio-main[data-page="doorstep"] .visual-stage { width: 100%; }.portfolio-main[data-page="doorstep"] .room-detail { display: block; padding: 44px 4px 0; }.doorstep-page { max-width: none; }.doorstep-photo { width: min(88vw, 420px); }.doorstep-copy { max-width: 500px; margin-top: 34px; font-size: 16px; }.doorstep-farewell { margin-top: 34px !important; }.doorstep-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); }.doorstep-hotspot > span { display: none; } }
+@media (max-width: 767px) { .portfolio-main[data-page="doorstep"] { display: block; height: auto; min-height: auto; padding: 24px 16px 58px; overflow: visible; }.portfolio-main[data-page="doorstep"] .visual-column { display: block; margin-top: 0; }.portfolio-main[data-page="doorstep"] .visual-stage { width: 100%; aspect-ratio: 16 / 9; }.portfolio-main[data-page="doorstep"] .room-detail { display: block; padding: 44px 4px 0; }.doorstep-page { max-width: none; }.doorstep-photo { width: min(88vw, 420px); }.doorstep-copy { max-width: 500px; margin-top: 34px; font-size: 16px; }.doorstep-farewell { margin-top: 34px !important; }.doorstep-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); }.doorstep-hotspot > span { display: none; } }
 @media (prefers-reduced-motion: reduce) { .doorstep-page, .doorstep-photo { animation: none; }.doorstep-hotspot, .doorstep-toast { transition-duration: .01ms; } }
 
 /* Doorstep keeps the shared navigation and uses the supplied scene as its full content area. */
@@ -4038,11 +4038,11 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   width: min(92%, 390px, calc((100svh - var(--header-height) - 410px) * .65));
   min-width: 300px;
   margin: 0 auto;
-  padding: 16px 16px 48px;
+  padding: 10px 10px 28px;
   transform: translateX(-8px) rotate(-1.5deg);
   background: #f8f3eb;
   border-radius: 3px;
-  box-shadow: 0 14px 28px -20px rgba(70, 50, 35, .4);
+  box-shadow: 0 12px 32px rgba(85, 67, 51, .07);
   animation: doorstep-photo-enter .75s .08s ease-out both;
 }
 .doorstep-polaroid img {
@@ -4052,16 +4052,6 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   aspect-ratio: 3 / 4;
   object-fit: cover;
   object-position: 72% center;
-}
-.doorstep-polaroid figcaption {
-  position: absolute;
-  right: 12px;
-  bottom: 15px;
-  left: 12px;
-  color: #9a897a;
-  font: italic 13px/1.1 "EB Garamond", Georgia, serif;
-  letter-spacing: .03em;
-  text-align: center;
 }
 .doorstep-tape {
   position: absolute;
@@ -4083,21 +4073,23 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
 .doorstep-note {
   width: min(100%, 470px);
   margin: clamp(20px, 2.6vh, 28px) 0 0 10px;
-  font-family: "Noto Serif SC", "Songti SC", STSong, serif;
+  font-family: "LXGW WenKai", "霞鹜文楷", "Kaiti SC", "STKaiti", serif;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.65;
   letter-spacing: .01em;
 }
 .doorstep-note-block { margin: 0; }
 .doorstep-note-block p { margin: 0; }
 .doorstep-intro-block h1 {
-  margin: 0 0 6px;
-  color: #5c4a3a;
-  font: 500 24px/1.4 "Noto Serif SC", "Songti SC", STSong, serif;
+  margin: 0 0 3px;
+  color: #8b7d72;
+  font: 400 15px/1.4 "LXGW WenKai", "霞鹜文楷", "Kaiti SC", "STKaiti", serif;
+  letter-spacing: .06em;
 }
-.doorstep-name { color: #3d3d3d; font-size: 18px; font-weight: 500; line-height: 1.35; }
-.doorstep-meta { margin-top: 4px !important; color: #8b7b6b; font-size: 15px; font-weight: 400; line-height: 1.4; }
+.doorstep-name { color: #55463c; font-size: clamp(25px, 1.7vw, 29px); font-weight: 500; line-height: 1.25; letter-spacing: .08em; }
+.doorstep-meta { margin-top: 7px !important; color: #95877b; font-size: 14px; font-weight: 400; line-height: 1.5; letter-spacing: .025em; }
+.doorstep-tagline { margin-top: 4px !important; color: #7f6e61; font: 400 14px/1.6 "LXGW WenKai", "霞鹜文楷", "Kaiti SC", "STKaiti", serif; letter-spacing: .035em; }
 .doorstep-home-block {
   margin-top: 14px;
   color: #3d3d3d;
@@ -4106,48 +4098,49 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
 }
 .doorstep-home-block p + p { margin-top: 4px; }
 .doorstep-goodbye-block {
-  margin-top: 14px;
-  color: #3d3d3d;
+  margin-top: 22px;
+  color: #51473f;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.85;
+  letter-spacing: .025em;
 }
 .doorstep-thanks { margin-bottom: 4px !important; }
-.doorstep-interest {
-  margin-top: 10px !important;
-  color: #5c4a3a;
-  font-weight: 600;
-}
-.doorstep-interest span { display: inline-block; margin-left: 4px; color: #b9a28d; transform: rotate(-12deg); }
 .doorstep-signoff {
-  margin: 9px 0 0 !important;
-  color: #8b7b6b;
-  font: 400 16px/1.4 "Noto Serif SC", "Songti SC", STSong, serif;
-  letter-spacing: .04em;
+  margin: 16px 0 0 !important;
+  color: #51473f;
+  font: 400 16px/1.85 "LXGW WenKai", "霞鹜文楷", "Kaiti SC", "STKaiti", serif;
+  letter-spacing: .025em;
 }
+.doorstep-signature { margin: 7px 0 0 150px !important; color: #8d7565; font: italic 20px/1.2 "EB Garamond", Georgia, serif; letter-spacing: .02em; transform: rotate(-3deg); }
 @keyframes doorstep-note-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .doorstep-polaroid:hover { transform: translate(-8px, -2px) rotate(-1deg); }
 @media (min-width: 768px) and (max-height: 780px) {
   .portfolio-main[data-page="doorstep"] .room-detail { padding-top: 18px; padding-bottom: 12px; }
-  .doorstep-polaroid { width: min(82%, 350px); min-width: 0; padding: 13px 13px 40px; }
+  .doorstep-polaroid { width: min(82%, 350px); min-width: 0; padding: 10px 10px 28px; }
   .doorstep-note { margin-top: 22px; }
   .doorstep-home-block, .doorstep-goodbye-block { margin-top: 14px; }
   .doorstep-home-block p + p, .doorstep-thanks { margin-bottom: 4px !important; }
-  .doorstep-interest, .doorstep-signoff { margin-top: 12px !important; }
+  .doorstep-signoff { margin-top: 12px !important; }
 }
 @media (max-width: 767px) {
   .portfolio-main[data-page="doorstep"] { position: relative; height: auto; min-height: 0; overflow: visible; }
+  body.is-doorstep-image { overflow-x: hidden; overflow-y: auto; }
+  .portfolio-main[data-page="doorstep"] .visual-column { height: 200px; min-height: 200px; }
   .portfolio-main[data-page="doorstep"] .room-detail {
     position: relative;
     inset: auto;
     display: block !important;
     width: 100%;
     height: auto;
-    padding: 34px 24px 58px;
+    padding: 22px 24px 30px;
     overflow: visible;
   }
   .doorstep-page { max-width: 500px; margin: 0 auto; }
-  .doorstep-polaroid { width: min(86vw, 380px); min-width: 0; margin-inline: auto; padding: 14px 14px 44px; transform: rotate(-1.5deg); }
-  .doorstep-note { width: 100%; margin: 32px 0 0; }
+  .doorstep-polaroid { width: min(190px, 58vw); min-width: 0; margin-inline: auto; padding: 10px 10px 28px; transform: rotate(-1.5deg); }
+  .doorstep-note { width: 100%; margin: 20px 0 0; font-size: 15px; line-height: 1.5; }
+  .doorstep-goodbye-block { margin-top: 14px; font-size: 15px; line-height: 1.55; }
+  .doorstep-signoff { font-size: 15px; line-height: 1.55; }
+  .doorstep-signature { margin-left: 110px !important; font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .doorstep-page, .doorstep-polaroid { animation: none; }
