@@ -483,7 +483,7 @@ function renderDetail(room, { entering = false } = {}) {
             <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
           </section>
           <section class="doorstep-note-block doorstep-home-block">
-            <p>这间小屋是我在互联网上的家，也是我尝试过的所有事。</p>
+            <p>这间小屋是我在互联网上的家，<br>也是我尝试过的所有事。</p>
             <p>逛到这里，说明你也愿意看到最后。<br>很高兴认识你。</p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">

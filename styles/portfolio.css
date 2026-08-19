@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&display=swap");
 
 :root {
   --paper: #f1f0eb;
@@ -4013,50 +4013,54 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   position: absolute;
   z-index: 12;
   top: 0;
-  right: clamp(28px, 4.5vw, 88px);
+  right: clamp(36px, 4.8vw, 92px);
   bottom: 0;
   display: block !important;
-  width: min(38vw, 500px);
+  width: min(40vw, 520px);
   height: auto;
-  padding: clamp(24px, 4vh, 48px) 0 clamp(18px, 3vh, 34px);
+  padding: clamp(10px, 1.5vh, 16px) 0 clamp(12px, 2vh, 20px);
   border: 0;
   overflow: hidden;
   background: transparent;
 }
 .doorstep-page {
+  display: flex;
   width: 100%;
-  max-width: 460px;
+  max-width: 520px;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 0;
   color: #3d3d3d;
   animation: doorstep-note-enter .75s ease-out both;
 }
 .doorstep-polaroid {
   position: relative;
-  width: min(280px, 72%);
-  margin: 0 0 0 12px;
-  padding: 11px 11px 38px;
-  transform: rotate(-2deg);
-  background: #f7f2e9;
+  width: min(92%, 390px, calc((100svh - var(--header-height) - 410px) * .65));
+  min-width: 300px;
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+  transform: translateX(-8px) rotate(-1.5deg);
+  background: #f8f3eb;
   border-radius: 3px;
-  box-shadow: 0 12px 25px -18px rgba(70, 50, 35, .45);
+  box-shadow: 0 14px 28px -20px rgba(70, 50, 35, .4);
   animation: doorstep-photo-enter .75s .08s ease-out both;
 }
 .doorstep-polaroid img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  background: #d9c7b6;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 72% center;
 }
 .doorstep-polaroid figcaption {
   position: absolute;
   right: 12px;
-  bottom: 12px;
+  bottom: 15px;
   left: 12px;
-  color: #8b7b6b;
-  font: 12px/1.1 "EB Garamond", Georgia, serif;
-  letter-spacing: .04em;
+  color: #9a897a;
+  font: italic 13px/1.1 "EB Garamond", Georgia, serif;
+  letter-spacing: .03em;
   text-align: center;
 }
 .doorstep-tape {
@@ -4066,7 +4070,8 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   left: 50%;
   width: 92px;
   height: 25px;
-  background: rgba(217, 199, 182, .72);
+  opacity: .4;
+  background: #d9c7b6;
   transform: translateX(-50%) rotate(3deg);
 }
 .doorstep-tape::after {
@@ -4076,56 +4081,61 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   content: "";
 }
 .doorstep-note {
-  width: min(100%, 460px);
-  margin: 30px 0 0 8px;
-  font-family: "EB Garamond", Georgia, serif;
+  width: min(100%, 470px);
+  margin: clamp(20px, 2.6vh, 28px) 0 0 10px;
+  font-family: "Noto Serif SC", "Songti SC", STSong, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: .01em;
 }
 .doorstep-note-block { margin: 0; }
 .doorstep-note-block p { margin: 0; }
 .doorstep-intro-block h1 {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: #5c4a3a;
-  font: italic 24px/1.1 "EB Garamond", Georgia, serif;
+  font: 500 24px/1.4 "Noto Serif SC", "Songti SC", STSong, serif;
 }
-.doorstep-name { color: #3d3d3d; font-size: 20px; line-height: 1.15; }
-.doorstep-meta { margin-top: 3px !important; color: #8b7b6b; font-size: 16px; line-height: 1.25; }
+.doorstep-name { color: #3d3d3d; font-size: 18px; font-weight: 500; line-height: 1.35; }
+.doorstep-meta { margin-top: 4px !important; color: #8b7b6b; font-size: 15px; font-weight: 400; line-height: 1.4; }
 .doorstep-home-block {
-  margin-top: 22px;
+  margin-top: 14px;
   color: #3d3d3d;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.5;
 }
-.doorstep-home-block p + p { margin-top: 2px; }
+.doorstep-home-block p + p { margin-top: 4px; }
 .doorstep-goodbye-block {
-  margin-top: 24px;
+  margin-top: 14px;
   color: #3d3d3d;
-  font-size: 18px;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.5;
 }
-.doorstep-thanks { margin-bottom: 2px !important; }
+.doorstep-thanks { margin-bottom: 4px !important; }
 .doorstep-interest {
-  margin-top: 16px !important;
+  margin-top: 10px !important;
   color: #5c4a3a;
   font-weight: 600;
 }
 .doorstep-interest span { display: inline-block; margin-left: 4px; color: #b9a28d; transform: rotate(-12deg); }
 .doorstep-signoff {
-  margin: 10px 0 0 12px !important;
+  margin: 9px 0 0 !important;
   color: #8b7b6b;
-  font: 500 18px/1.45 "Caveat", cursive;
-  transform: rotate(-1deg);
+  font: 400 16px/1.4 "Noto Serif SC", "Songti SC", STSong, serif;
+  letter-spacing: .04em;
 }
 @keyframes doorstep-note-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.doorstep-polaroid:hover { transform: translateY(-2px) rotate(-1deg); }
+.doorstep-polaroid:hover { transform: translate(-8px, -2px) rotate(-1deg); }
 @media (min-width: 768px) and (max-height: 780px) {
-  .portfolio-main[data-page="doorstep"] .room-detail { padding-top: 18px; padding-bottom: 14px; }
-  .doorstep-polaroid { width: min(230px, 58%); padding-bottom: 30px; }
-  .doorstep-note { margin-top: 16px; }
-  .doorstep-home-block { margin-top: 14px; font-size: 15px; line-height: 1.55; }
-  .doorstep-goodbye-block { margin-top: 14px; font-size: 16px; line-height: 1.5; }
+  .portfolio-main[data-page="doorstep"] .room-detail { padding-top: 18px; padding-bottom: 12px; }
+  .doorstep-polaroid { width: min(82%, 350px); min-width: 0; padding: 13px 13px 40px; }
+  .doorstep-note { margin-top: 22px; }
+  .doorstep-home-block, .doorstep-goodbye-block { margin-top: 14px; }
+  .doorstep-home-block p + p, .doorstep-thanks { margin-bottom: 4px !important; }
+  .doorstep-interest, .doorstep-signoff { margin-top: 12px !important; }
 }
 @media (max-width: 767px) {
-  .portfolio-main[data-page="doorstep"] { position: relative; }
+  .portfolio-main[data-page="doorstep"] { position: relative; height: auto; min-height: 0; overflow: visible; }
   .portfolio-main[data-page="doorstep"] .room-detail {
     position: relative;
     inset: auto;
@@ -4136,12 +4146,12 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
     overflow: visible;
   }
   .doorstep-page { max-width: 500px; margin: 0 auto; }
-  .doorstep-polaroid { width: min(250px, 86vw); margin-left: 8px; }
-  .doorstep-note { width: 100%; margin: 30px 0 0; }
+  .doorstep-polaroid { width: min(86vw, 380px); min-width: 0; margin-inline: auto; padding: 14px 14px 44px; transform: rotate(-1.5deg); }
+  .doorstep-note { width: 100%; margin: 32px 0 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .doorstep-page, .doorstep-polaroid { animation: none; }
-  .doorstep-polaroid:hover { transform: rotate(-2deg); }
+  .doorstep-polaroid:hover { transform: translateX(-8px) rotate(-1.5deg); }
 }
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
