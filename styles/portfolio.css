@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap");
+
 :root {
   --paper: #f1f0eb;
   /* Sampled from the outer pixels of doorstep-final.png. */
@@ -4004,6 +4006,143 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   .portfolio-main[data-page="doorstep"] .visual-layer { transform: translateX(-3vw); }
 }
 @media (max-width: 760px) { .bilibili-experience { padding: 20px 12px 48px; }.bili-hero-grid { grid-template-columns: 1fr; }.bili-identity { min-height: 0; gap: 15px; }.bili-profile-image-link img { min-height: 0; }.bili-title-row, .bili-blogger-entry { display: block; }.bili-uid { display: inline-block; margin-top: 18px; }.bili-meta, .bili-stat-grid, .bili-highlight-grid, .bili-income-grid, .bili-step-list, .bili-roadmap { grid-template-columns: 1fr; }.bili-direction-grid { grid-template-columns: repeat(2, 1fr); }.bili-section-heading { align-items: center; }.bili-section-heading em { font-size: 9px; }.bili-language-bars > div { grid-template-columns: 60px minmax(100px, 1fr) 62px; gap: 8px; }.bili-entry-button { display: inline-block; margin-top: 18px; }.bili-income-table { font-size: 11px; } }
+
+/* Doorstep note corner: the right side sits directly on the shared canvas. */
+.portfolio-main[data-page="doorstep"] { position: relative; }
+.portfolio-main[data-page="doorstep"] .room-detail {
+  position: absolute;
+  z-index: 12;
+  top: 0;
+  right: clamp(28px, 4.5vw, 88px);
+  bottom: 0;
+  display: block !important;
+  width: min(38vw, 500px);
+  height: auto;
+  padding: clamp(24px, 4vh, 48px) 0 clamp(18px, 3vh, 34px);
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+}
+.doorstep-page {
+  width: 100%;
+  max-width: 460px;
+  margin: 0;
+  color: #3d3d3d;
+  animation: doorstep-note-enter .75s ease-out both;
+}
+.doorstep-polaroid {
+  position: relative;
+  width: min(280px, 72%);
+  margin: 0 0 0 12px;
+  padding: 11px 11px 38px;
+  transform: rotate(-2deg);
+  background: #f7f2e9;
+  border-radius: 3px;
+  box-shadow: 0 12px 25px -18px rgba(70, 50, 35, .45);
+  animation: doorstep-photo-enter .75s .08s ease-out both;
+}
+.doorstep-polaroid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #d9c7b6;
+}
+.doorstep-polaroid figcaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  color: #8b7b6b;
+  font: 12px/1.1 "EB Garamond", Georgia, serif;
+  letter-spacing: .04em;
+  text-align: center;
+}
+.doorstep-tape {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+  left: 50%;
+  width: 92px;
+  height: 25px;
+  background: rgba(217, 199, 182, .72);
+  transform: translateX(-50%) rotate(3deg);
+}
+.doorstep-tape::after {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 12px, rgba(255,255,255,.14) 12px 14px);
+  content: "";
+}
+.doorstep-note {
+  width: min(100%, 460px);
+  margin: 30px 0 0 8px;
+  font-family: "EB Garamond", Georgia, serif;
+}
+.doorstep-note-block { margin: 0; }
+.doorstep-note-block p { margin: 0; }
+.doorstep-intro-block h1 {
+  margin: 0 0 4px;
+  color: #5c4a3a;
+  font: italic 24px/1.1 "EB Garamond", Georgia, serif;
+}
+.doorstep-name { color: #3d3d3d; font-size: 20px; line-height: 1.15; }
+.doorstep-meta { margin-top: 3px !important; color: #8b7b6b; font-size: 16px; line-height: 1.25; }
+.doorstep-home-block {
+  margin-top: 22px;
+  color: #3d3d3d;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.doorstep-home-block p + p { margin-top: 2px; }
+.doorstep-goodbye-block {
+  margin-top: 24px;
+  color: #3d3d3d;
+  font-size: 18px;
+  line-height: 1.75;
+}
+.doorstep-thanks { margin-bottom: 2px !important; }
+.doorstep-interest {
+  margin-top: 16px !important;
+  color: #5c4a3a;
+  font-weight: 600;
+}
+.doorstep-interest span { display: inline-block; margin-left: 4px; color: #b9a28d; transform: rotate(-12deg); }
+.doorstep-signoff {
+  margin: 10px 0 0 12px !important;
+  color: #8b7b6b;
+  font: 500 18px/1.45 "Caveat", cursive;
+  transform: rotate(-1deg);
+}
+@keyframes doorstep-note-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.doorstep-polaroid:hover { transform: translateY(-2px) rotate(-1deg); }
+@media (min-width: 768px) and (max-height: 780px) {
+  .portfolio-main[data-page="doorstep"] .room-detail { padding-top: 18px; padding-bottom: 14px; }
+  .doorstep-polaroid { width: min(230px, 58%); padding-bottom: 30px; }
+  .doorstep-note { margin-top: 16px; }
+  .doorstep-home-block { margin-top: 14px; font-size: 15px; line-height: 1.55; }
+  .doorstep-goodbye-block { margin-top: 14px; font-size: 16px; line-height: 1.5; }
+}
+@media (max-width: 767px) {
+  .portfolio-main[data-page="doorstep"] { position: relative; }
+  .portfolio-main[data-page="doorstep"] .room-detail {
+    position: relative;
+    inset: auto;
+    display: block !important;
+    width: 100%;
+    height: auto;
+    padding: 34px 24px 58px;
+    overflow: visible;
+  }
+  .doorstep-page { max-width: 500px; margin: 0 auto; }
+  .doorstep-polaroid { width: min(250px, 86vw); margin-left: 8px; }
+  .doorstep-note { width: 100%; margin: 30px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .doorstep-page, .doorstep-polaroid { animation: none; }
+  .doorstep-polaroid:hover { transform: rotate(-2deg); }
+}
 .search-data-section { background: #f5f8f6; }
 .search-data-browser { grid-template-columns: minmax(230px, .68fr) minmax(0, 1.32fr); }
 .search-data-card { grid-template-columns: 34px 1fr auto; gap: 4px 8px; min-height: 91px; padding: 14px; }
@@ -4229,5 +4368,18 @@ body.is-doorstep-image .portfolio-shell { background: var(--doorstep-canvas); }
   .visual-stage.is-returning .visual-layer-current,
   .visual-stage.is-returning .visual-layer-incoming {
     transition: opacity 120ms ease !important;
+  }
+}
+
+/* Keep the doorstep note visible after the shared room-state reset rules. */
+.portfolio-main[data-page="doorstep"] .room-detail {
+  display: block !important;
+}
+@media (max-width: 767px) {
+  .portfolio-main[data-page="doorstep"] .room-detail {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
   }
 }

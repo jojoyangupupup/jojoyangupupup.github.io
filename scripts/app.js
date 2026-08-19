@@ -469,7 +469,32 @@ function renderDetail(room, { entering = false } = {}) {
   if (room.isDoorstep) {
     detail.dataset.directoryLevel = "doorstep";
     detail.classList.remove("is-level-entering");
-    detail.innerHTML = "";
+    detail.innerHTML = `
+      <section class="doorstep-page" aria-labelledby="doorstep-note-title">
+        <figure class="doorstep-polaroid">
+          <div class="doorstep-tape" aria-hidden="true"></div>
+          <img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在城市暮色中拿着手机的背影照片" width="5712" height="4284">
+          <figcaption>somewhere under the evening sky</figcaption>
+        </figure>
+        <div class="doorstep-note" id="doorstep-note-title">
+          <section class="doorstep-note-block doorstep-intro-block">
+            <h1>你好，我是 JoJo</h1>
+            <p class="doorstep-name">杨昕乔</p>
+            <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
+          </section>
+          <section class="doorstep-note-block doorstep-home-block">
+            <p>这间小屋是我在互联网上的家，也是我尝试过的所有事。</p>
+            <p>逛到这里，说明你也愿意看到最后。<br>很高兴认识你。</p>
+          </section>
+          <section class="doorstep-note-block doorstep-goodbye-block">
+            <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
+            <p>14 件作品都在这里了——<br>客厅是兴趣、书房是学业，<br>厨房是搬运、花园是杂学。</p>
+            <p class="doorstep-interest">如果你也感兴趣—— <span aria-hidden="true">⌁</span></p>
+            <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
+          </section>
+        </div>
+      </section>
+    `;
     return;
   }
   const rooms = directoryRooms();
