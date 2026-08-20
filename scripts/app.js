@@ -9,20 +9,8 @@ import {
   roomFromPath,
 } from "/scripts/rooms-data.js?v=88";
 
-const FOCUS_TIMING = {
-  expandStart: 80,
-  crossfadeStart: 300,
-  detailStart: 700,
-  total: 950,
-};
-const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 };
-const ROOM_SWITCH_MS = 300;
-const GARDEN_DOORSTEP_TIMING = {
-  exit: 240,
-  enter: 480,
-  copyDelay: 70,
-};
-const REDUCED_GARDEN_DOORSTEP_TIMING = { exit: 24, enter: 90, copyDelay: 0 };
+const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
+const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
 const DOORSTEP_PROFILE = {
   displayName: "JoJo",
@@ -188,7 +176,6 @@ const portfolioMain = document.querySelector(".portfolio-main");
 const stage = document.querySelector(".visual-stage");
 const currentImage = document.querySelector(".visual-layer-current");
 const incomingImage = document.querySelector(".visual-layer-incoming");
-const focusClipPath = document.querySelector(".focus-clip-path");
 const detail = document.querySelector(".room-detail");
 const roomSwitchControls = document.querySelector(".room-switch-controls");
 const previousButton = document.querySelector(".room-switch-previous");
@@ -1753,253 +1740,109 @@ function commitHistory(path, mode) {
   if (mode === "replace") window.history.replaceState({}, "", path);
 }
 
-function setFocusRoom(room) {
-  const originX = (room.hotspotCenter.x / OVERVIEW_SIZE.width) * 100;
-  const originY = (room.hotspotCenter.y / OVERVIEW_SIZE.height) * 100;
-  const { sourceFinal, detailInitial } = room.transition;
-
-  focusClipPath.setAttribute("d", room.hotspotPath);
-  stage.style.setProperty("--focus-x", `${originX}%`);
-  stage.style.setProperty("--focus-y", `${originY}%`);
-  stage.style.setProperty("--focus-scale", sourceFinal.scale);
-  stage.style.setProperty("--focus-shift-x", `${sourceFinal.x}%`);
-  stage.style.setProperty("--focus-shift-y", `${sourceFinal.y}%`);
-  stage.style.setProperty("--focus-blur", `${sourceFinal.blur}px`);
-  stage.style.setProperty("--incoming-start-x", `${detailInitial.x}%`);
-  stage.style.setProperty("--incoming-start-y", `${detailInitial.y}%`);
-  stage.style.setProperty("--incoming-start-scale", detailInitial.scale);
-  stage.style.setProperty("--incoming-start-blur", `${detailInitial.blur}px`);
-}
-
-function setSwitchDirection(direction) {
-  const sign = direction === "previous" ? -1 : 1;
-  stage.style.setProperty("--switch-enter-x", `${sign * 12}px`);
-  stage.style.setProperty("--switch-exit-x", `${sign * -10}px`);
-  stage.dataset.switchDirection = direction;
-}
-
-function clearTransitionClasses() {
-  stage.classList.remove(
-    "is-focus-transition",
-    "is-focus-selecting",
-    "is-focus-expanding",
-    "is-focus-crossfading",
-    "is-switch-prepared",
-    "is-switching",
-    "is-returning",
-  );
+function clearPageTransition() {
+  portfolioMain.classList.remove("is-page-fade", "is-page-exiting", "is-page-entering");
   detail.classList.remove("is-updating");
-  delete stage.dataset.switchDirection;
-  focusClipPath.removeAttribute("d");
 }
 
-function clearOverviewInteractionState() {
-  hotspots.forEach((hotspot) => hotspot.classList.remove("is-highlighted"));
-  clearTransitionClasses();
-  [
-    "--focus-x",
-    "--focus-y",
-    "--focus-scale",
-    "--focus-shift-x",
-    "--focus-shift-y",
-    "--focus-blur",
-    "--incoming-start-x",
-    "--incoming-start-y",
-    "--incoming-start-scale",
-    "--incoming-start-blur",
-  ].forEach((property) => stage.style.removeProperty(property));
-}
-
-function prepareOverviewDirectorySelection(roomId) {
-  const directory = detail.querySelector(".overview-directory");
-  if (!directory) return;
-  directory.classList.add("is-committing");
-  detail.querySelectorAll("[data-directory-room]").forEach((row) => {
-    const selected = row.dataset.roomId === roomId;
-    row.classList.toggle("is-selected", selected);
-    row.classList.toggle("is-muted", !selected);
-  });
-}
-
-async function focusFromOverview(room, swapDirectory) {
-  setFocusRoom(room);
-  portfolioMain.dataset.page = "transition";
-  stage.dataset.view = "transition";
-  stage.classList.add("is-focus-transition");
-  stage.getBoundingClientRect();
-  stage.classList.add("is-focus-selecting");
-
-  if (prefersReducedMotion.matches) {
-    await wait(REDUCED_FOCUS_TIMING.crossfadeStart);
-    stage.classList.add("is-focus-crossfading");
-    swapDirectory();
-    await wait(REDUCED_FOCUS_TIMING.detailStart - REDUCED_FOCUS_TIMING.crossfadeStart);
-    detail.classList.add("is-visible");
-    await wait(REDUCED_FOCUS_TIMING.total - REDUCED_FOCUS_TIMING.detailStart);
-    return;
-  }
-
-  await wait(FOCUS_TIMING.expandStart);
-  stage.classList.add("is-focus-expanding");
-  await wait(FOCUS_TIMING.crossfadeStart - FOCUS_TIMING.expandStart);
-  stage.classList.add("is-focus-crossfading");
-  await wait(60);
-  swapDirectory();
-  await wait(FOCUS_TIMING.detailStart - FOCUS_TIMING.crossfadeStart - 60);
-  detail.classList.add("is-visible");
-  await wait(FOCUS_TIMING.total - FOCUS_TIMING.detailStart);
-}
-
-async function switchRoomVisual(direction) {
-  setSwitchDirection(direction);
-  stage.classList.add("is-switch-prepared");
-  stage.getBoundingClientRect();
-  stage.classList.add("is-switching");
-
-  const duration = prefersReducedMotion.matches ? 140 : ROOM_SWITCH_MS;
-  await wait(duration / 2);
-  detail.classList.remove("is-updating");
-  await wait(duration / 2);
-}
-
-async function switchGardenToDoorstep(room, historyMode) {
-  const timing = prefersReducedMotion.matches
-    ? REDUCED_GARDEN_DOORSTEP_TIMING
-    : GARDEN_DOORSTEP_TIMING;
-  const imageReady = await preloadImage(room.image);
+async function fadeToPage({ room = null, historyMode = "push", animate = true } = {}) {
+  const timing = prefersReducedMotion.matches ? REDUCED_PAGE_FADE_TIMING : PAGE_FADE_TIMING;
+  const targetImage = room ? room.image : OVERVIEW_IMAGE;
+  const targetAlt = room
+    ? room.alt
+    : "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
+  const imageReady = await preloadImage(targetImage);
   if (!imageReady) {
     setLocked(false);
     return;
   }
 
-  incomingImage.src = room.image;
-  incomingImage.alt = room.alt;
+  if (!animate) {
+    currentImage.src = targetImage;
+    currentImage.alt = targetAlt;
+    incomingImage.src = targetImage;
+    incomingImage.alt = targetAlt;
+    if (room) {
+      renderDetail(room);
+      currentPageId = room.id;
+      portfolioMain.dataset.page = room.id;
+      stage.dataset.view = "room";
+      stage.dataset.roomId = room.id;
+    } else {
+      renderOverviewDirectory();
+      currentPageId = "overview";
+      portfolioMain.dataset.page = "overview";
+      stage.dataset.view = "overview";
+      delete stage.dataset.roomId;
+      document.body.classList.remove("is-doorstep-image");
+      stage.classList.remove("doorstep-house-stage");
+    }
+    hotspots.forEach((hotspot) => hotspot.classList.remove("is-highlighted"));
+    detail.classList.add("is-visible");
+    updateVisualControls(currentPageId);
+    setNavigationState(currentPageId);
+    if (!historySyncPending) commitHistory(room?.path || "/", historyMode);
+    updateDocument(room);
+    clearPageTransition();
+    setLocked(false);
+    return;
+  }
+
+  incomingImage.src = targetImage;
+  incomingImage.alt = targetAlt;
   incomingImage.removeAttribute("aria-hidden");
-  detail.classList.add("is-updating");
-  setNavigationState(room.id);
-  document.body.classList.add("is-garden-doorstep-transition");
-  portfolioMain.classList.add("is-garden-doorstep-switch");
-  stage.classList.add("is-garden-doorstep-switch");
+  setNavigationState(room?.id || "overview");
+  portfolioMain.classList.add("is-page-fade", "is-page-exiting");
   portfolioMain.getBoundingClientRect();
-  portfolioMain.classList.add("is-garden-doorstep-exiting");
   await wait(timing.exit);
 
-  // Swap the layout only after the garden content has cleared the stage.
-  portfolioMain.dataset.page = room.id;
-  stage.dataset.view = "room";
-  stage.dataset.roomId = room.id;
-  renderDetail(room, { entering: true });
-  detail.classList.remove("is-updating");
+  currentImage.src = targetImage;
+  currentImage.alt = targetAlt;
+  incomingImage.src = targetImage;
+  if (room) {
+    portfolioMain.dataset.page = room.id;
+    stage.dataset.view = "room";
+    stage.dataset.roomId = room.id;
+    renderDetail(room);
+    currentPageId = room.id;
+  } else {
+    portfolioMain.dataset.page = "overview";
+    stage.dataset.view = "overview";
+    delete stage.dataset.roomId;
+    renderOverviewDirectory();
+    currentPageId = "overview";
+    document.body.classList.remove("is-doorstep-image");
+    stage.classList.remove("doorstep-house-stage");
+  }
+  hotspots.forEach((hotspot) => hotspot.classList.remove("is-highlighted"));
   detail.classList.add("is-visible");
-  portfolioMain.classList.remove("is-garden-doorstep-exiting");
+  portfolioMain.classList.remove("is-page-exiting");
+  portfolioMain.classList.add("is-page-entering");
   portfolioMain.getBoundingClientRect();
-  portfolioMain.classList.add("is-garden-doorstep-entering");
-  await wait(timing.enter + timing.copyDelay);
+  portfolioMain.classList.remove("is-page-entering");
+  await wait(timing.enter);
 
-  currentImage.src = room.image;
-  currentImage.alt = room.alt;
-  incomingImage.src = room.image;
-  currentPageId = room.id;
   updateVisualControls(currentPageId);
-  portfolioMain.classList.remove("is-garden-doorstep-switch", "is-garden-doorstep-entering");
-  stage.classList.remove("is-garden-doorstep-switch");
-  document.body.classList.remove("is-garden-doorstep-transition");
-  if (!historySyncPending) commitHistory(room.path, historyMode);
+  clearPageTransition();
+  if (!historySyncPending) commitHistory(room?.path || "/", historyMode);
   updateDocument(room);
   setLocked(false);
+  if (room) detail.querySelector(".detail-title")?.focus({ preventScroll: true });
 }
 
-function getSwitchDirection(targetPageId, requestedDirection) {
-  if (requestedDirection) return requestedDirection;
-  const currentIndex = PAGE_NAVIGATION.findIndex((item) => item.id === currentPageId);
-  const nextIndex = PAGE_NAVIGATION.findIndex((item) => item.id === targetPageId);
-  return nextIndex < currentIndex ? "previous" : "next";
-}
-
-async function transitionToRoom(room, historyMode = "push", animate = true, requestedDirection) {
+async function transitionToRoom(room, historyMode = "push", animate = true) {
   if (!room || transitioning || currentPageId === room.id) return;
 
   setLocked(true);
   if (room.id === "garden") warmRoomImage("doorstep");
-  if (currentPageId === "garden" && room.id === "doorstep" && animate) {
-    await switchGardenToDoorstep(room, historyMode);
-    return;
-  }
-  const fromOverview = currentPageId === "overview";
-  const direction = getSwitchDirection(room.id, requestedDirection);
-  if (fromOverview && animate) prepareOverviewDirectorySelection(room.id);
-  const imageReady = await preloadImage(room.image);
-  if (!imageReady) {
-    if (fromOverview) renderOverviewDirectory();
-    setLocked(false);
-    return;
-  }
-
-  if (fromOverview && !animate) clearOverviewInteractionState();
-  if (fromOverview && !animate) portfolioMain.dataset.page = room.id;
-  incomingImage.src = room.image;
-  incomingImage.alt = room.alt;
-  incomingImage.removeAttribute("aria-hidden");
-  if (!fromOverview && animate) detail.classList.add("is-updating");
-  if (!fromOverview || !animate) renderDetail(room);
-  setNavigationState(room.id);
-
-  if (animate && fromOverview) await focusFromOverview(room, () => renderDetail(room, { entering: true }));
-  else if (animate) await switchRoomVisual(direction);
-
-  currentImage.src = room.image;
-  currentImage.alt = room.alt;
-  incomingImage.src = room.image;
-  currentPageId = room.id;
-  portfolioMain.dataset.page = room.id;
-  stage.dataset.view = "room";
-  stage.dataset.roomId = room.id;
-  detail.classList.add("is-visible");
-  updateVisualControls(currentPageId);
-  clearTransitionClasses();
-  if (!historySyncPending) commitHistory(room.path, historyMode);
-  updateDocument(room);
-  setLocked(false);
-  if (animate) detail.querySelector(".detail-title")?.focus({ preventScroll: true });
+  await fadeToPage({ room, historyMode, animate });
 }
 
 async function transitionToOverview(historyMode = "push", animate = true) {
   if (transitioning || currentPageId === "overview") return;
 
   setLocked(true);
-  const imageReady = await preloadImage(OVERVIEW_IMAGE);
-  if (!imageReady) {
-    setLocked(false);
-    return;
-  }
-  incomingImage.src = OVERVIEW_IMAGE;
-  incomingImage.alt = "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
-  incomingImage.removeAttribute("aria-hidden");
-  stage.dataset.view = "transition";
-  portfolioMain.dataset.page = "overview-enter";
-  stage.classList.add("is-returning");
-  if (animate) detail.classList.add("is-updating");
-  setNavigationState("overview");
-
-  if (animate) {
-    stage.getBoundingClientRect();
-    await wait(prefersReducedMotion.matches ? 140 : ROOM_SWITCH_MS);
-  }
-
-  currentImage.src = OVERVIEW_IMAGE;
-  currentImage.alt = incomingImage.alt;
-  incomingImage.src = OVERVIEW_IMAGE;
-  currentPageId = "overview";
-  portfolioMain.dataset.page = "overview";
-  stage.dataset.view = "overview";
-  delete stage.dataset.roomId;
-  renderOverviewDirectory({ entering: animate });
-  detail.classList.add("is-visible");
-  updateVisualControls(currentPageId);
-  clearTransitionClasses();
-  if (!historySyncPending) commitHistory("/", historyMode);
-  updateDocument(null);
-  setLocked(false);
+  await fadeToPage({ historyMode, animate });
 }
 
 function navigateToPage(pageId, direction, source = "top-tab") {
@@ -2320,12 +2163,14 @@ document.addEventListener("keydown", (event) => {
 
 const preloadAllRoomImages = () => PAGE_NAVIGATION
   .filter((page) => page.type === "room")
-  .forEach((page) => {
-    warmRoomImage(page.roomId);
-    warmRoomDocuments(page.roomId);
-  });
-if ("requestIdleCallback" in window) window.requestIdleCallback(preloadAllRoomImages, { timeout: 1800 });
-else window.setTimeout(preloadAllRoomImages, 700);
+  .forEach((page) => warmRoomImage(page.roomId));
+const preloadAllRoomDocuments = () => PAGE_NAVIGATION
+  .filter((page) => page.type === "room")
+  .forEach((page) => warmRoomDocuments(page.roomId));
+
+preloadAllRoomImages();
+if ("requestIdleCallback" in window) window.requestIdleCallback(preloadAllRoomDocuments, { timeout: 1800 });
+else window.setTimeout(preloadAllRoomDocuments, 700);
 
 function navigateWithArrow(button, direction) {
   const source = currentPageId === "overview" ? "overview-arrow" : "detail-arrow";
