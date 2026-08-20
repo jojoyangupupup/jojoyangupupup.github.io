@@ -17,6 +17,12 @@ const FOCUS_TIMING = {
 };
 const REDUCED_FOCUS_TIMING = { crossfadeStart: 30, detailStart: 110, total: 200 };
 const ROOM_SWITCH_MS = 300;
+const GARDEN_DOORSTEP_TIMING = {
+  exit: 240,
+  enter: 480,
+  copyDelay: 70,
+};
+const REDUCED_GARDEN_DOORSTEP_TIMING = { exit: 24, enter: 90, copyDelay: 0 };
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
 const DOORSTEP_PROFILE = {
   displayName: "JoJo",
@@ -54,7 +60,7 @@ app.innerHTML = `
       <section class="visual-column" aria-label="Room visual">
         <div class="visual-frame">
           <div class="visual-stage${showHotspots ? " show-hotspots" : ""}" data-view="overview" data-show-hotspots="${showHotspots}">
-            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="Isometric overview of four portfolio categories: garden, kitchen, living room, and study" fetchpriority="high">
+            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="Isometric overview of four portfolio categories: garden, kitchen, living room, and study" fetchpriority="high" decoding="async" draggable="false">
             <svg class="focus-room-layer" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <clipPath id="selected-room-clip">
@@ -63,7 +69,7 @@ app.innerHTML = `
               </defs>
               <image href="${OVERVIEW_IMAGE}" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" clip-path="url(#selected-room-clip)"></image>
             </svg>
-            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="" aria-hidden="true">
+            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="" aria-hidden="true" decoding="async" draggable="false">
             <svg class="hotspot-map" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-label="Clickable portfolio category areas">
               ${ROOMS.map((room, index) => `
                 <path class="hotspot hotspot-${index + 1}" tabindex="0" role="link" data-room-id="${room.id}" aria-label="Enter ${room.title} portfolio category" d="${room.hotspotPath}"></path>
@@ -1856,6 +1862,53 @@ async function switchRoomVisual(direction) {
   await wait(duration / 2);
 }
 
+async function switchGardenToDoorstep(room, historyMode) {
+  const timing = prefersReducedMotion.matches
+    ? REDUCED_GARDEN_DOORSTEP_TIMING
+    : GARDEN_DOORSTEP_TIMING;
+  const imageReady = await preloadImage(room.image);
+  if (!imageReady) {
+    setLocked(false);
+    return;
+  }
+
+  incomingImage.src = room.image;
+  incomingImage.alt = room.alt;
+  incomingImage.removeAttribute("aria-hidden");
+  detail.classList.add("is-updating");
+  setNavigationState(room.id);
+  document.body.classList.add("is-garden-doorstep-transition");
+  portfolioMain.classList.add("is-garden-doorstep-switch");
+  stage.classList.add("is-garden-doorstep-switch");
+  portfolioMain.getBoundingClientRect();
+  portfolioMain.classList.add("is-garden-doorstep-exiting");
+  await wait(timing.exit);
+
+  // Swap the layout only after the garden content has cleared the stage.
+  portfolioMain.dataset.page = room.id;
+  stage.dataset.view = "room";
+  stage.dataset.roomId = room.id;
+  renderDetail(room, { entering: true });
+  detail.classList.remove("is-updating");
+  detail.classList.add("is-visible");
+  portfolioMain.classList.remove("is-garden-doorstep-exiting");
+  portfolioMain.getBoundingClientRect();
+  portfolioMain.classList.add("is-garden-doorstep-entering");
+  await wait(timing.enter + timing.copyDelay);
+
+  currentImage.src = room.image;
+  currentImage.alt = room.alt;
+  incomingImage.src = room.image;
+  currentPageId = room.id;
+  updateVisualControls(currentPageId);
+  portfolioMain.classList.remove("is-garden-doorstep-switch", "is-garden-doorstep-entering");
+  stage.classList.remove("is-garden-doorstep-switch");
+  document.body.classList.remove("is-garden-doorstep-transition");
+  if (!historySyncPending) commitHistory(room.path, historyMode);
+  updateDocument(room);
+  setLocked(false);
+}
+
 function getSwitchDirection(targetPageId, requestedDirection) {
   if (requestedDirection) return requestedDirection;
   const currentIndex = PAGE_NAVIGATION.findIndex((item) => item.id === currentPageId);
@@ -1867,6 +1920,11 @@ async function transitionToRoom(room, historyMode = "push", animate = true, requ
   if (!room || transitioning || currentPageId === room.id) return;
 
   setLocked(true);
+  if (room.id === "garden") warmRoomImage("doorstep");
+  if (currentPageId === "garden" && room.id === "doorstep" && animate) {
+    await switchGardenToDoorstep(room, historyMode);
+    return;
+  }
   const fromOverview = currentPageId === "overview";
   const direction = getSwitchDirection(room.id, requestedDirection);
   if (fromOverview && animate) prepareOverviewDirectorySelection(room.id);
