@@ -450,6 +450,9 @@ function renderDetail(room, { entering = false } = {}) {
     detail.classList.remove("is-level-entering");
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
+        <figure class="doorstep-personal-photo">
+          <img src="/assets/rooms/doorstep-personal.jpg" alt="JoJo 在城市黄昏中的背影照片" width="5712" height="4284" loading="eager" fetchpriority="high" decoding="async">
+        </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-opening-block">
             <p class="doorstep-intro-label">你好，我是</p>
@@ -461,6 +464,8 @@ function renderDetail(room, { entering = false } = {}) {
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
             <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
+          </section>
+          <section class="doorstep-note-block doorstep-works-block">
             <p>14 件作品都在这里了。</p>
           </section>
           <section class="doorstep-note-block doorstep-closing-block">

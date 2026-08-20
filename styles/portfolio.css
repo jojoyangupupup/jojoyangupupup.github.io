@@ -4392,6 +4392,25 @@ body.is-doorstep-image {
   left: clamp(-30px, -2.2vw, -20px);
 }
 
+.doorstep-personal-photo {
+  width: min(100%, 300px);
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.doorstep-personal-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+
 .doorstep-note {
   width: 100%;
   max-width: 430px;
@@ -4453,7 +4472,15 @@ body.is-doorstep-image {
 }
 
 .doorstep-thanks { margin: 0 !important; }
-.doorstep-goodbye-block p + p { margin-top: 3px; }
+
+.doorstep-works-block {
+  margin-top: 4px;
+  color: #5c4a3a;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: .02em;
+}
 
 .doorstep-closing-block {
   margin-top: 30px;
@@ -4469,7 +4496,7 @@ body.is-doorstep-image {
 .doorstep-signature {
   display: block;
   width: fit-content;
-  margin: 12px 0 0 8px !important;
+  margin: 12px 0 0 auto !important;
   color: #5c4a3a;
   font: italic 400 24px/1 "EB Garamond", Georgia, serif;
   letter-spacing: .01em;
@@ -4503,6 +4530,7 @@ body.is-doorstep-image {
   .portfolio-main[data-page="doorstep"] .visual-column { height: min(42vh, 340px); transform: none; }
   .portfolio-main[data-page="doorstep"] .room-detail { display: block !important; height: auto; padding: 32px 0 0; }
   .doorstep-page { max-width: 500px; margin: 0 auto; left: auto; }
+  .doorstep-personal-photo { width: min(100%, 300px); margin-bottom: 18px; }
   .doorstep-note { max-width: 390px; margin: 0 auto; font-size: 15px; }
   .doorstep-intro-label { font-size: 17px; }
   .doorstep-name { font-size: clamp(38px, 11vw, 48px); }
