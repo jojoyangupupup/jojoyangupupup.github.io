@@ -469,7 +469,7 @@ function renderDetail(room, { entering = false } = {}) {
             <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
             <p>14 件作品都在这里了——</p>
             <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
-            <p class="doorstep-signature">JoJo</p>
+            <span class="doorstep-signature" translate="no" lang="en">JoJo</span>
           </section>
         </div>
       </section>
