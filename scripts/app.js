@@ -451,18 +451,21 @@ function renderDetail(room, { entering = false } = {}) {
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
         <div class="doorstep-note" id="doorstep-note-title">
-          <section class="doorstep-note-block doorstep-intro-block">
-            <span class="doorstep-note-rule" aria-hidden="true"></span>
+          <section class="doorstep-note-block doorstep-opening-block">
             <p class="doorstep-intro-label">你好，我是</p>
+          </section>
+          <section class="doorstep-note-block doorstep-identity-block">
             <h1 class="doorstep-name">杨昕乔</h1>
             <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
             <p class="doorstep-tagline">创意多多，热爱捕捉细碎有趣的表达</p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
             <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
-            <p>14 件作品都在这里了——</p>
+            <p>14 件作品都在这里了。</p>
+          </section>
+          <section class="doorstep-note-block doorstep-closing-block">
             <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
-            <span class="doorstep-signature" translate="no" lang="en">JoJo</span>
+            <span class="doorstep-signature signature" translate="no" lang="en">JoJo</span>
           </section>
         </div>
       </section>
