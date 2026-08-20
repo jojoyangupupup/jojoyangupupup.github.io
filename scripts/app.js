@@ -24,7 +24,6 @@ const DOORSTEP_PROFILE = {
   wechat: "ledwechat15945158337",
   bilibiliUrl: "https://space.bilibili.com/702930217",
   resumeUrl: "/assets/resume.pdf",
-  portraitUrl: "/assets/rooms/doorstep-personal.jpg",
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
@@ -452,25 +451,23 @@ function bindDoorstepInteractions() {
 
 function renderDetail(room, { entering = false } = {}) {
   document.body.classList.toggle("is-doorstep-image", Boolean(room.isDoorstep));
+  stage.classList.toggle("doorstep-house-stage", Boolean(room.isDoorstep));
   if (room.isDoorstep) {
     detail.dataset.directoryLevel = "doorstep";
     detail.classList.remove("is-level-entering");
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
-        <figure class="doorstep-polaroid">
-          <div class="doorstep-tape" aria-hidden="true"></div>
-          <img src="${DOORSTEP_PROFILE.portraitUrl}" alt="JoJo 在城市暮色中拿着手机的背影照片" width="5712" height="4284">
-        </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-intro-block">
-            <h1>你好，我是</h1>
-            <p class="doorstep-name">杨昕乔</p>
+            <span class="doorstep-note-rule" aria-hidden="true"></span>
+            <p class="doorstep-intro-label">你好，我是</p>
+            <h1 class="doorstep-name">杨昕乔</h1>
             <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
             <p class="doorstep-tagline">创意多多，热爱捕捉细碎有趣的表达</p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
             <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
-            <p>14 件作品都在这里了——<br>客厅是兴趣、书房是学业，<br>厨房是搬运、花园是杂学。</p>
+            <p>14 件作品都在这里了——</p>
             <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
             <p class="doorstep-signature">JoJo</p>
           </section>
