@@ -4446,6 +4446,7 @@ body.is-doorstep-image {
   object-fit: contain;
   object-position: center;
   transform: translate(-50%, -50%);
+  clip-path: polygon(44.5% 7.8%, 68% 30%, 68% 69.5%, 44.5% 92%, 20.4% 69.5%, 20.4% 30%);
 }
 
 .portfolio-main[data-page="doorstep"] .room-detail {
