@@ -954,7 +954,18 @@ export const ROOMS = [
     isDoorstep: true,
     projects: [],
     documents: [],
-    objectHotspots: [],
+    objectHotspots: [
+      {
+        id: "doorstep-canvas-bag",
+        number: "01",
+        label: "帆布包邮箱",
+        ariaLabel: "复制邮箱 15045158337@163.com",
+        copyValue: "15045158337@163.com",
+        copySuccessMessage: "邮箱已复制",
+        path: "M 895 264 C 901 247 916 239 931 247 C 945 255 952 273 958 291 L 972 316 L 975 339 L 967 408 L 953 439 L 918 431 L 899 412 L 902 371 L 893 345 L 899 318 L 894 290 Z",
+        glowPath: "M 895 264 C 901 247 916 239 931 247 C 945 255 952 273 958 291 L 972 316 L 975 339 L 967 408 L 953 439 L 918 431 L 899 412 L 902 371 L 893 345 L 899 318 L 894 290 Z",
+      },
+    ],
     hotspotPath: "M 0 0 Z",
     hotspotCenter: { x: 0, y: 0 },
     transition: {

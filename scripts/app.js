@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=88";
+} from "/scripts/rooms-data.js?v=90";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -21,6 +21,7 @@ const DOORSTEP_PROFILE = {
 };
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
+const doorstepObjects = ROOMS.find((room) => room.id === "doorstep")?.objectHotspots || [];
 
 const app = document.querySelector("#app");
 
@@ -131,6 +132,31 @@ app.innerHTML = `
                   ` : ""}
                 </g>
               `)).join("")}
+            </svg>
+            <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
+              ${doorstepObjects.map((object) => `
+                <g class="room-object-group" data-room-id="doorstep">
+                  <path
+                    class="room-object-hotspot"
+                    tabindex="0"
+                    role="button"
+                    data-room-id="doorstep"
+                    data-object-id="${object.id}"
+                    aria-label="${object.ariaLabel || `Open ${object.label} document` }"
+                    d="${object.path}"
+                  ></path>
+                  ${object.glowPath ? `
+                    <path
+                      class="room-object-glow"
+                      data-room-id="doorstep"
+                      data-object-id="${object.id}"
+                      d="${object.glowPath}"
+                      fill="#ffffff"
+                      aria-hidden="true"
+                    ></path>
+                  ` : ""}
+                </g>
+              `).join("")}
             </svg>
           </div>
 
@@ -399,8 +425,16 @@ function showDoorstepToast(message) {
 
 async function copyDoorstepValue(value, successMessage) {
   try {
-    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
-    else {
+    let copied = false;
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(value);
+        copied = true;
+      } catch {
+        // Fall through to the local fallback for restricted clipboard contexts.
+      }
+    }
+    if (!copied) {
       const field = document.createElement("textarea");
       field.value = value;
       field.setAttribute("readonly", "");
@@ -408,9 +442,10 @@ async function copyDoorstepValue(value, successMessage) {
       field.style.opacity = "0";
       document.body.append(field);
       field.select();
-      document.execCommand("copy");
+      copied = document.execCommand("copy");
       field.remove();
     }
+    if (!copied) throw new Error("copy unavailable");
     showDoorstepToast(successMessage);
   } catch {
     showDoorstepToast("复制失败，请稍后重试");
@@ -1693,8 +1728,13 @@ function closeDocumentModal(restoreFocus = true) {
 function openRoomObject(roomId, objectId, trigger) {
   if (transitioning || currentPageId !== roomId) return;
   const { room, object, documents } = getRoomObject(roomId, objectId);
-  if (!room || !object || !documents.length) return;
+  if (!room || !object) return;
   markObjectDiscovered(roomId, objectId);
+  if (object.copyValue) {
+    copyDoorstepValue(object.copyValue, object.copySuccessMessage || "邮箱已复制");
+    return;
+  }
+  if (!documents.length) return;
   openDocumentModal(room, object, documents, trigger);
 }
 

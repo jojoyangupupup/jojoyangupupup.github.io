@@ -393,6 +393,27 @@ button {
   pointer-events: auto;
 }
 
+.doorstep-object-map {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  left: calc(50% + 82px);
+  width: auto;
+  height: min(86vh, 900px);
+  max-width: none;
+  max-height: calc(100% - 32px);
+  aspect-ratio: 1626 / 967;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.visual-stage[data-view="room"][data-room-id="doorstep"] .doorstep-object-map {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .room-object-group {
   opacity: 0;
   pointer-events: none;
@@ -403,6 +424,12 @@ button {
 .visual-stage[data-room-id="kitchen"] .room-object-group[data-room-id="kitchen"],
 .visual-stage[data-room-id="living"] .room-object-group[data-room-id="living"],
 .visual-stage[data-room-id="garden"] .room-object-group[data-room-id="garden"] {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.visual-stage[data-room-id="doorstep"] .room-object-group[data-room-id="doorstep"] {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
