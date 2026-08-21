@@ -4319,6 +4319,7 @@ body.is-doorstep-image {
   padding: 0;
   column-gap: 0;
   overflow: hidden;
+  background: var(--doorstep-canvas);
 }
 
 .portfolio-main[data-page="doorstep"] .visual-column {
@@ -4329,13 +4330,16 @@ body.is-doorstep-image {
   justify-content: center;
   overflow: visible;
   transform: none;
+  background: var(--doorstep-canvas);
 }
 
 .portfolio-main[data-page="doorstep"] .visual-frame,
-.portfolio-main[data-page="doorstep"] .doorstep-house-stage {
+.portfolio-main[data-page="doorstep"] .doorstep-house-stage,
+.portfolio-main[data-page="doorstep"] .visual-stage {
   width: 100%;
   height: 100%;
   overflow: visible;
+  background: var(--doorstep-canvas);
 }
 
 .portfolio-main[data-page="doorstep"] .doorstep-house-stage {
