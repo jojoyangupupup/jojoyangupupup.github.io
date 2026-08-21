@@ -7,21 +7,13 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=101";
+} from "/scripts/rooms-data.js?v=102";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
-const DOORSTEP_PROFILE = {
-  displayName: "JoJo",
-  email: "15945158337@163.com",
-  wechat: "ledwechat15945158337",
-  bilibiliUrl: "https://space.bilibili.com/702930217",
-  resumeUrl: "/assets/resume.pdf",
-};
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
-const doorstepObjects = ROOMS.find((room) => room.id === "doorstep")?.objectHotspots || [];
 
 const app = document.querySelector("#app");
 
@@ -132,61 +124,6 @@ app.innerHTML = `
                   ` : ""}
                 </g>
               `)).join("")}
-            </svg>
-            <svg class="doorstep-object-map" viewBox="0 0 1312 1199" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
-              <defs>
-                <!-- Keep the doorstep path in the same warm, tight edge treatment as room objects. -->
-                <filter id="doorstep-room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="6" result="outer-edge"></feMorphology>
-                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
-                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
-                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
-                  <feFlood flood-color="#efb45f" flood-opacity="0.66" result="soft-color"></feFlood>
-                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
-                  <feFlood flood-color="#fff7df" flood-opacity="0.94" result="line-color"></feFlood>
-                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
-                  <feMerge>
-                    <feMergeNode in="soft-glow"></feMergeNode>
-                    <feMergeNode in="line-glow"></feMergeNode>
-                  </feMerge>
-                </filter>
-              </defs>
-              ${doorstepObjects.map((object) => `
-                <g class="room-object-group" data-room-id="doorstep">
-                  <path
-                    class="room-object-hotspot"
-                    tabindex="0"
-                    role="button"
-                    data-room-id="doorstep"
-                    data-object-id="${object.id}"
-                    aria-label="${object.ariaLabel || `Open ${object.label} document` }"
-                    d="${object.path}"
-                  ></path>
-                  ${object.glowImage ? `
-                    <image
-                      class="room-object-glow"
-                      data-room-id="doorstep"
-                      data-object-id="${object.id}"
-                      href="${object.glowImage.file}"
-                      x="${object.glowImage.x}"
-                      y="${object.glowImage.y}"
-                      width="${object.glowImage.width}"
-                      height="${object.glowImage.height}"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    ></image>
-                  ` : object.glowPath ? `
-                    <path
-                      class="room-object-glow"
-                      data-room-id="doorstep"
-                      data-object-id="${object.id}"
-                      d="${object.glowPath}"
-                      fill="#ffffff"
-                      aria-hidden="true"
-                    ></path>
-                  ` : ""}
-                </g>
-              `).join("")}
             </svg>
           </div>
 
@@ -432,82 +369,6 @@ function renderOverviewDirectory({ entering = false } = {}) {
     </section>
   `;
   bindDirectoryInteractions();
-}
-
-let doorstepToastTimer = 0;
-
-function showDoorstepToast(message) {
-  let toast = document.querySelector("[data-doorstep-toast]");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "doorstep-toast";
-    toast.dataset.doorstepToast = "true";
-    toast.setAttribute("role", "status");
-    toast.setAttribute("aria-live", "polite");
-    document.body.append(toast);
-  }
-  window.clearTimeout(doorstepToastTimer);
-  toast.textContent = message;
-  toast.classList.remove("is-visible");
-  requestAnimationFrame(() => toast.classList.add("is-visible"));
-  doorstepToastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 2000);
-}
-
-async function copyDoorstepValue(value, successMessage) {
-  try {
-    let copied = false;
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(value);
-        copied = true;
-      } catch {
-        // Fall through to the local fallback for restricted clipboard contexts.
-      }
-    }
-    if (!copied) {
-      const field = document.createElement("textarea");
-      field.value = value;
-      field.setAttribute("readonly", "");
-      field.style.position = "fixed";
-      field.style.opacity = "0";
-      document.body.append(field);
-      field.select();
-      copied = document.execCommand("copy");
-      field.remove();
-    }
-    if (!copied) throw new Error("copy unavailable");
-    showDoorstepToast(successMessage);
-  } catch {
-    showDoorstepToast("复制失败，请稍后重试");
-  }
-}
-
-async function downloadDoorstepFile(url, filename, successMessage = "下载简历") {
-  try {
-    const response = await fetch(url, { method: "HEAD", cache: "no-store" });
-    if (!response.ok) throw new Error("missing");
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.append(link);
-    link.click();
-    link.remove();
-    showDoorstepToast(successMessage);
-  } catch {
-    showDoorstepToast("简历文件暂未上传");
-  }
-}
-
-function bindDoorstepInteractions() {
-  const bindOnce = (selector, handler) => {
-    const control = document.querySelector(selector);
-    if (!control || control.dataset.doorstepBound) return;
-    control.dataset.doorstepBound = "true";
-    control.addEventListener("click", handler);
-  };
-  bindOnce("[data-copy-email]", () => copyDoorstepValue(DOORSTEP_PROFILE.email, "邮箱已复制"));
-  bindOnce("[data-copy-wechat]", () => copyDoorstepValue(DOORSTEP_PROFILE.wechat, "微信号已复制"));
-  bindOnce("[data-download-resume]", () => downloadDoorstepFile(DOORSTEP_PROFILE.resumeUrl, "杨昕乔-简历.pdf"));
 }
 
 function renderDetail(room, { entering = false } = {}) {
@@ -1763,14 +1624,6 @@ function openRoomObject(roomId, objectId, trigger) {
   const { room, object, documents } = getRoomObject(roomId, objectId);
   if (!room || !object) return;
   markObjectDiscovered(roomId, objectId);
-  if (object.copyValue) {
-    copyDoorstepValue(object.copyValue, object.copySuccessMessage || "邮箱已复制");
-    return;
-  }
-  if (object.downloadUrl) {
-    downloadDoorstepFile(object.downloadUrl, object.downloadFilename || "杨昕乔-简历.pdf", object.downloadSuccessMessage || "下载简历");
-    return;
-  }
   if (!documents.length) return;
   openDocumentModal(room, object, documents, trigger);
 }

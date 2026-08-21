@@ -15,11 +15,6 @@ export const PORTFOLIO = {
 
 // Hotspots use the overview image's 1487 x 1058 coordinate space so they stay
 // aligned at every rendered size. The same paths also drive the focus clipPath.
-// Doorstep paths use the current 1312 x 1199 source coordinates. Each outline
-// drives both hit testing and the matching edge glow.
-const DOORSTEP_DOG_OUTLINE = "M 668 590 C 677 585 689 590 697 601 C 704 609 714 616 724 621 C 737 623 749 627 758 633 C 766 623 778 621 784 630 C 791 640 785 653 771 660 C 767 674 753 685 735 691 C 719 697 703 698 691 695 L 665 689 C 652 692 637 689 629 683 C 623 678 625 673 633 669 C 627 665 626 659 630 654 C 635 648 643 644 650 638 C 648 628 652 619 660 612 C 664 605 662 596 668 590 Z";
-const DOORSTEP_EMAIL_OUTLINE = "M 875 250 L 966 278 C 974 281 978 289 977 299 L 969 391 C 968 402 961 408 951 405 L 882 384 C 875 382 871 374 872 364 L 875 266 C 875 258 878 252 875 250 Z";
-const DOORSTEP_RESUME_OUTLINE = "M 1005 307 L 1087 336 C 1095 339 1099 347 1098 358 L 1087 457 C 1086 468 1079 474 1069 472 L 1004 453 C 997 451 993 444 994 435 L 999 322 C 999 314 1001 309 1005 307 Z";
 export const ROOMS = [
   {
     id: "garden",
@@ -953,46 +948,12 @@ export const ROOMS = [
     number: "05",
     title: "Doorstep",
     path: "/rooms/doorstep",
-    image: "/assets/rooms/doorstep-house-contact-transparent.png?v=5",
+    image: "/assets/rooms/doorstep-house-full.png?v=1",
     alt: "暖色等距视角门廊小屋，包含开放木门、鞋柜、联系图标、小狗和地垫",
     description: "A quiet goodbye at the doorstep.",
     isDoorstep: true,
     projects: [],
     documents: [],
-    objectHotspots: [
-      {
-        id: "doorstep-canvas-bag",
-        number: "01",
-        label: "邮箱",
-        ariaLabel: "复制邮箱 15945158337@163.com",
-        copyValue: "15945158337@163.com",
-        copySuccessMessage: "邮箱已复制",
-        path: DOORSTEP_EMAIL_OUTLINE,
-        glowPath: DOORSTEP_EMAIL_OUTLINE,
-      },
-      {
-        id: "doorstep-dog",
-        number: "02",
-        label: "小狗微信号",
-        ariaLabel: "复制微信号 ledwechat15945158337",
-        copyValue: "ledwechat15945158337",
-        copySuccessMessage: "已复制微信号",
-        // Follows the red hand-drawn dog outline in 579.jpg.
-        path: DOORSTEP_DOG_OUTLINE,
-        glowPath: DOORSTEP_DOG_OUTLINE,
-      },
-      {
-        id: "doorstep-cat",
-        number: "03",
-        downloadUrl: "/assets/resume.pdf",
-        downloadFilename: "杨昕乔-简历.pdf",
-        downloadSuccessMessage: "下载简历",
-        label: "简历",
-        ariaLabel: "下载简历 PDF",
-        path: DOORSTEP_RESUME_OUTLINE,
-        glowPath: DOORSTEP_RESUME_OUTLINE,
-      },
-    ],
     hotspotPath: "M 0 0 Z",
     hotspotCenter: { x: 0, y: 0 },
     transition: {
