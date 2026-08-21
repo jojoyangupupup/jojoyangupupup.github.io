@@ -468,6 +468,11 @@ button {
   filter: url(#room-object-edge-glow-tight);
 }
 
+.room-object-glow[data-object-id="doorstep-canvas-bag"] {
+  filter: url(#doorstep-bag-edge-glow);
+  mix-blend-mode: normal;
+}
+
 .room-object-hotspot:hover + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot:focus-visible + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot.is-directory-highlighted + .room-object-glow[data-object-id="garden-bike"] {

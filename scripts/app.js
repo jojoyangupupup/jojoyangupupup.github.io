@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=90";
+} from "/scripts/rooms-data.js?v=91";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -134,6 +134,17 @@ app.innerHTML = `
               `)).join("")}
             </svg>
             <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
+              <defs>
+                <filter id="doorstep-bag-edge-glow" x="-80%" y="-60%" width="260%" height="220%" color-interpolation-filters="sRGB">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#f4dc8f" flood-opacity="0.9" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                  </feMerge>
+                </filter>
+              </defs>
               ${doorstepObjects.map((object) => `
                 <g class="room-object-group" data-room-id="doorstep">
                   <path
@@ -151,7 +162,9 @@ app.innerHTML = `
                       data-room-id="doorstep"
                       data-object-id="${object.id}"
                       d="${object.glowPath}"
-                      fill="#ffffff"
+                      ${object.id === "doorstep-canvas-bag"
+                        ? 'fill="none" stroke="#fff1ad" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"'
+                        : 'fill="#ffffff"'}
                       aria-hidden="true"
                     ></path>
                   ` : ""}
