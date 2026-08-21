@@ -402,7 +402,7 @@ button {
   height: min(86vh, 900px);
   max-width: none;
   max-height: calc(100% - 32px);
-  aspect-ratio: 1315 / 1197;
+  aspect-ratio: 1312 / 1199;
   overflow: visible;
   opacity: 0;
   pointer-events: none;

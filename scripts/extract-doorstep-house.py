@@ -10,18 +10,18 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/rooms/doorstep-house-contact-source.png"
 OUTPUT = ROOT / "assets/rooms/doorstep-house-contact-transparent.png"
 
-# Clockwise outer silhouette in the source image's 1315 x 1197 coordinates.
+# Clockwise outer silhouette in the source image's 1312 x 1199 coordinates.
 # The points sit just outside the roof, wall, and floor edges so pale structural
 # pixels remain intact while every pixel beyond the house becomes transparent.
 HOUSE_OUTLINE = (
-    (646, 18),
-    (1170, 334),
-    (1174, 878),
-    (1129, 920),
-    (616, 1204),
-    (592, 1204),
-    (116, 874),
-    (126, 344),
+    (655, 16),
+    (1160, 334),
+    (1163, 878),
+    (1122, 921),
+    (657, 1205),
+    (631, 1205),
+    (142, 875),
+    (154, 337),
 )
 
 SUPERSAMPLE = 4
@@ -29,7 +29,7 @@ SUPERSAMPLE = 4
 
 def main() -> None:
     source = Image.open(SOURCE).convert("RGBA")
-    if source.size != (1315, 1197):
+    if source.size != (1312, 1199):
         raise ValueError(f"Unexpected source size: {source.size}")
 
     mask = Image.new(
