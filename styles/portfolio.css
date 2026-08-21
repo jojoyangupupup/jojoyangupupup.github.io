@@ -469,8 +469,9 @@ button {
 }
 
 .room-object-glow[data-object-id="doorstep-canvas-bag"] {
-  filter: url(#doorstep-bag-edge-glow);
+  filter: url(#doorstep-bag-alpha-glow);
   mix-blend-mode: normal;
+  transition: opacity 140ms ease-out;
 }
 
 .room-object-hotspot:hover + .room-object-glow[data-object-id="garden-bike"],
@@ -483,6 +484,12 @@ button {
 .room-object-hotspot:focus-visible + .room-object-glow,
 .room-object-hotspot.is-directory-highlighted + .room-object-glow {
   opacity: 0.94;
+}
+
+.room-object-hotspot:hover + .room-object-glow[data-object-id="doorstep-canvas-bag"],
+.room-object-hotspot:focus-visible + .room-object-glow[data-object-id="doorstep-canvas-bag"],
+.room-object-hotspot.is-directory-highlighted + .room-object-glow[data-object-id="doorstep-canvas-bag"] {
+  opacity: 1;
 }
 
 .hotspot {

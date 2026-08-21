@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=92";
+} from "/scripts/rooms-data.js?v=93";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -135,13 +135,20 @@ app.innerHTML = `
             </svg>
             <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
               <defs>
-                <filter id="doorstep-bag-edge-glow" x="-80%" y="-60%" width="260%" height="220%" color-interpolation-filters="sRGB">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="soft-edge"></feGaussianBlur>
-                  <feFlood flood-color="#f4dc8f" flood-opacity="0.9" result="soft-color"></feFlood>
-                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                <filter id="doorstep-bag-alpha-glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+                  <feComponentTransfer in="SourceAlpha" result="clean-alpha">
+                    <feFuncA type="discrete" tableValues="0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1"></feFuncA>
+                  </feComponentTransfer>
+                  <feMorphology in="clean-alpha" operator="dilate" radius="1.8" result="expanded"></feMorphology>
+                  <feComposite in="expanded" in2="clean-alpha" operator="out" result="outer-ring"></feComposite>
+                  <feFlood flood-color="#ffe99a" flood-opacity="0.92" result="edge-color"></feFlood>
+                  <feComposite in="edge-color" in2="outer-ring" operator="in" result="edge-line"></feComposite>
+                  <feGaussianBlur in="outer-ring" stdDeviation="1.6" result="soft-ring"></feGaussianBlur>
+                  <feFlood flood-color="#ffe99a" flood-opacity="0.78" result="glow-color"></feFlood>
+                  <feComposite in="glow-color" in2="soft-ring" operator="in" result="final-glow"></feComposite>
                   <feMerge>
-                    <feMergeNode in="soft-glow"></feMergeNode>
-                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                    <feMergeNode in="edge-line"></feMergeNode>
+                    <feMergeNode in="final-glow"></feMergeNode>
                   </feMerge>
                 </filter>
               </defs>
@@ -156,15 +163,26 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || `Open ${object.label} document` }"
                     d="${object.path}"
                   ></path>
-                  ${object.glowPath ? `
+                  ${object.glowImage ? `
+                    <image
+                      class="room-object-glow"
+                      data-room-id="doorstep"
+                      data-object-id="${object.id}"
+                      href="${object.glowImage.file}"
+                      x="${object.glowImage.x}"
+                      y="${object.glowImage.y}"
+                      width="${object.glowImage.width}"
+                      height="${object.glowImage.height}"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></image>
+                  ` : object.glowPath ? `
                     <path
                       class="room-object-glow"
                       data-room-id="doorstep"
                       data-object-id="${object.id}"
                       d="${object.glowPath}"
-                      ${object.id === "doorstep-canvas-bag"
-                        ? 'fill="none" stroke="#fff1ad" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"'
-                        : 'fill="#ffffff"'}
+                      fill="#ffffff"
                       aria-hidden="true"
                     ></path>
                   ` : ""}
