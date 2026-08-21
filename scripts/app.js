@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=107";
+} from "/scripts/rooms-data.js?v=108";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
