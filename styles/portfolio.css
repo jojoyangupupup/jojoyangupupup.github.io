@@ -388,6 +388,37 @@ button {
   transition: opacity 180ms ease;
 }
 
+.doorstep-object-map {
+  position: absolute;
+  z-index: 7;
+  top: 50%;
+  left: calc(50% + 82px);
+  width: auto;
+  height: min(86vh, 900px);
+  max-width: none;
+  max-height: calc(100% - 32px);
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.visual-stage[data-view="room"][data-room-id="doorstep"] .doorstep-object-map {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.visual-stage[data-room-id="doorstep"] .doorstep-object-map .room-object-group {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.doorstep-object-map .room-object-glow {
+  filter: url(#doorstep-object-edge-glow);
+}
+
 .visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"], [data-room-id="garden"]) .room-object-map {
   opacity: 1;
   pointer-events: auto;
@@ -451,6 +482,31 @@ button {
 .room-object-hotspot:focus-visible + .room-object-glow,
 .room-object-hotspot.is-directory-highlighted + .room-object-glow {
   opacity: 0.94;
+}
+
+.interaction-toast {
+  position: fixed;
+  z-index: 1500;
+  top: 50%;
+  left: 50%;
+  max-width: min(80vw, 280px);
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 247, 223, .48);
+  border-radius: 999px;
+  background: rgba(82, 67, 54, .92);
+  color: #fff7df;
+  font: 15px/1.4 "Noto Serif SC", "Songti SC", serif;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(52, 42, 34, .18);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) translateY(8px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.interaction-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%);
 }
 
 .hotspot {
@@ -4520,6 +4576,7 @@ body.is-doorstep-image {
   }
   .portfolio-main[data-page="doorstep"] .visual-column { height: min(42vh, 340px); transform: none; }
   .portfolio-main[data-page="doorstep"] .visual-layer { left: 50%; }
+  .portfolio-main[data-page="doorstep"] .doorstep-object-map { left: 50%; }
   .portfolio-main[data-page="doorstep"] .room-detail { display: block !important; height: auto; padding: 32px 0 0; }
   .doorstep-page { max-width: 500px; margin: 0 auto; left: auto; }
   .doorstep-personal-photo { width: min(100%, 300px); margin-bottom: 18px; }
@@ -4534,4 +4591,5 @@ body.is-doorstep-image {
 
 @media (prefers-reduced-motion: reduce) {
   .doorstep-page { animation: none; }
+  .interaction-toast { transition: none; }
 }

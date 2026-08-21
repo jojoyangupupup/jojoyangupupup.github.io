@@ -954,6 +954,22 @@ export const ROOMS = [
     isDoorstep: true,
     projects: [],
     documents: [],
+    objectHotspots: [
+      {
+        id: "doorstep-wechat",
+        number: "01",
+        label: "微信号",
+        ariaLabel: "复制微信号",
+        path: "M 749 174 C 741 173 736 179 736 188 L 736 269 C 736 280 741 289 750 295 L 834 343 C 846 349 856 342 856 330 L 856 247 C 856 235 851 227 842 221 L 758 175 C 755 173 752 173 749 174 Z",
+        glowPath: "M 749 174 C 741 173 736 179 736 188 L 736 269 C 736 280 741 289 750 295 L 834 343 C 846 349 856 342 856 330 L 856 247 C 856 235 851 227 842 221 L 758 175 C 755 173 752 173 749 174 Z",
+        action: {
+          type: "copy",
+          value: "ledwechat15945158337",
+          successMessage: "已复制微信号",
+        },
+        excludeFromProgress: true,
+      },
+    ],
     hotspotPath: "M 0 0 Z",
     hotspotCenter: { x: 0, y: 0 },
     transition: {

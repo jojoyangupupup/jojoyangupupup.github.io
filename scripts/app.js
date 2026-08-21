@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=105";
+} from "/scripts/rooms-data.js?v=107";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -88,7 +88,7 @@ app.innerHTML = `
                   </feMerge>
                 </filter>
               </defs>
-              ${ROOMS.flatMap((room) => (room.objectHotspots || []).map((object) => `
+              ${ROOMS.filter((room) => !room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
                   <path
                     class="room-object-hotspot"
@@ -122,6 +122,45 @@ app.innerHTML = `
                       aria-hidden="true"
                     ></image>
                   ` : ""}
+                </g>
+              `)).join("")}
+            </svg>
+            <svg class="doorstep-object-map" viewBox="0 0 1312 1199" width="1312" height="1199" preserveAspectRatio="xMidYMid meet" aria-label="门廊可点击物品">
+              <defs>
+                <filter id="doorstep-object-edge-glow" x="-24%" y="-30%" width="148%" height="160%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
+                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
+                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.68" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.95" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
+              </defs>
+              ${ROOMS.filter((room) => room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
+                <g class="room-object-group" data-room-id="${room.id}">
+                  <path
+                    class="room-object-hotspot"
+                    tabindex="0"
+                    role="button"
+                    data-room-id="${room.id}"
+                    data-object-id="${object.id}"
+                    aria-label="${object.ariaLabel || object.label}"
+                    d="${object.path}"
+                  ></path>
+                  <path
+                    class="room-object-glow"
+                    data-room-id="${room.id}"
+                    data-object-id="${object.id}"
+                    d="${object.glowPath || object.path}"
+                    fill="#ffffff"
+                    aria-hidden="true"
+                  ></path>
                 </g>
               `)).join("")}
             </svg>
@@ -159,6 +198,7 @@ app.innerHTML = `
         </div>
       </section>
     </div>
+    <div class="interaction-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
   </div>
 `;
 
@@ -182,12 +222,14 @@ const documentModalDialog = document.querySelector(".document-modal-dialog");
 const documentModalScroll = document.querySelector(".document-modal-scroll");
 const documentPages = document.querySelector(".document-pages");
 const documentModalClose = document.querySelector(".document-modal-close");
+const interactionToast = document.querySelector(".interaction-toast");
 
 const initialRoom = roomFromPath(window.location.pathname);
 let currentPageId = "overview";
 let transitioning = false;
 let historySyncPending = false;
 let documentReturnFocus = null;
+let interactionToastTimer = 0;
 let activeModalDocuments = [];
 let documentModalHistory = [];
 let workIntroObserver = null;
@@ -241,9 +283,13 @@ function discoveryKey(roomId, objectId) {
   return `${roomId}:${objectId}`;
 }
 
+function progressObjects(room) {
+  return (room.objectHotspots || []).filter((object) => !object.excludeFromProgress);
+}
+
 function configuredDiscoveryKeys() {
   return new Set(directoryRooms().flatMap(({ room }) =>
-    (room.objectHotspots || []).map((object) => discoveryKey(room.id, object.id))));
+    progressObjects(room).map((object) => discoveryKey(room.id, object.id))));
 }
 
 function loadDiscoveredItems() {
@@ -265,7 +311,7 @@ function saveDiscoveredItems() {
 }
 
 function roomProgress(room) {
-  const objects = room.objectHotspots || [];
+  const objects = progressObjects(room);
   return {
     total: objects.length,
     viewed: objects.filter((object) => discoveredItems.has(discoveryKey(room.id, object.id))).length,
@@ -1619,11 +1665,56 @@ function closeDocumentModal(restoreFocus = true) {
   updateDocumentCloseAction();
 }
 
-function openRoomObject(roomId, objectId, trigger) {
+function showInteractionToast(message) {
+  if (!interactionToast) return;
+  window.clearTimeout(interactionToastTimer);
+  interactionToast.textContent = message;
+  interactionToast.hidden = false;
+  interactionToast.classList.remove("is-visible");
+  window.requestAnimationFrame(() => interactionToast.classList.add("is-visible"));
+  interactionToastTimer = window.setTimeout(() => {
+    interactionToast.classList.remove("is-visible");
+    interactionToastTimer = window.setTimeout(() => {
+      interactionToast.hidden = true;
+    }, 220);
+  }, 1600);
+}
+
+async function copyText(value) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      // Fall through to the legacy copy path for restricted browser contexts.
+    }
+  }
+  const input = document.createElement("textarea");
+  input.value = value;
+  input.setAttribute("readonly", "");
+  input.style.position = "fixed";
+  input.style.opacity = "0";
+  document.body.append(input);
+  input.select();
+  const copied = document.execCommand("copy");
+  input.remove();
+  if (!copied) throw new Error("Clipboard copy failed");
+}
+
+async function openRoomObject(roomId, objectId, trigger) {
   if (transitioning || currentPageId !== roomId) return;
   const { room, object, documents } = getRoomObject(roomId, objectId);
   if (!room || !object) return;
   markObjectDiscovered(roomId, objectId);
+  if (object.action?.type === "copy") {
+    try {
+      await copyText(object.action.value);
+      showInteractionToast(object.action.successMessage || "已复制");
+    } catch {
+      showInteractionToast("复制失败，请重试");
+    }
+    return;
+  }
   if (!documents.length) return;
   openDocumentModal(room, object, documents, trigger);
 }
