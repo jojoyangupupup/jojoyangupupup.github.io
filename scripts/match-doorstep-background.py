@@ -11,24 +11,37 @@ SOURCE = ROOT / "assets/rooms/doorstep-house-full.png"
 OUTPUT = ROOT / "assets/rooms/doorstep-house-final.png"
 CANVAS = (235, 230, 222)
 
-# The complete house silhouette, including the lower plinth, in source pixels.
+# The complete house silhouette in source pixels. The lower points follow the
+# outside edge of the plinth, preserving its full depth while excluding only
+# the three marked background/shadow areas beyond it.
 HOUSE_OUTLINE = (
     (655, 16),
     (1160, 334),
-    (1163, 878),
-    (1122, 921),
-    (657, 1205),
-    (631, 1205),
-    (142, 875),
+    (1160, 807),
+    (1163, 807),
+    (1163, 853),
+    (1150, 859),
+    (1100, 893),
+    (1050, 927),
+    (1000, 961),
+    (950, 995),
+    (900, 1030),
+    (850, 1065),
+    (800, 1099),
+    (750, 1135),
+    (700, 1171),
+    (657, 1199),
+    (650, 1193),
+    (600, 1158),
+    (500, 1088),
+    (400, 1019),
+    (300, 950),
+    (200, 881),
+    (150, 849),
+    (142, 849),
+    (142, 808),
+    (154, 808),
     (154, 337),
-)
-
-# The three regions marked in 4901.png: the outer right wall edge and the two
-# lower plinth sections. Everything else remains from the supplied scene.
-REMOVED_REGIONS = (
-    ((1148, 330), (1168, 336), (1167, 878), (1152, 892), (1144, 878)),
-    ((140, 814), (657, 1150), (660, 1205), (631, 1205), (140, 878)),
-    ((657, 1150), (1160, 814), (1167, 920), (660, 1205)),
 )
 
 SUPERSAMPLE = 4
@@ -45,11 +58,6 @@ def main() -> None:
         [(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in HOUSE_OUTLINE],
         fill=255,
     )
-    for region in REMOVED_REGIONS:
-        draw.polygon(
-            [(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in region],
-            fill=0,
-        )
     mask = mask.resize(source.size, Image.Resampling.LANCZOS)
 
     background = Image.new("RGB", source.size, CANVAS)
