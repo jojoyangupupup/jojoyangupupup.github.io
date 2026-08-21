@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=93";
+} from "/scripts/rooms-data.js?v=94";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -134,6 +134,23 @@ app.innerHTML = `
               `)).join("")}
             </svg>
             <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
+              <defs>
+                <!-- Keep the doorstep path in the same warm, tight edge treatment as room objects. -->
+                <filter id="doorstep-room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="8" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
+                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
+                  <feGaussianBlur in="edge" stdDeviation="5" result="soft-edge"></feGaussianBlur>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.66" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.94" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
+              </defs>
               ${doorstepObjects.map((object) => `
                 <g class="room-object-group" data-room-id="doorstep">
                   <path

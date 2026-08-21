@@ -963,13 +963,9 @@ export const ROOMS = [
         copyValue: "15945158337@163.com",
         copySuccessMessage: "邮箱已复制",
         path: "M 895 264 C 901 247 916 239 931 247 C 945 255 952 273 958 291 L 972 316 L 975 339 L 967 408 L 953 439 L 918 431 L 899 412 L 902 371 L 893 345 L 899 318 L 894 290 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-canvas-bag-mask.png",
-          x: 897,
-          y: 244,
-          width: 76,
-          height: 198,
-        },
+        // Matches the red hand-drawn outline in 578.jpg. This path is used
+        // directly by the same edge filter as the study sofa hover effect.
+        glowPath: "M 940 298 C 934 300 930 311 928 322 L 924 331 L 912 333 C 906 336 904 344 904 354 L 904 381 C 903 394 900 401 899 406 C 904 415 915 423 928 429 C 939 435 950 438 957 435 L 969 428 C 974 421 975 413 974 400 L 973 381 L 973 367 C 972 359 967 353 961 347 C 960 339 958 328 956 317 C 954 308 951 301 946 299 C 944 298 942 297 940 298 Z",
       },
     ],
     hotspotPath: "M 0 0 Z",
