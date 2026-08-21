@@ -15,6 +15,8 @@ export const PORTFOLIO = {
 
 // Hotspots use the overview image's 1487 x 1058 coordinate space so they stay
 // aligned at every rendered size. The same paths also drive the focus clipPath.
+// The doorstep dog uses one shared outline for both hit testing and its glow.
+const DOORSTEP_DOG_OUTLINE = "M 736 489 C 743 492 746 495 755 496 C 758 500 760 506 764 511 C 779 511 793 514 806 517 C 816 521 821 524 825 531 C 831 526 839 527 844 533 C 849 540 849 548 844 553 C 836 559 821 560 810 557 C 802 559 798 562 797 563 L 767 563 C 767 558 761 556 753 557 L 737 557 C 729 557 725 555 726 553 C 727 550 735 548 740 547 C 744 544 743 544 732 544 C 722 546 716 545 715 543 C 715 540 721 536 724 535 C 729 532 734 529 728 527 C 724 524 722 521 724 516 C 724 512 728 508 731 500 C 733 495 733 492 736 489 Z";
 export const ROOMS = [
   {
     id: "garden",
@@ -966,6 +968,17 @@ export const ROOMS = [
         // Matches the red hand-drawn outline in 578.jpg. This path is used
         // directly by the same edge filter as the study sofa hover effect.
         glowPath: "M 940 298 C 934 300 930 311 928 322 L 924 331 L 912 333 C 906 336 904 344 904 354 L 904 381 C 903 394 900 401 899 406 C 904 415 915 423 928 429 C 939 435 950 438 957 435 L 969 428 C 974 421 975 413 974 400 L 973 381 L 973 367 C 972 359 967 353 961 347 C 960 339 958 328 956 317 C 954 308 951 301 946 299 C 944 298 942 297 940 298 Z",
+      },
+      {
+        id: "doorstep-dog",
+        number: "02",
+        label: "小狗微信号",
+        ariaLabel: "复制微信号 ledwechat15945158337",
+        copyValue: "ledwechat15945158337",
+        copySuccessMessage: "已复制微信号",
+        // Follows the red hand-drawn dog outline in 579.jpg.
+        path: DOORSTEP_DOG_OUTLINE,
+        glowPath: DOORSTEP_DOG_OUTLINE,
       },
     ],
     hotspotPath: "M 0 0 Z",
