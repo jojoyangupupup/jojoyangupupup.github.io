@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/rooms/doorstep-house-full.png"
-OUTPUT = ROOT / "assets/rooms/doorstep-house-full-matched.png"
+OUTPUT = ROOT / "assets/rooms/doorstep-house-final.png"
 CANVAS = (235, 230, 222)
 
 # The complete house silhouette, including the lower plinth, in source pixels.
@@ -21,6 +21,14 @@ HOUSE_OUTLINE = (
     (631, 1205),
     (142, 875),
     (154, 337),
+)
+
+# The three regions marked in 4901.png: the outer right wall edge and the two
+# lower plinth sections. Everything else remains from the supplied scene.
+REMOVED_REGIONS = (
+    ((1148, 330), (1168, 336), (1167, 878), (1152, 892), (1144, 878)),
+    ((140, 814), (657, 1150), (660, 1205), (631, 1205), (140, 878)),
+    ((657, 1150), (1160, 814), (1167, 920), (660, 1205)),
 )
 
 SUPERSAMPLE = 4
@@ -37,6 +45,11 @@ def main() -> None:
         [(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in HOUSE_OUTLINE],
         fill=255,
     )
+    for region in REMOVED_REGIONS:
+        draw.polygon(
+            [(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in region],
+            fill=0,
+        )
     mask = mask.resize(source.size, Image.Resampling.LANCZOS)
 
     background = Image.new("RGB", source.size, CANVAS)
