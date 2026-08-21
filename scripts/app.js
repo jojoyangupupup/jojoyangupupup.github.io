@@ -134,24 +134,6 @@ app.innerHTML = `
               `)).join("")}
             </svg>
             <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
-              <defs>
-                <filter id="doorstep-bag-alpha-glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-                  <feComponentTransfer in="SourceAlpha" result="clean-alpha">
-                    <feFuncA type="discrete" tableValues="0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1"></feFuncA>
-                  </feComponentTransfer>
-                  <feMorphology in="clean-alpha" operator="dilate" radius="1.8" result="expanded"></feMorphology>
-                  <feComposite in="expanded" in2="clean-alpha" operator="out" result="outer-ring"></feComposite>
-                  <feFlood flood-color="#ffe99a" flood-opacity="0.92" result="edge-color"></feFlood>
-                  <feComposite in="edge-color" in2="outer-ring" operator="in" result="edge-line"></feComposite>
-                  <feGaussianBlur in="outer-ring" stdDeviation="1.6" result="soft-ring"></feGaussianBlur>
-                  <feFlood flood-color="#ffe99a" flood-opacity="0.78" result="glow-color"></feFlood>
-                  <feComposite in="glow-color" in2="soft-ring" operator="in" result="final-glow"></feComposite>
-                  <feMerge>
-                    <feMergeNode in="edge-line"></feMergeNode>
-                    <feMergeNode in="final-glow"></feMergeNode>
-                  </feMerge>
-                </filter>
-              </defs>
               ${doorstepObjects.map((object) => `
                 <g class="room-object-group" data-room-id="doorstep">
                   <path
