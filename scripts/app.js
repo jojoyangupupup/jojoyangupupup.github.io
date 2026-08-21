@@ -137,10 +137,10 @@ app.innerHTML = `
               <defs>
                 <!-- Keep the doorstep path in the same warm, tight edge treatment as room objects. -->
                 <filter id="doorstep-room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="8" result="outer-edge"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="6" result="outer-edge"></feMorphology>
                   <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
                   <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
-                  <feGaussianBlur in="edge" stdDeviation="5" result="soft-edge"></feGaussianBlur>
+                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
                   <feFlood flood-color="#efb45f" flood-opacity="0.66" result="soft-color"></feFlood>
                   <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
                   <feFlood flood-color="#fff7df" flood-opacity="0.94" result="line-color"></feFlood>
