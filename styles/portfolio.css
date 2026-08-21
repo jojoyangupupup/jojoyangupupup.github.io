@@ -462,7 +462,8 @@ button {
 .room-object-glow[data-object-id="kitchen-plant"],
 .room-object-glow[data-object-id="study-sofa"],
 .room-object-glow[data-object-id="doorstep-canvas-bag"],
-.room-object-glow[data-object-id="doorstep-dog"] {
+.room-object-glow[data-object-id="doorstep-dog"],
+.room-object-glow[data-object-id="doorstep-cat"] {
   filter: url(#room-object-edge-glow-tight);
 }
 
@@ -471,7 +472,8 @@ button {
 }
 
 .room-object-glow[data-room-id="doorstep"][data-object-id="doorstep-canvas-bag"],
-.room-object-glow[data-room-id="doorstep"][data-object-id="doorstep-dog"] {
+.room-object-glow[data-room-id="doorstep"][data-object-id="doorstep-dog"],
+.room-object-glow[data-room-id="doorstep"][data-object-id="doorstep-cat"] {
   filter: url(#doorstep-room-object-edge-glow-tight);
 }
 

@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=95";
+} from "/scripts/rooms-data.js?v=96";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -482,6 +482,22 @@ async function copyDoorstepValue(value, successMessage) {
   }
 }
 
+async function downloadDoorstepFile(url, filename, successMessage = "下载简历") {
+  try {
+    const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+    if (!response.ok) throw new Error("missing");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    showDoorstepToast(successMessage);
+  } catch {
+    showDoorstepToast("简历文件暂未上传");
+  }
+}
+
 function bindDoorstepInteractions() {
   const bindOnce = (selector, handler) => {
     const control = document.querySelector(selector);
@@ -491,20 +507,7 @@ function bindDoorstepInteractions() {
   };
   bindOnce("[data-copy-email]", () => copyDoorstepValue(DOORSTEP_PROFILE.email, "邮箱已复制"));
   bindOnce("[data-copy-wechat]", () => copyDoorstepValue(DOORSTEP_PROFILE.wechat, "微信号已复制"));
-  bindOnce("[data-download-resume]", async () => {
-    try {
-      const response = await fetch(DOORSTEP_PROFILE.resumeUrl, { method: "HEAD", cache: "no-store" });
-      if (!response.ok) throw new Error("missing");
-      const link = document.createElement("a");
-      link.href = DOORSTEP_PROFILE.resumeUrl;
-      link.download = "杨昕乔-简历.pdf";
-      document.body.append(link);
-      link.click();
-      link.remove();
-    } catch {
-      showDoorstepToast("简历文件暂未上传");
-    }
-  });
+  bindOnce("[data-download-resume]", () => downloadDoorstepFile(DOORSTEP_PROFILE.resumeUrl, "杨昕乔-简历.pdf"));
 }
 
 function renderDetail(room, { entering = false } = {}) {
@@ -1762,6 +1765,10 @@ function openRoomObject(roomId, objectId, trigger) {
   markObjectDiscovered(roomId, objectId);
   if (object.copyValue) {
     copyDoorstepValue(object.copyValue, object.copySuccessMessage || "邮箱已复制");
+    return;
+  }
+  if (object.downloadUrl) {
+    downloadDoorstepFile(object.downloadUrl, object.downloadFilename || "杨昕乔-简历.pdf", object.downloadSuccessMessage || "下载简历");
     return;
   }
   if (!documents.length) return;

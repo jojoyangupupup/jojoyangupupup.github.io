@@ -17,6 +17,7 @@ export const PORTFOLIO = {
 // aligned at every rendered size. The same paths also drive the focus clipPath.
 // The doorstep dog uses one shared outline for both hit testing and its glow.
 const DOORSTEP_DOG_OUTLINE = "M 736 489 C 743 492 746 495 755 496 C 758 500 760 506 764 511 C 779 511 793 514 806 517 C 816 521 821 524 825 531 C 831 526 839 527 844 533 C 849 540 849 548 844 553 C 836 559 821 560 810 557 C 802 559 798 562 797 563 L 767 563 C 767 558 761 556 753 557 L 737 557 C 729 557 725 555 726 553 C 727 550 735 548 740 547 C 744 544 743 544 732 544 C 722 546 716 545 715 543 C 715 540 721 536 724 535 C 729 532 734 529 728 527 C 724 524 722 521 724 516 C 724 512 728 508 731 500 C 733 495 733 492 736 489 Z";
+const DOORSTEP_CAT_OUTLINE = "M 904 535 C 893 536 883 540 875 548 C 869 553 865 559 862 565 C 859 570 861 576 867 579 C 867 585 873 589 882 591 C 894 593 909 592 922 593 C 933 593 941 588 944 580 C 947 571 944 559 939 552 C 934 546 928 542 920 541 C 915 537 910 535 904 535 Z";
 export const ROOMS = [
   {
     id: "garden",
@@ -979,6 +980,18 @@ export const ROOMS = [
         // Follows the red hand-drawn dog outline in 579.jpg.
         path: DOORSTEP_DOG_OUTLINE,
         glowPath: DOORSTEP_DOG_OUTLINE,
+      },
+      {
+        id: "doorstep-cat",
+        number: "03",
+        label: "小猫简历",
+        ariaLabel: "下载简历 PDF",
+        downloadUrl: "/assets/resume.pdf",
+        downloadFilename: "杨昕乔-简历.pdf",
+        downloadSuccessMessage: "下载简历",
+        // Follows the red hand-drawn cat outline in 579 2.jpg.
+        path: DOORSTEP_CAT_OUTLINE,
+        glowPath: DOORSTEP_CAT_OUTLINE,
       },
     ],
     hotspotPath: "M 0 0 Z",
