@@ -30,8 +30,10 @@ HOUSE_OUTLINE = (
 # while the room, floor surface, and interior objects remain pixel-identical.
 REMOVED_REGIONS = (
     ((1148, 330), (1168, 336), (1167, 878), (1152, 892), (1144, 878)),
-    ((140, 814), (657, 1150), (660, 1205), (631, 1205), (140, 878)),
-    ((657, 1150), (1160, 814), (1167, 920), (660, 1205)),
+    # Keep a narrow structural plinth directly below each floor edge so the
+    # house retains its dimensional, grounded profile after background removal.
+    ((140, 840), (657, 1174), (660, 1205), (631, 1205), (140, 878)),
+    ((657, 1174), (1160, 840), (1167, 920), (660, 1205)),
 )
 
 SUPERSAMPLE = 4
