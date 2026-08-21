@@ -32,8 +32,8 @@ REMOVED_REGIONS = (
     ((1148, 330), (1168, 336), (1167, 878), (1152, 892), (1144, 878)),
     # Keep a narrow structural plinth directly below each floor edge so the
     # house retains its dimensional, grounded profile after background removal.
-    ((140, 840), (657, 1174), (660, 1205), (631, 1205), (140, 878)),
-    ((657, 1174), (1160, 840), (1167, 920), (660, 1205)),
+    ((140, 850), (657, 1186), (660, 1205), (631, 1205), (140, 878)),
+    ((657, 1186), (1160, 850), (1167, 920), (660, 1205)),
 )
 
 SUPERSAMPLE = 4
