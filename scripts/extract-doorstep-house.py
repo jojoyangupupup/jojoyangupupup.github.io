@@ -24,6 +24,16 @@ HOUSE_OUTLINE = (
     (154, 337),
 )
 
+# The supplied 4900.jpg marks these three structural pieces for removal:
+# the narrow outside edge of the right wall and the two white plinth sections
+# below the left and right front floor edges. They are cut from the alpha mask,
+# while the room, floor surface, and interior objects remain pixel-identical.
+REMOVED_REGIONS = (
+    ((1148, 330), (1168, 336), (1167, 878), (1152, 892), (1144, 878)),
+    ((140, 814), (657, 1150), (660, 1205), (631, 1205), (140, 878)),
+    ((657, 1150), (1160, 814), (1167, 920), (660, 1205)),
+)
+
 SUPERSAMPLE = 4
 
 
@@ -38,7 +48,10 @@ def main() -> None:
         0,
     )
     points = [(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in HOUSE_OUTLINE]
-    ImageDraw.Draw(mask).polygon(points, fill=255)
+    draw = ImageDraw.Draw(mask)
+    draw.polygon(points, fill=255)
+    for region in REMOVED_REGIONS:
+        draw.polygon([(x * SUPERSAMPLE, y * SUPERSAMPLE) for x, y in region], fill=0)
     mask = mask.resize(source.size, Image.Resampling.LANCZOS)
 
     source.putalpha(mask)
