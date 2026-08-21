@@ -402,7 +402,7 @@ button {
   height: min(86vh, 900px);
   max-width: none;
   max-height: calc(100% - 32px);
-  aspect-ratio: 1626 / 967;
+  aspect-ratio: 1315 / 1197;
   overflow: visible;
   opacity: 0;
   pointer-events: none;
@@ -4404,6 +4404,8 @@ body.is-doorstep-image {
   max-height: calc(100% - 32px);
   object-fit: contain;
   object-position: center;
+  mix-blend-mode: normal;
+  opacity: 1;
   transform: translate(-50%, -50%);
   clip-path: none;
 }
@@ -4564,6 +4566,8 @@ body.is-doorstep-image {
     overflow: visible;
   }
   .portfolio-main[data-page="doorstep"] .visual-column { height: min(42vh, 340px); transform: none; }
+  .portfolio-main[data-page="doorstep"] .visual-layer,
+  .portfolio-main[data-page="doorstep"] .doorstep-object-map { left: 50%; }
   .portfolio-main[data-page="doorstep"] .room-detail { display: block !important; height: auto; padding: 32px 0 0; }
   .doorstep-page { max-width: 500px; margin: 0 auto; left: auto; }
   .doorstep-personal-photo { width: min(100%, 300px); margin-bottom: 18px; }

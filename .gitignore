@@ -28,6 +28,8 @@ assets/rooms/*
 !assets/rooms/kitchen-cutout.png
 !assets/rooms/living-cutout.png
 !assets/rooms/study-cutout.png
+!assets/rooms/doorstep-house-contact-source.png
+!assets/rooms/doorstep-house-contact-transparent.png
 !assets/rooms/objects
 !assets/rooms/objects/**
 !assets/rooms/overview-motion

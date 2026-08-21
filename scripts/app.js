@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=96";
+} from "/scripts/rooms-data.js?v=97";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -133,7 +133,7 @@ app.innerHTML = `
                 </g>
               `)).join("")}
             </svg>
-            <svg class="doorstep-object-map" viewBox="0 0 1626 967" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
+            <svg class="doorstep-object-map" viewBox="0 0 1315 1197" preserveAspectRatio="none" aria-label="Clickable doorstep objects">
               <defs>
                 <!-- Keep the doorstep path in the same warm, tight edge treatment as room objects. -->
                 <filter id="doorstep-room-object-edge-glow-tight" x="-20%" y="-25%" width="140%" height="150%" color-interpolation-filters="sRGB">
