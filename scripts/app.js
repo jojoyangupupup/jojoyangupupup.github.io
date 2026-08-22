@@ -132,9 +132,9 @@ app.innerHTML = `
                   <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
                   <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
                   <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
-                  <feFlood flood-color="#efb45f" flood-opacity="0.68" result="soft-color"></feFlood>
+                  <feFlood flood-color="rgb(239 180 95)" flood-opacity="0.68" result="soft-color"></feFlood>
                   <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
-                  <feFlood flood-color="#fff7df" flood-opacity="0.95" result="line-color"></feFlood>
+                  <feFlood flood-color="rgb(255 247 223)" flood-opacity="0.95" result="line-color"></feFlood>
                   <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
                   <feMerge>
                     <feMergeNode in="soft-glow"></feMergeNode>
