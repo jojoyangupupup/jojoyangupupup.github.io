@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=109";
+} from "/scripts/rooms-data.js?v=111";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -126,22 +126,6 @@ app.innerHTML = `
               `)).join("")}
             </svg>
             <svg class="doorstep-object-map" viewBox="0 0 1312 1199" width="1312" height="1199" preserveAspectRatio="xMidYMid meet" aria-label="门廊可点击物品">
-              <defs>
-                <filter id="doorstep-object-edge-glow" x="-24%" y="-30%" width="148%" height="160%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="outer-edge"></feMorphology>
-                  <feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner-edge"></feMorphology>
-                  <feComposite in="outer-edge" in2="inner-edge" operator="out" result="edge"></feComposite>
-                  <feGaussianBlur in="edge" stdDeviation="4" result="soft-edge"></feGaussianBlur>
-                  <feFlood flood-color="rgb(239 180 95)" flood-opacity="0.68" result="soft-color"></feFlood>
-                  <feComposite in="soft-color" in2="soft-edge" operator="in" result="soft-glow"></feComposite>
-                  <feFlood flood-color="rgb(255 247 223)" flood-opacity="0.95" result="line-color"></feFlood>
-                  <feComposite in="line-color" in2="edge" operator="in" result="line-glow"></feComposite>
-                  <feMerge>
-                    <feMergeNode in="soft-glow"></feMergeNode>
-                    <feMergeNode in="line-glow"></feMergeNode>
-                  </feMerge>
-                </filter>
-              </defs>
               ${ROOMS.filter((room) => room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
                   <path
@@ -153,14 +137,29 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || object.label}"
                     d="${object.path}"
                   ></path>
-                  <path
-                    class="room-object-glow"
-                    data-room-id="${room.id}"
-                    data-object-id="${object.id}"
-                    d="${object.glowPath || object.path}"
-                    fill="#ffffff"
-                    aria-hidden="true"
-                  ></path>
+                  ${object.glowImage ? `
+                    <image
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      href="${object.glowImage.file}"
+                      x="${object.glowImage.x}"
+                      y="${object.glowImage.y}"
+                      width="${object.glowImage.width}"
+                      height="${object.glowImage.height}"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></image>
+                  ` : `
+                    <path
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      d="${object.glowPath || object.path}"
+                      fill="#ffffff"
+                      aria-hidden="true"
+                    ></path>
+                  `}
                 </g>
               `)).join("")}
             </svg>

@@ -416,7 +416,7 @@ button {
 }
 
 .doorstep-object-map .room-object-glow {
-  filter: url(#doorstep-object-edge-glow);
+  filter: none;
 }
 
 .visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"], [data-room-id="garden"]) .room-object-map {
