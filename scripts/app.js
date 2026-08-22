@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=117";
+} from "/scripts/rooms-data.js?v=118";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -16,6 +16,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search).has("debug-hotspots");
 
 const app = document.querySelector("#app");
+const initialRoom = roomFromPath(window.location.pathname);
+const initialVisualImage = initialRoom?.image || OVERVIEW_IMAGE;
+const initialVisualAlt = initialRoom?.alt || "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
 
 app.innerHTML = `
   <div class="portfolio-shell">
@@ -37,20 +40,20 @@ app.innerHTML = `
       </nav>
     </header>
 
-    <main class="portfolio-main" data-page="overview">
+    <main class="portfolio-main" data-page="${initialRoom?.id || "overview"}">
       <section class="visual-column" aria-label="Room visual">
         <div class="visual-frame">
-          <div class="visual-stage${showHotspots ? " show-hotspots" : ""}" data-view="overview" data-show-hotspots="${showHotspots}">
-            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="Isometric overview of four portfolio categories: garden, kitchen, living room, and study" fetchpriority="high" decoding="async" draggable="false">
+          <div class="visual-stage${showHotspots ? " show-hotspots" : ""}" data-view="${initialRoom ? "room" : "overview"}"${initialRoom ? ` data-room-id="${initialRoom.id}"` : ""} data-show-hotspots="${showHotspots}">
+            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${initialVisualImage}" alt="${initialVisualAlt}" fetchpriority="high" decoding="async" draggable="false">
             <svg class="focus-room-layer" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <clipPath id="selected-room-clip">
                   <path class="focus-clip-path"></path>
                 </clipPath>
               </defs>
-              <image href="${OVERVIEW_IMAGE}" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" clip-path="url(#selected-room-clip)"></image>
+              <image data-src="${OVERVIEW_IMAGE}" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" clip-path="url(#selected-room-clip)"></image>
             </svg>
-            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${OVERVIEW_IMAGE}" alt="" aria-hidden="true" decoding="async" draggable="false">
+            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${initialVisualImage}" alt="${initialVisualAlt}" aria-hidden="true" decoding="async" draggable="false">
             <svg class="hotspot-map" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-label="Clickable portfolio category areas">
               ${ROOMS.map((room, index) => `
                 <path class="hotspot hotspot-${index + 1}" tabindex="0" role="link" data-room-id="${room.id}" aria-label="Enter ${room.title} portfolio category" d="${room.hotspotPath}"></path>
@@ -113,7 +116,7 @@ app.innerHTML = `
                       class="room-object-glow"
                       data-room-id="${room.id}"
                       data-object-id="${object.id}"
-                      href="${object.glowImage.file}"
+                      data-src="${object.glowImage.file}"
                       x="${object.glowImage.x}"
                       y="${object.glowImage.y}"
                       width="${object.glowImage.width}"
@@ -137,29 +140,16 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || object.label}"
                     d="${object.path}"
                   ></path>
-                  ${object.glowImage ? `
-                    <image
-                      class="room-object-glow"
-                      data-room-id="${room.id}"
-                      data-object-id="${object.id}"
-                      href="${object.glowImage.file}"
-                      x="${object.glowImage.x}"
-                      y="${object.glowImage.y}"
-                      width="${object.glowImage.width}"
-                      height="${object.glowImage.height}"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    ></image>
-                  ` : `
+                  ${object.glowPath ? `
                     <path
                       class="room-object-glow"
                       data-room-id="${room.id}"
                       data-object-id="${object.id}"
-                      d="${object.glowPath || object.path}"
+                      d="${object.glowPath}"
                       fill="#ffffff"
                       aria-hidden="true"
                     ></path>
-                  `}
+                  ` : ""}
                 </g>
               `)).join("")}
             </svg>
@@ -223,7 +213,6 @@ const documentPages = document.querySelector(".document-pages");
 const documentModalClose = document.querySelector(".document-modal-close");
 const interactionToast = document.querySelector(".interaction-toast");
 
-const initialRoom = roomFromPath(window.location.pathname);
 let currentPageId = "overview";
 let transitioning = false;
 let historySyncPending = false;
@@ -263,12 +252,29 @@ function warmRoomImage(id) {
   if (room) preloadImage(room.image);
 }
 
-function warmRoomDocuments(id) {
-  const room = ROOMS.find((item) => item.id === id);
-  (room?.documents || []).forEach((documentEntry) => {
-    if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
-    if (documentEntry.workIntro?.coverImage) preloadImage(documentEntry.workIntro.coverImage);
-  });
+function hydrateRoomObjectGlows(roomId) {
+  document
+    .querySelectorAll(`.room-object-map .room-object-glow[data-room-id="${roomId}"][data-src]`)
+    .forEach((glow) => {
+      glow.setAttribute("href", glow.dataset.src);
+      glow.removeAttribute("data-src");
+    });
+}
+
+function scheduleAdjacentRoomPreload(pageId = currentPageId) {
+  const run = () => {
+    const index = PAGE_NAVIGATION.findIndex((page) => page.id === pageId);
+    if (index < 0) return;
+    const adjacentPages = [
+      PAGE_NAVIGATION[(index - 1 + PAGE_NAVIGATION.length) % PAGE_NAVIGATION.length],
+      PAGE_NAVIGATION[(index + 1) % PAGE_NAVIGATION.length],
+    ];
+    adjacentPages
+      .filter((page) => page.type === "room" && page.roomId !== pageId)
+      .forEach((page) => warmRoomImage(page.roomId));
+  };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(run, { timeout: 2500 });
+  else window.setTimeout(run, 1200);
 }
 
 function directoryRooms() {
@@ -425,7 +431,7 @@ function renderDetail(room, { entering = false } = {}) {
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
         <figure class="doorstep-personal-photo">
-          <img src="/assets/rooms/doorstep-personal.jpg" alt="JoJo 在城市黄昏中的背影照片" width="5712" height="4284" loading="eager" fetchpriority="high" decoding="async">
+          <img src="/assets/rooms/doorstep-personal.webp?v=1" alt="JoJo 在城市黄昏中的背影照片" width="1200" height="1600" loading="lazy" decoding="async">
         </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-opening-block">
@@ -1804,6 +1810,7 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
     incomingImage.alt = targetAlt;
     if (room) {
       renderDetail(room);
+      hydrateRoomObjectGlows(room.id);
       currentPageId = room.id;
       portfolioMain.dataset.page = room.id;
       stage.dataset.view = "room";
@@ -1825,6 +1832,7 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
     updateDocument(room);
     clearPageTransition();
     setLocked(false);
+    if (historyMode === "push") scheduleAdjacentRoomPreload(currentPageId);
     return;
   }
 
@@ -1844,6 +1852,7 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
     stage.dataset.view = "room";
     stage.dataset.roomId = room.id;
     renderDetail(room);
+    hydrateRoomObjectGlows(room.id);
     currentPageId = room.id;
   } else {
     portfolioMain.dataset.page = "overview";
@@ -1867,6 +1876,7 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
   if (!historySyncPending) commitHistory(room?.path || "/", historyMode);
   updateDocument(room);
   setLocked(false);
+  if (historyMode === "push") scheduleAdjacentRoomPreload(currentPageId);
   if (room) detail.querySelector(".detail-title")?.focus({ preventScroll: true });
 }
 
@@ -1874,7 +1884,6 @@ async function transitionToRoom(room, historyMode = "push", animate = true) {
   if (!room || transitioning || currentPageId === room.id) return;
 
   setLocked(true);
-  if (room.id === "garden") warmRoomImage("doorstep");
   await fadeToPage({ room, historyMode, animate });
 }
 
@@ -2200,17 +2209,6 @@ document.addEventListener("keydown", (event) => {
     }
   }
 });
-
-const preloadAllRoomImages = () => PAGE_NAVIGATION
-  .filter((page) => page.type === "room")
-  .forEach((page) => warmRoomImage(page.roomId));
-const preloadAllRoomDocuments = () => PAGE_NAVIGATION
-  .filter((page) => page.type === "room")
-  .forEach((page) => warmRoomDocuments(page.roomId));
-
-preloadAllRoomImages();
-if ("requestIdleCallback" in window) window.requestIdleCallback(preloadAllRoomDocuments, { timeout: 1800 });
-else window.setTimeout(preloadAllRoomDocuments, 700);
 
 function navigateWithArrow(button, direction) {
   const source = currentPageId === "overview" ? "overview-arrow" : "detail-arrow";
