@@ -578,8 +578,13 @@ export const ROOMS = [
         title: "个人工作知识管理",
         format: "PDF",
         pages: 1,
-        contentType: "embed",
-        embedUrl: "/assets/works/living-personal-work-knowledge-management/personal-work-knowledge-management.pdf",
+        renderedPages: {
+          basePath: "/assets/works/living-personal-work-knowledge-management/pages",
+          extension: "webp",
+          version: "20260822-1",
+          width: 1652,
+          height: 5579,
+        },
       },
       {
         id: "living-project-space-introduction",
