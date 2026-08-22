@@ -570,7 +570,7 @@ function renderDetail(room, { entering = false } = {}) {
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
         <figure class="doorstep-personal-photo">
-          <img src="/assets/rooms/doorstep-personal.webp?v=1" alt="JoJo 在城市黄昏中的背影照片" width="1200" height="1600" loading="lazy" decoding="async">
+          <img src="/assets/rooms/doorstep-personal-5225.jpg?v=1" alt="JoJo 在室内托脸微笑的照片" width="4284" height="5712" loading="lazy" decoding="async">
         </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-opening-block">
@@ -578,17 +578,13 @@ function renderDetail(room, { entering = false } = {}) {
           </section>
           <section class="doorstep-note-block doorstep-identity-block">
             <h1 class="doorstep-name">杨昕乔</h1>
-            <p class="doorstep-meta">东北师大 · 新传硕 24 级</p>
-            <p class="doorstep-tagline">创意多多，热爱捕捉细碎有趣的表达</p>
+            <p class="doorstep-meta">东北师大 · 新传硕 24 级 <span class="doorstep-meta-divider">·</span> <span class="doorstep-tagline-inline">创意多多，热爱捕捉细碎有趣的表达</span></p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
-            <p class="doorstep-thanks">谢谢你逛完这间小屋。</p>
-          </section>
-          <section class="doorstep-note-block doorstep-works-block">
-            <p>14 件作品都在这里了。</p>
+            <p class="doorstep-thanks">谢谢你逛完这间小屋。14 件作品都在这里了。</p>
           </section>
           <section class="doorstep-note-block doorstep-closing-block">
-            <p class="doorstep-signoff">小屋还会继续盖，<br>欢迎回来坐坐。</p>
+            <p class="doorstep-signoff">小屋还会继续盖，欢迎回来坐坐。</p>
             <span class="doorstep-signature signature" translate="no" lang="en">JoJo</span>
           </section>
         </div>

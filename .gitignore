@@ -22,6 +22,7 @@
 assets/*
 !assets/rooms
 assets/rooms/*
+!assets/rooms/doorstep-personal-5225.jpg
 !assets/rooms/garden-cutout.png
 !assets/rooms/home-overview-fresh-original.png
 !assets/rooms/home-overview-decorated.png
