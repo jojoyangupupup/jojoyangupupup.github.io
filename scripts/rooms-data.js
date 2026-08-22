@@ -580,10 +580,10 @@ export const ROOMS = [
         pages: 1,
         renderedPages: {
           basePath: "/assets/works/living-personal-work-knowledge-management/pages",
-          extension: "webp",
-          version: "20260822-1",
+          extension: "jpg",
+          version: "20260822-2",
           width: 1652,
-          height: 5579,
+          height: 5578,
         },
       },
       {
