@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=115";
+} from "/scripts/rooms-data.js?v=117";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -1712,6 +1712,18 @@ async function openRoomObject(roomId, objectId, trigger) {
     } catch {
       showInteractionToast("复制失败，请重试");
     }
+    return;
+  }
+  if (object.action?.type === "download") {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = object.action.file;
+    downloadLink.download = object.action.filename || "";
+    downloadLink.click();
+    showInteractionToast(object.action.successMessage || "下载已开始");
+    return;
+  }
+  if (object.action?.type === "link") {
+    window.location.assign(object.action.url);
     return;
   }
   if (!documents.length) return;
