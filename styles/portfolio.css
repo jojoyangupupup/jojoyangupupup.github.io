@@ -416,6 +416,7 @@ button {
 }
 
 .doorstep-object-map .room-object-glow {
+  display: none;
   filter: none;
 }
 
