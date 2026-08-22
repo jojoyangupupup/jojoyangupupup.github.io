@@ -91,7 +91,7 @@ app.innerHTML = `
                   </feMerge>
                 </filter>
                 <filter id="green-book-outer-glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="1.5" result="expanded"></feMorphology>
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="expanded"></feMorphology>
                   <feGaussianBlur in="expanded" stdDeviation="3" result="blurred"></feGaussianBlur>
                   <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
                   <feFlood flood-color="#FFE59A" flood-opacity="0.82" result="glow-color"></feFlood>
