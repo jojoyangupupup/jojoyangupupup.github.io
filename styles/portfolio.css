@@ -1334,6 +1334,207 @@ button {
   stroke-width: 1.8;
 }
 
+.document-plan-button {
+  position: fixed;
+  z-index: 3;
+  top: 22px;
+  right: 88px;
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 246, 224, 0.3);
+  border-radius: 999px;
+  background: rgba(241, 240, 235, 0.94);
+  color: var(--moss);
+  cursor: pointer;
+  pointer-events: auto;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 18px rgba(255, 239, 212, 0.24), 0 7px 18px rgba(32, 36, 31, 0.16);
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.document-plan-button:hover {
+  border-color: rgba(152, 91, 67, 0.55);
+  background: #f8f3e9;
+  color: var(--rust);
+  transform: translateY(-1px);
+}
+
+.document-plan-button:focus-visible {
+  outline: 2px solid rgba(255, 246, 224, 0.96);
+  outline-offset: 3px;
+}
+
+.setup-plan-overlay {
+  position: fixed;
+  z-index: 220;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(18px, 4vw, 56px);
+  isolation: isolate;
+}
+
+.setup-plan-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 36, 31, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.setup-plan-dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(920px, 94vw);
+  max-height: min(86vh, 920px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(241, 240, 235, 0.34);
+  border-radius: 10px;
+  background: #f5f1e8;
+  color: #434c41;
+  box-shadow: 0 28px 80px rgba(16, 22, 18, 0.32);
+}
+
+.setup-plan-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px clamp(22px, 4vw, 44px) 20px;
+  border-bottom: 1px solid rgba(67, 76, 65, 0.18);
+  background: rgba(255, 252, 245, 0.72);
+}
+
+.setup-plan-kicker {
+  margin: 0 0 7px;
+  color: #986047;
+  font: 700 10px/1.3 var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+.setup-plan-header h2 {
+  margin: 0;
+  color: #434c41;
+  font: 600 clamp(24px, 3vw, 34px)/1.15 var(--font-serif);
+}
+
+.setup-plan-close {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid rgba(67, 76, 65, 0.28);
+  border-radius: 50%;
+  background: transparent;
+  color: #434c41;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.setup-plan-close:hover,
+.setup-plan-close:focus-visible {
+  border-color: rgba(152, 91, 67, 0.58);
+  background: rgba(152, 91, 67, 0.08);
+  color: #986047;
+}
+
+.setup-plan-close:focus-visible {
+  outline: 2px solid rgba(152, 91, 67, 0.32);
+  outline-offset: 3px;
+}
+
+.setup-plan-scroll {
+  min-height: 0;
+  overflow: auto;
+  padding: clamp(24px, 4vw, 48px) clamp(22px, 5vw, 64px) 56px;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(67, 76, 65, 0.45) transparent;
+  scrollbar-width: thin;
+}
+
+.setup-plan-content {
+  width: min(720px, 100%);
+  margin: 0 auto;
+}
+
+.setup-plan-content h1,
+.setup-plan-content h2,
+.setup-plan-content h3 {
+  color: #434c41;
+  font-family: var(--font-serif);
+}
+
+.setup-plan-content h1 {
+  margin: 0 0 8px;
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.2;
+}
+
+.setup-plan-content h2 {
+  margin: 38px 0 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(67, 76, 65, 0.2);
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.setup-plan-content h3 {
+  margin: 26px 0 8px;
+  color: #986047;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.setup-plan-content p,
+.setup-plan-list,
+.setup-plan-code {
+  margin: 0 0 13px;
+  color: #60675f;
+  font: 14px/1.85 var(--font-serif);
+}
+
+.setup-plan-content h1 + p {
+  color: #986047;
+  font-size: 16px;
+}
+
+.setup-plan-list {
+  padding-left: 1.35em;
+}
+
+.setup-plan-list li {
+  padding-left: 4px;
+  margin-bottom: 5px;
+}
+
+.setup-plan-code {
+  overflow-x: auto;
+  margin: 12px 0 18px;
+  padding: 14px 16px;
+  border-left: 2px solid rgba(152, 91, 67, 0.48);
+  background: rgba(230, 226, 217, 0.58);
+  color: #50594f;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+.setup-plan-loading,
+.setup-plan-error {
+  color: #986047;
+  font-size: 16px;
+}
+
 .document-modal-scroll {
   display: flex;
   width: 100%;
@@ -3186,6 +3387,37 @@ button {
   .document-modal-close {
     top: 14px;
     right: 14px;
+  }
+
+  .document-plan-button {
+    top: 14px;
+    right: 70px;
+    min-height: 40px;
+    padding-inline: 12px;
+    font-size: 11px;
+  }
+
+  .setup-plan-overlay {
+    padding: 12px;
+  }
+
+  .setup-plan-dialog {
+    width: 100%;
+    max-height: 90vh;
+  }
+
+  .setup-plan-header {
+    padding: 20px 18px 16px;
+  }
+
+  .setup-plan-scroll {
+    padding: 22px 18px 34px;
+  }
+
+  .setup-plan-content p,
+  .setup-plan-list,
+  .setup-plan-code {
+    font-size: 13px;
   }
 
   .document-modal-scroll {

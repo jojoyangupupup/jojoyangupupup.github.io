@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=123";
+} from "/scripts/rooms-data.js?v=124";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -177,6 +177,10 @@ app.innerHTML = `
     <div class="document-modal" hidden aria-hidden="true">
       <div class="document-modal-backdrop" data-document-close aria-hidden="true"></div>
       <section class="document-modal-dialog" role="dialog" aria-modal="true" aria-label="Document">
+        <button class="document-plan-button" type="button" data-open-setup-plan hidden>
+          <span>查看搭建方案</span>
+          <span aria-hidden="true">↗</span>
+        </button>
         <button class="document-modal-close" type="button" data-document-close aria-label="Close document">
           <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
             <path d="M5 5l14 14M19 5L5 19"></path>
@@ -184,6 +188,23 @@ app.innerHTML = `
         </button>
         <div class="document-modal-scroll" tabindex="0">
           <div class="document-pages" role="document"></div>
+        </div>
+      </section>
+    </div>
+    <div class="setup-plan-overlay" hidden aria-hidden="true">
+      <div class="setup-plan-backdrop" data-setup-plan-close aria-hidden="true"></div>
+      <section class="setup-plan-dialog" role="dialog" aria-modal="true" aria-labelledby="setup-plan-title">
+        <header class="setup-plan-header">
+          <div>
+            <p class="setup-plan-kicker">PERSONAL WORK SYSTEM</p>
+            <h2 id="setup-plan-title">快速搭建方案</h2>
+          </div>
+          <button class="setup-plan-close" type="button" data-setup-plan-close aria-label="关闭搭建方案">×</button>
+        </header>
+        <div class="setup-plan-scroll" tabindex="0">
+          <article class="setup-plan-content" data-setup-plan-content>
+            <p class="setup-plan-loading">正在加载搭建方案…</p>
+          </article>
         </div>
       </section>
     </div>
@@ -211,6 +232,10 @@ const documentModalDialog = document.querySelector(".document-modal-dialog");
 const documentModalScroll = document.querySelector(".document-modal-scroll");
 const documentPages = document.querySelector(".document-pages");
 const documentModalClose = document.querySelector(".document-modal-close");
+const documentPlanButton = document.querySelector(".document-plan-button");
+const setupPlanOverlay = document.querySelector(".setup-plan-overlay");
+const setupPlanClose = document.querySelector(".setup-plan-close");
+const setupPlanContent = document.querySelector("[data-setup-plan-content]");
 const interactionToast = document.querySelector(".interaction-toast");
 
 let currentPageId = "overview";
@@ -222,6 +247,8 @@ let activeModalDocuments = [];
 let documentModalHistory = [];
 let workIntroObserver = null;
 let workIntroSetupFrame = 0;
+let setupPlanReturnFocus = null;
+const setupPlanCache = new Map();
 let discoveredItems = loadDiscoveredItems();
 
 function syncBranding() {
@@ -1433,8 +1460,108 @@ function updateDocumentCloseAction() {
   documentModalClose.setAttribute("aria-label", label);
 }
 
+function renderSetupPlanText(markdown) {
+  setupPlanContent.replaceChildren();
+  const fragment = document.createDocumentFragment();
+  let list = null;
+  let codeBlock = null;
+  let inCodeBlock = false;
+
+  const flushList = () => {
+    if (!list) return;
+    fragment.append(list);
+    list = null;
+  };
+
+  markdown.replace(/\r/g, "").split("\n").forEach((line) => {
+    if (line.trim().startsWith("``")) {
+      flushList();
+      if (inCodeBlock) {
+        fragment.append(codeBlock);
+        codeBlock = null;
+        inCodeBlock = false;
+      } else {
+        codeBlock = document.createElement("pre");
+        codeBlock.className = "setup-plan-code";
+        inCodeBlock = true;
+      }
+      return;
+    }
+    if (inCodeBlock) {
+      codeBlock.append(document.createTextNode(`${line}\n`));
+      return;
+    }
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushList();
+      return;
+    }
+    const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+    if (heading) {
+      flushList();
+      const level = Math.min(3, heading[1].length);
+      const element = document.createElement(`h${level}`);
+      element.textContent = heading[2];
+      fragment.append(element);
+      return;
+    }
+    if (trimmed.startsWith("- ")) {
+      if (!list) {
+        list = document.createElement("ul");
+        list.className = "setup-plan-list";
+      }
+      const item = document.createElement("li");
+      item.textContent = trimmed.slice(2);
+      list.append(item);
+      return;
+    }
+    flushList();
+    const paragraph = document.createElement("p");
+    paragraph.textContent = trimmed;
+    fragment.append(paragraph);
+  });
+
+  flushList();
+  if (inCodeBlock && codeBlock) fragment.append(codeBlock);
+  setupPlanContent.append(fragment);
+}
+
+async function openSetupPlan(setupPlan) {
+  if (!setupPlan?.file) return;
+  setupPlanReturnFocus = documentPlanButton;
+  setupPlanOverlay.hidden = false;
+  setupPlanOverlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("is-setup-plan-open");
+  setupPlanContent.innerHTML = "<p class=\"setup-plan-loading\">正在加载搭建方案…</p>";
+  setupPlanClose.focus({ preventScroll: true });
+  try {
+    let text = setupPlanCache.get(setupPlan.file);
+    if (!text) {
+      const response = await fetch(setupPlan.file);
+      if (!response.ok) throw new Error(`Setup plan request failed: ${response.status}`);
+      text = await response.text();
+      setupPlanCache.set(setupPlan.file, text);
+    }
+    if (!setupPlanOverlay.hidden) renderSetupPlanText(text);
+  } catch {
+    setupPlanContent.innerHTML = "<p class=\"setup-plan-error\">搭建方案暂时无法加载，请稍后重试。</p>";
+  }
+}
+
+function closeSetupPlan(restoreFocus = true) {
+  if (setupPlanOverlay.hidden) return;
+  setupPlanOverlay.hidden = true;
+  setupPlanOverlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-setup-plan-open");
+  if (restoreFocus && !documentModal.hidden && !documentPlanButton.hidden) {
+    (setupPlanReturnFocus || documentPlanButton).focus({ preventScroll: true });
+  }
+  setupPlanReturnFocus = null;
+}
+
 function renderDocumentModalView(documents, scrollTop = 0) {
   activeModalDocuments = documents;
+  closeSetupPlan(false);
   renderDocumentPages(documents);
   documentModal.classList.toggle(
     "is-transparent-document",
@@ -1444,6 +1571,7 @@ function renderDocumentModalView(documents, scrollTop = 0) {
   documentModal.classList.toggle("is-model-experience", documents.some((documentEntry) => documentEntry.contentType === "model-experience"));
   documentModal.classList.toggle("is-search-experience", documents.some((documentEntry) => documentEntry.contentType === "search-experience"));
   documentModal.classList.toggle("is-bilibili-experience", documents.some((documentEntry) => documentEntry.contentType === "bilibili-experience"));
+  documentPlanButton.hidden = !documents.some((documentEntry) => documentEntry.setupPlan);
   documentModalDialog.setAttribute("aria-label", documents.map((documentEntry) => documentEntry.title).join(" / "));
   documentModalScroll.scrollTop = scrollTop;
   documentPages.querySelectorAll(".document-column").forEach((column) => { column.scrollTop = 0; });
@@ -1642,6 +1770,7 @@ function closeOrReturnDocument() {
 
 function closeDocumentModal(restoreFocus = true) {
   if (documentModal.hidden) return;
+  closeSetupPlan(false);
   const experience = documentPages.querySelector(".memory-experience.is-entered, .model-experience.is-entered, .search-experience.is-entered");
   const experienceClosingClass = documentModal.classList.contains("is-model-experience")
     ? "is-model-closing"
@@ -2133,6 +2262,15 @@ documentModal.addEventListener("click", (event) => {
   closeOrReturnDocument();
 });
 
+documentPlanButton.addEventListener("click", () => {
+  const documentEntry = activeModalDocuments.find((entry) => entry.setupPlan);
+  openSetupPlan(documentEntry?.setupPlan);
+});
+
+setupPlanOverlay.addEventListener("click", (event) => {
+  if (event.target.closest("[data-setup-plan-close]")) closeSetupPlan();
+});
+
 function closeSearchImagePreview() {
   const preview = document.querySelector("[data-search-image-lightbox]");
   if (!preview) return;
@@ -2191,6 +2329,10 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeSearchImagePreview();
     closeBloggerBookPreview();
+  }
+  if (event.key === "Escape" && !setupPlanOverlay.hidden) {
+    closeSetupPlan();
+    return;
   }
   if (event.key === "Escape" && !documentModal.hidden) closeOrReturnDocument();
   if (!documentModal.hidden && documentModal.classList.contains("is-memory-experience") && ["ArrowLeft", "ArrowRight"].includes(event.key)) {

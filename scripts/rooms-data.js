@@ -585,6 +585,10 @@ export const ROOMS = [
           width: 1652,
           height: 5578,
         },
+        setupPlan: {
+          title: "快速搭建方案",
+          file: "/assets/works/living-personal-work-knowledge-management/setup-plan.txt",
+        },
       },
       {
         id: "living-project-space-introduction",
