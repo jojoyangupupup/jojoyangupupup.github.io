@@ -4701,8 +4701,8 @@ body.is-doorstep-image {
 }
 
 .doorstep-personal-photo {
-  width: 100%;
-  max-width: 460px;
+  width: min(100%, 380px);
+  max-width: 380px;
   aspect-ratio: 4 / 3;
   margin: 0 0 14px;
   padding: 0;
@@ -4844,7 +4844,7 @@ body.is-doorstep-image {
   .portfolio-main[data-page="doorstep"] .doorstep-object-map { left: 50%; }
   .portfolio-main[data-page="doorstep"] .room-detail { display: block !important; height: auto; padding: 32px 0 0; }
   .doorstep-page { max-width: 500px; margin: 0 auto; left: auto; }
-  .doorstep-personal-photo { width: min(100%, 420px); margin-bottom: 16px; }
+  .doorstep-personal-photo { width: min(100%, 320px); margin-bottom: 16px; }
   .doorstep-note { max-width: 390px; margin: 0 auto; font-size: 15px; }
   .doorstep-intro-label { font-size: 17px; }
   .doorstep-name { font-size: clamp(38px, 11vw, 48px); }
