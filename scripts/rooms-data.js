@@ -637,7 +637,7 @@ export const ROOMS = [
     title: "Study",
     path: "/rooms/study",
     image: "/assets/rooms/study-cutout.png",
-    directoryImage: "/assets/rooms/home-directory-book.png",
+    directoryImage: "/assets/rooms/home-directory-book.png?v=2",
     alt: "Isometric study with dark timber bookshelves, floral seating, and an easel",
     description: "A category for research-led, editorial, and reflective projects.",
     projects: [
@@ -949,7 +949,7 @@ export const ROOMS = [
     title: "Doorstep",
     path: "/rooms/doorstep",
     image: "/assets/rooms/doorstep-house-final.webp?v=1",
-    directoryImage: "/assets/rooms/home-directory-doorstep.png",
+    directoryImage: "/assets/rooms/home-directory-doorstep.png?v=2",
     alt: "暖色等距视角门廊小屋，包含开放木门、鞋柜、联系图标、小狗和地垫",
     description: "A quiet goodbye at the doorstep.",
     isDoorstep: true,
