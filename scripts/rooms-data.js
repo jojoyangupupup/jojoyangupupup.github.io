@@ -949,6 +949,7 @@ export const ROOMS = [
     title: "Doorstep",
     path: "/rooms/doorstep",
     image: "/assets/rooms/doorstep-house-final.webp?v=1",
+    directoryImage: "/assets/rooms/home-directory-doorstep.png",
     alt: "暖色等距视角门廊小屋，包含开放木门、鞋柜、联系图标、小狗和地垫",
     description: "A quiet goodbye at the doorstep.",
     isDoorstep: true,
