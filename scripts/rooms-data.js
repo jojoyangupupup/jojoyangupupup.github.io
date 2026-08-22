@@ -993,12 +993,8 @@ export const ROOMS = [
         label: "微信号",
         ariaLabel: "复制微信号",
         path: "M 776 169 C 772 168 767 170 763 173 L 759 178 C 756 182 756 187 756 194 L 756 270 C 756 278 760 284 767 289 L 854 336 C 861 340 866 335 867 329 C 868 326 867 321 867 317 L 867 227 C 867 220 864 214 859 211 L 786 170 C 783 168 779 168 776 169 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-wechat-glow.png?v=3",
-          x: 749,
-          y: 161,
-          width: 125,
-          height: 182,
+        glowMask: {
+          file: "/assets/rooms/objects/doorstep-wechat-mask.png?v=1",
         },
         action: {
           type: "copy",
@@ -1013,12 +1009,8 @@ export const ROOMS = [
         label: "163 邮箱",
         ariaLabel: "复制邮箱地址",
         path: "M 888 245 L 959 268 C 970 271 977 280 977 291 L 977 344 C 977 355 969 363 959 360 L 886 331 C 875 327 869 318 869 308 L 869 263 C 869 252 877 244 888 245 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-email-glow.png?v=1",
-          x: 861,
-          y: 237,
-          width: 124,
-          height: 131,
+        glowMask: {
+          file: "/assets/rooms/objects/doorstep-email-mask.png?v=1",
         },
         action: {
           type: "copy",
@@ -1033,12 +1025,8 @@ export const ROOMS = [
         label: "个人简历",
         ariaLabel: "下载个人简历",
         path: "M 1013 309 L 1082 331 C 1092 334 1098 344 1098 355 L 1098 438 C 1098 450 1089 457 1078 454 L 1008 431 C 998 427 992 418 992 407 L 992 327 C 992 315 1001 307 1013 309 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-resume-glow.png?v=1",
-          x: 984,
-          y: 301,
-          width: 122,
-          height: 161,
+        glowMask: {
+          file: "/assets/rooms/objects/doorstep-resume-mask.png?v=1",
         },
         action: {
           type: "download",
@@ -1054,12 +1042,8 @@ export const ROOMS = [
         label: "Bilibili",
         ariaLabel: "打开 Bilibili 主页",
         path: "M 817 350 L 891 376 C 900 379 906 388 906 399 L 906 476 C 906 486 897 493 888 490 L 812 463 C 803 460 798 451 798 441 L 798 369 C 798 358 807 350 817 350 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-bilibili-glow.png?v=1",
-          x: 790,
-          y: 342,
-          width: 124,
-          height: 156,
+        glowMask: {
+          file: "/assets/rooms/objects/doorstep-bilibili-mask.png?v=1",
         },
         action: {
           type: "link",
@@ -1073,12 +1057,8 @@ export const ROOMS = [
         label: "GitHub",
         ariaLabel: "打开 GitHub 主页",
         path: "M 930 423 L 1036 454 C 1047 457 1054 467 1054 478 L 1054 548 C 1054 559 1046 567 1035 564 L 929 533 C 918 530 911 521 911 510 L 911 445 C 911 434 919 423 930 423 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/doorstep-github-glow.png?v=1",
-          x: 903,
-          y: 415,
-          width: 159,
-          height: 157,
+        glowMask: {
+          file: "/assets/rooms/objects/doorstep-github-mask.png?v=1",
         },
         action: {
           type: "link",

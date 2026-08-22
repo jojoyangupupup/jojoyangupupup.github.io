@@ -416,8 +416,28 @@ button {
 }
 
 .doorstep-object-map .room-object-glow {
-  display: none;
+  display: block;
   filter: none;
+}
+
+.doorstep-object-map .room-object-glow[data-object-id="doorstep-wechat"] {
+  filter: url(#doorstep-wechat-outer-glow);
+}
+
+.doorstep-object-map .room-object-glow[data-object-id="doorstep-email"] {
+  filter: url(#doorstep-email-outer-glow);
+}
+
+.doorstep-object-map .room-object-glow[data-object-id="doorstep-resume"] {
+  filter: url(#doorstep-resume-outer-glow);
+}
+
+.doorstep-object-map .room-object-glow[data-object-id="doorstep-bilibili"] {
+  filter: url(#doorstep-bilibili-outer-glow);
+}
+
+.doorstep-object-map .room-object-glow[data-object-id="doorstep-github"] {
+  filter: url(#doorstep-github-outer-glow);
 }
 
 .visual-stage[data-view="room"]:is([data-room-id="study"], [data-room-id="kitchen"], [data-room-id="living"], [data-room-id="garden"]) .room-object-map {

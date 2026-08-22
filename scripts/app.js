@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=127";
+} from "/scripts/rooms-data.js?v=128";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -118,6 +118,61 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
+                <filter id="doorstep-wechat-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
+                </filter>
+                <filter id="doorstep-email-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
+                </filter>
+                <filter id="doorstep-resume-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
+                </filter>
+                <filter id="doorstep-bilibili-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
+                </filter>
+                <filter id="doorstep-github-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
+                </filter>
               </defs>
               ${ROOMS.filter((room) => !room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
@@ -181,7 +236,21 @@ app.innerHTML = `
                     aria-label="${object.ariaLabel || object.label}"
                     d="${object.path}"
                   ></path>
-                  ${object.glowPath ? `
+                  ${object.glowMask ? `
+                    <image
+                      class="room-object-glow room-object-glow-mask"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      data-src="${object.glowMask.file}"
+                      x="0"
+                      y="0"
+                      width="1312"
+                      height="1199"
+                      preserveAspectRatio="xMidYMid meet"
+                      filter="url(#doorstep-${object.id.replace("doorstep-", "")}-outer-glow)"
+                      aria-hidden="true"
+                    ></image>
+                  ` : object.glowPath ? `
                     <path
                       class="room-object-glow"
                       data-room-id="${room.id}"
@@ -322,7 +391,7 @@ function warmRoomImage(id) {
 
 function hydrateRoomObjectGlows(roomId) {
   document
-    .querySelectorAll(`.room-object-map .room-object-glow[data-room-id="${roomId}"][data-src]`)
+    .querySelectorAll(`.room-object-map .room-object-glow[data-room-id="${roomId}"][data-src], .doorstep-object-map .room-object-glow[data-room-id="${roomId}"][data-src]`)
     .forEach((glow) => {
       glow.setAttribute("href", glow.dataset.src);
       glow.removeAttribute("data-src");
