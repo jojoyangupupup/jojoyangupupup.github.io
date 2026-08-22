@@ -587,7 +587,7 @@ export const ROOMS = [
         },
         setupPlan: {
           title: "快速搭建方案",
-          file: "/assets/works/living-personal-work-knowledge-management/setup-plan.txt",
+          file: "/assets/works/living-personal-work-knowledge-management/setup-plan.txt?v=2",
         },
       },
       {
