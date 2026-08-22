@@ -118,6 +118,59 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
+              </defs>
+              ${ROOMS.filter((room) => !room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
+                <g class="room-object-group" data-room-id="${room.id}">
+                  <path
+                    class="room-object-hotspot"
+                    tabindex="0"
+                    role="button"
+                    data-room-id="${room.id}"
+                    data-object-id="${object.id}"
+                    aria-label="${object.ariaLabel || `Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}`}"
+                    d="${object.path}"
+                  ></path>
+                  ${object.glowPath ? `
+                    <path
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      d="${object.glowPath}"
+                      fill="#ffffff"
+                      aria-hidden="true"
+                    ></path>
+                  ` : object.glowMask ? `
+                    <image
+                      class="room-object-glow room-object-glow-mask"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      data-src="${object.glowMask.file}"
+                      x="0"
+                      y="0"
+                      width="2048"
+                      height="2048"
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
+                    ></image>
+                  ` : object.glowImage ? `
+                    <image
+                      class="room-object-glow"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      data-src="${object.glowImage.file}"
+                      x="${object.glowImage.x}"
+                      y="${object.glowImage.y}"
+                      width="${object.glowImage.width}"
+                      height="${object.glowImage.height}"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></image>
+                  ` : ""}
+                </g>
+              `)).join("")}
+            </svg>
+            <svg class="doorstep-object-map" viewBox="0 0 1312 1199" width="1312" height="1199" preserveAspectRatio="xMidYMid meet" aria-label="门廊可点击物品">
+              <defs>
                 <filter id="doorstep-wechat-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
                   <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
                   <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
@@ -174,57 +227,6 @@ app.innerHTML = `
                   <feMerge><feMergeNode in="soft-glow"></feMergeNode><feMergeNode in="line-glow"></feMergeNode></feMerge>
                 </filter>
               </defs>
-              ${ROOMS.filter((room) => !room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
-                <g class="room-object-group" data-room-id="${room.id}">
-                  <path
-                    class="room-object-hotspot"
-                    tabindex="0"
-                    role="button"
-                    data-room-id="${room.id}"
-                    data-object-id="${object.id}"
-                    aria-label="${object.ariaLabel || `Open ${object.label}${object.documentIds?.length > 1 ? " and related documents" : " document"}`}"
-                    d="${object.path}"
-                  ></path>
-                  ${object.glowPath ? `
-                    <path
-                      class="room-object-glow"
-                      data-room-id="${room.id}"
-                      data-object-id="${object.id}"
-                      d="${object.glowPath}"
-                      fill="#ffffff"
-                      aria-hidden="true"
-                    ></path>
-                  ` : object.glowMask ? `
-                    <image
-                      class="room-object-glow room-object-glow-mask"
-                      data-room-id="${room.id}"
-                      data-object-id="${object.id}"
-                      data-src="${object.glowMask.file}"
-                      x="0"
-                      y="0"
-                      width="2048"
-                      height="2048"
-                      preserveAspectRatio="xMidYMid meet"
-                      aria-hidden="true"
-                    ></image>
-                  ` : object.glowImage ? `
-                    <image
-                      class="room-object-glow"
-                      data-room-id="${room.id}"
-                      data-object-id="${object.id}"
-                      data-src="${object.glowImage.file}"
-                      x="${object.glowImage.x}"
-                      y="${object.glowImage.y}"
-                      width="${object.glowImage.width}"
-                      height="${object.glowImage.height}"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    ></image>
-                  ` : ""}
-                </g>
-              `)).join("")}
-            </svg>
-            <svg class="doorstep-object-map" viewBox="0 0 1312 1199" width="1312" height="1199" preserveAspectRatio="xMidYMid meet" aria-label="门廊可点击物品">
               ${ROOMS.filter((room) => room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
                   <path
