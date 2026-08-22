@@ -571,6 +571,10 @@ function renderDetail(room, { entering = false } = {}) {
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
         <figure class="doorstep-personal-photo">
           <img src="/assets/rooms/doorstep-personal-5225.jpg?v=1" alt="JoJo 在室内托脸微笑的照片" width="4284" height="5712" loading="lazy" decoding="async">
+          <span class="doorstep-frame-decoration doorstep-frame-decoration--top-left" aria-hidden="true">✦</span>
+          <span class="doorstep-frame-decoration doorstep-frame-decoration--top-right" aria-hidden="true">❀</span>
+          <span class="doorstep-frame-decoration doorstep-frame-decoration--bottom-left" aria-hidden="true">·✦</span>
+          <span class="doorstep-frame-decoration doorstep-frame-decoration--bottom-right" aria-hidden="true">❀</span>
         </figure>
         <div class="doorstep-note" id="doorstep-note-title">
           <section class="doorstep-note-block doorstep-opening-block">
