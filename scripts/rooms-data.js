@@ -574,6 +574,14 @@ export const ROOMS = [
     ],
     documents: [
       {
+        id: "living-personal-work-knowledge-management",
+        title: "个人工作知识管理",
+        format: "PDF",
+        pages: 1,
+        contentType: "embed",
+        embedUrl: "/assets/works/living-personal-work-knowledge-management/personal-work-knowledge-management.pdf",
+      },
+      {
         id: "living-project-space-introduction",
         title: "【一期】组织档案沉淀 V2.0",
         format: "PDF",
@@ -608,6 +616,22 @@ export const ROOMS = [
       },
     ],
     objectHotspots: [
+      {
+        id: "living-book",
+        number: "02",
+        label: "个人工作知识管理",
+        directoryImage: "/assets/rooms/objects/living-book.png",
+        ariaLabel: "打开个人工作知识管理",
+        documentId: "living-personal-work-knowledge-management",
+        path: "M 958 1247 L 1098 1165 L 1262 1234 L 1251 1266 L 1084 1342 L 958 1272 Z",
+        glowImage: {
+          file: "/assets/rooms/objects/living-book.png",
+          x: 958,
+          y: 1154,
+          width: 320,
+          height: 204,
+        },
+      },
       {
         id: "living-tv",
         number: "01",
