@@ -204,8 +204,10 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/garden-book.png",
         ariaLabel: "打开 B站 UP 主自述档案",
         documentId: "garden-bilibili-profile",
-        path: "M 915 1200 L 1035 1115 L 1210 1170 L 1215 1235 L 1080 1300 L 930 1250 Z",
-        glowPath: "M 915 1200 L 1035 1115 L 1210 1170 L 1215 1235 L 1080 1300 L 930 1250 Z",
+        path: "M 1080 1177 L 1221 1245 L 1219 1263 L 1103 1341 L 973 1277 L 972 1258 Z",
+        glowMask: {
+          file: "/assets/rooms/objects/garden-red-book-mask.png?v=1",
+        },
       },
     ],
     hotspotPath: "M478 360 L512 391 L744 498 L540 617 L540 789 L309 613 L309 596 L337 580 L337 523 L360 510 L371 474 L411 466 L430 438 L461 421 Z",

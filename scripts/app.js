@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=126";
+} from "/scripts/rooms-data.js?v=127";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -91,6 +91,20 @@ app.innerHTML = `
                   </feMerge>
                 </filter>
                 <filter id="green-book-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
+                <filter id="garden-red-book-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
                   <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
                   <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
                   <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>

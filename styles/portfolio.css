@@ -477,6 +477,10 @@ button {
   filter: url(#green-book-outer-glow);
 }
 
+.room-object-glow[data-object-id="garden-book"] {
+  filter: url(#garden-red-book-outer-glow);
+}
+
 .room-object-hotspot:hover + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot:focus-visible + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot.is-directory-highlighted + .room-object-glow[data-object-id="garden-bike"] {
