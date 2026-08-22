@@ -632,13 +632,9 @@ export const ROOMS = [
         directoryImage: "/assets/rooms/objects/living-book.png",
         ariaLabel: "打开个人工作知识管理",
         documentId: "living-personal-work-knowledge-management",
-        path: "M 958 1247 L 1098 1165 L 1262 1234 L 1251 1266 L 1084 1342 L 958 1272 Z",
-        glowImage: {
-          file: "/assets/rooms/objects/living-book.png",
-          x: 958,
-          y: 1154,
-          width: 320,
-          height: 204,
+        path: "M 1098 1177 L 1211 1242 L 1209 1262 L 1071 1338 L 959 1277 L 958 1257 Z",
+        glowMask: {
+          file: "/assets/rooms/objects/living-book-mask.png?v=1",
         },
       },
       {

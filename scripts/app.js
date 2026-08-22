@@ -7,7 +7,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=125";
+} from "/scripts/rooms-data.js?v=126";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -90,6 +90,16 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
+                <filter id="green-book-outer-glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="1.5" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="3" result="blurred"></feGaussianBlur>
+                  <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
+                  <feFlood flood-color="#FFE59A" flood-opacity="0.82" result="glow-color"></feFlood>
+                  <feComposite in="glow-color" in2="outer-only" operator="in" result="colored-glow"></feComposite>
+                  <feMerge>
+                    <feMergeNode in="colored-glow"></feMergeNode>
+                  </feMerge>
+                </filter>
               </defs>
               ${ROOMS.filter((room) => !room.isDoorstep).flatMap((room) => (room.objectHotspots || []).map((object) => `
                 <g class="room-object-group" data-room-id="${room.id}">
@@ -111,6 +121,19 @@ app.innerHTML = `
                       fill="#ffffff"
                       aria-hidden="true"
                     ></path>
+                  ` : object.glowMask ? `
+                    <image
+                      class="room-object-glow room-object-glow-mask"
+                      data-room-id="${room.id}"
+                      data-object-id="${object.id}"
+                      data-src="${object.glowMask.file}"
+                      x="0"
+                      y="0"
+                      width="2048"
+                      height="2048"
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
+                    ></image>
                   ` : object.glowImage ? `
                     <image
                       class="room-object-glow"

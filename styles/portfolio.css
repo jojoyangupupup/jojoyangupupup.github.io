@@ -473,6 +473,10 @@ button {
   filter: url(#room-object-edge-glow-tight);
 }
 
+.room-object-glow[data-object-id="living-book"] {
+  filter: url(#green-book-outer-glow);
+}
+
 .room-object-hotspot:hover + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot:focus-visible + .room-object-glow[data-object-id="garden-bike"],
 .room-object-hotspot.is-directory-highlighted + .room-object-glow[data-object-id="garden-bike"] {
