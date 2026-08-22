@@ -90,14 +90,18 @@ app.innerHTML = `
                     <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
-                <filter id="green-book-outer-glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-                  <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="expanded"></feMorphology>
-                  <feGaussianBlur in="expanded" stdDeviation="3" result="blurred"></feGaussianBlur>
+                <filter id="green-book-outer-glow" x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+                  <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="expanded"></feMorphology>
+                  <feGaussianBlur in="expanded" stdDeviation="10" result="blurred"></feGaussianBlur>
                   <feComposite in="blurred" in2="SourceAlpha" operator="out" result="outer-only"></feComposite>
-                  <feFlood flood-color="#FFE59A" flood-opacity="0.82" result="glow-color"></feFlood>
-                  <feComposite in="glow-color" in2="outer-only" operator="in" result="colored-glow"></feComposite>
+                  <feFlood flood-color="#efb45f" flood-opacity="0.82" result="soft-color"></feFlood>
+                  <feComposite in="soft-color" in2="outer-only" operator="in" result="soft-glow"></feComposite>
+                  <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-edge"></feComposite>
+                  <feFlood flood-color="#fff7df" flood-opacity="0.96" result="line-color"></feFlood>
+                  <feComposite in="line-color" in2="outer-edge" operator="in" result="line-glow"></feComposite>
                   <feMerge>
-                    <feMergeNode in="colored-glow"></feMergeNode>
+                    <feMergeNode in="soft-glow"></feMergeNode>
+                    <feMergeNode in="line-glow"></feMergeNode>
                   </feMerge>
                 </filter>
               </defs>
