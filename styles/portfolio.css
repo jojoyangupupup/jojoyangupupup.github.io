@@ -150,7 +150,9 @@ button {
 
 .site-wordmark:hover,
 .site-wordmark:focus-visible {
-  filter: drop-shadow(0 0 3px rgba(239, 180, 95, 0.28));
+  filter:
+    drop-shadow(0 0 4px rgba(239, 180, 95, 0.48))
+    drop-shadow(0 0 9px rgba(255, 247, 223, 0.26));
 }
 
 .site-wordmark:focus-visible {
