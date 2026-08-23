@@ -20,6 +20,7 @@
 
 !assets
 assets/*
+!assets/home-house.png
 !assets/rooms
 assets/rooms/*
 !assets/rooms/doorstep-personal-5225.jpg

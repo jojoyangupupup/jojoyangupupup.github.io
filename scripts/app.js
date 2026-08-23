@@ -25,9 +25,7 @@ app.innerHTML = `
   <div class="portfolio-shell">
     <header class="site-header" data-locked="false">
       <a class="site-wordmark" href="/" aria-label="${PORTFOLIO.authorName}，返回首页">
-        <svg class="wordmark-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1zM9 20.6v-6h6v6" />
-        </svg>
+        <img class="wordmark-mark" src="/assets/home-house.png" alt="" width="36" height="36" decoding="async">
         <span>${PORTFOLIO.authorName}</span>
       </a>
       <nav class="top-navigation" aria-label="主要导航">
