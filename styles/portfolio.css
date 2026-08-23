@@ -129,7 +129,7 @@ button {
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 200ms ease, transform 200ms ease;
+  transition: color 200ms ease, transform 200ms ease, filter 220ms ease;
 }
 
 .brand-house {
@@ -146,6 +146,11 @@ button {
 .site-wordmark.is-current {
   color: var(--rust);
   transform: translateY(-1px);
+}
+
+.site-wordmark:hover,
+.site-wordmark:focus-visible {
+  filter: drop-shadow(0 0 3px rgba(239, 180, 95, 0.28));
 }
 
 .site-wordmark:focus-visible {
