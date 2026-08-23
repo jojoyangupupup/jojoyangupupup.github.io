@@ -1086,6 +1086,8 @@ export const PAGE_NAVIGATION = [
   { id: "doorstep", label: "门廊", accessibleLabel: "Doorstep", path: "/rooms/doorstep", type: "room", roomId: "doorstep" },
 ];
 
+export const ROOM_NAVIGATION = PAGE_NAVIGATION.filter((item) => item.type === "room");
+
 export function roomFromPath(pathname) {
   const normalized = pathname.replace(/\/+$/, "") || "/";
   return ROOMS.find((room) => room.path === normalized) || null;

@@ -3,11 +3,12 @@ import {
   OVERVIEW_SIZE,
   PAGE_NAVIGATION,
   PORTFOLIO,
+  ROOM_NAVIGATION,
   ROOMS,
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=128";
+} from "/scripts/rooms-data.js?v=129";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -24,12 +25,14 @@ app.innerHTML = `
   <div class="portfolio-shell">
     <header class="site-header" data-locked="false">
       <a class="site-wordmark" href="/" aria-label="${PORTFOLIO.authorName}，返回首页">
-        <span class="wordmark-mark" aria-hidden="true"></span>
+        <svg class="wordmark-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3.5 10.5 12 3.8l8.5 6.7v9.1a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1zM9 20.6v-6h6v6" />
+        </svg>
         <span>${PORTFOLIO.authorName}</span>
       </a>
       <nav class="top-navigation" aria-label="主要导航">
         <ul class="top-navigation-list">
-          ${PAGE_NAVIGATION.map((item) => `
+          ${ROOM_NAVIGATION.map((item) => `
               <li>
                 <a class="top-navigation-link" href="${item.path}" data-page-id="${item.id}"${item.roomId ? ` data-room-id="${item.roomId}"` : ""}>
                   ${item.label}
@@ -1991,6 +1994,7 @@ function updateVisualControls(pageId) {
 }
 
 function setNavigationState(pageId) {
+  wordmark.classList.toggle("is-current", pageId === "overview");
   navLinks.forEach((link) => {
     const selected = pageId === link.dataset.pageId;
     if (selected) link.setAttribute("aria-current", "page");
