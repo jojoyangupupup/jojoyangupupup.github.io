@@ -11,7 +11,7 @@ import {
   roomFromPath,
 } from "/scripts/rooms-data.js?v=130";
 
-const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
+const PAGE_FADE_TIMING = { exit: 100, enter: 120 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
 const DISCOVERY_STORAGE_KEY = "portfolio-discovered-items-v1";
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -386,6 +386,9 @@ let workIntroSetupFrame = 0;
 let setupPlanReturnFocus = null;
 let mobileMenuScrollY = 0;
 let mobileMenuOpen = false;
+let navigationPerformanceId = 0;
+let pendingNavigationPerformanceId = null;
+let visualTransitionId = 0;
 const setupPlanCache = new Map();
 let discoveredItems = loadDiscoveredItems();
 
@@ -445,6 +448,37 @@ function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
 
+function markNavigationPerformance(stageName, id) {
+  window.performance?.mark?.(`portfolio-navigation-${id}-${stageName}`);
+}
+
+function beginNavigationPerformance(pageId) {
+  const id = ++navigationPerformanceId;
+  pendingNavigationPerformanceId = id;
+  markNavigationPerformance(`click-${pageId}`, id);
+  return id;
+}
+
+function observeImageReady(imageElement, { timeout = 4000 } = {}) {
+  if (imageElement.complete) return Promise.resolve(imageElement.naturalWidth > 0);
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (ready) => {
+      if (settled) return;
+      settled = true;
+      imageElement.removeEventListener("load", onLoad);
+      imageElement.removeEventListener("error", onError);
+      window.clearTimeout(timer);
+      resolve(ready);
+    };
+    const onLoad = () => finish(true);
+    const onError = () => finish(false);
+    const timer = window.setTimeout(() => finish(imageElement.naturalWidth > 0), timeout);
+    imageElement.addEventListener("load", onLoad, { once: true });
+    imageElement.addEventListener("error", onError, { once: true });
+  });
+}
+
 function preloadImage(src, { timeout = 1800 } = {}) {
   if (!preloadImage.cache.has(src)) preloadImage.cache.set(src, new Promise((resolve) => {
     const image = new Image();
@@ -466,7 +500,8 @@ preloadImage.cache = new Map();
 
 function responsiveRoomImage(room) {
   if (!room?.imageSrcSet) return room?.image;
-  const targetWidth = window.innerWidth <= 767 ? window.innerWidth : window.innerWidth * 0.6;
+  const displayWidth = window.innerWidth <= 767 ? window.innerWidth : window.innerWidth * 0.6;
+  const targetWidth = displayWidth * Math.min(window.devicePixelRatio || 1, 2);
   const candidates = room.imageSrcSet
     .split(",")
     .map((candidate) => {
@@ -2180,10 +2215,20 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
   const targetAlt = room
     ? room.alt
     : "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
+  const performanceId = pendingNavigationPerformanceId || ++navigationPerformanceId;
+  pendingNavigationPerformanceId = null;
+  const transitionId = ++visualTransitionId;
+  markNavigationPerformance("route-start", performanceId);
 
   if (!animate) {
     setVisualImage(currentImage, room, targetAlt);
     setVisualImage(incomingImage, room, targetAlt);
+    markNavigationPerformance("image-start", performanceId);
+    observeImageReady(currentImage).then((ready) => {
+      if (!ready || transitionId !== visualTransitionId) return;
+      markNavigationPerformance("image-ready", performanceId);
+      if (historyMode === "push") scheduleAdjacentRoomPreload(room?.id || "overview");
+    });
     if (room) {
       renderDetail(room);
       currentPageId = room.id;
@@ -2207,35 +2252,33 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
     updateDocument(room);
     clearPageTransition();
     setLocked(false);
-    if (historyMode === "push") scheduleAdjacentRoomPreload(currentPageId);
+    markNavigationPerformance("complete", performanceId);
     return;
   }
 
   setVisualImage(incomingImage, room, targetAlt);
+  incomingImage.loading = "eager";
   incomingImage.removeAttribute("aria-hidden");
-  const imageReady = incomingImage.complete && incomingImage.naturalWidth > 0
-    ? Promise.resolve(true)
-    : new Promise((resolve) => {
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        incomingImage.removeEventListener("load", finish);
-        incomingImage.removeEventListener("error", finish);
-        resolve(incomingImage.naturalWidth > 0);
-      };
-      incomingImage.addEventListener("load", finish, { once: true });
-      incomingImage.addEventListener("error", finish, { once: true });
-      window.setTimeout(finish, 650);
-    });
-  await Promise.race([imageReady, wait(650)]);
-  setNavigationState(room?.id || "overview");
-  portfolioMain.classList.add("is-page-fade", "is-page-exiting");
-  portfolioMain.getBoundingClientRect();
-  await wait(timing.exit);
+  incomingImage.classList.remove("is-ready");
+  currentImage.classList.remove("is-swapping");
+  markNavigationPerformance("image-start", performanceId);
+  observeImageReady(incomingImage).then((ready) => {
+    if (!ready || transitionId !== visualTransitionId) return;
+    markNavigationPerformance("image-ready", performanceId);
+    if (historyMode === "push") scheduleAdjacentRoomPreload(room?.id || "overview");
+    incomingImage.classList.add("is-ready");
+    currentImage.classList.add("is-swapping");
+    window.setTimeout(() => {
+      if (transitionId !== visualTransitionId) return;
+      setVisualImage(currentImage, room, targetAlt);
+      window.requestAnimationFrame(() => {
+        incomingImage.classList.remove("is-ready");
+        currentImage.classList.remove("is-swapping");
+      });
+    }, 180);
+  });
 
-  setVisualImage(currentImage, room, targetAlt);
-  setVisualImage(incomingImage, room, targetAlt);
+  setNavigationState(room?.id || "overview");
   if (room) {
     portfolioMain.dataset.page = room.id;
     stage.dataset.view = "room";
@@ -2253,6 +2296,14 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
   }
   hotspots.forEach((hotspot) => hotspot.classList.remove("is-highlighted"));
   detail.classList.add("is-visible");
+  updateVisualControls(currentPageId);
+  if (!historySyncPending) commitHistory(room?.path || "/", historyMode);
+  updateDocument(room);
+  markNavigationPerformance("shell", performanceId);
+
+  portfolioMain.classList.add("is-page-fade", "is-page-exiting");
+  portfolioMain.getBoundingClientRect();
+  await wait(timing.exit);
   portfolioMain.classList.remove("is-page-exiting");
   portfolioMain.classList.add("is-page-entering");
   portfolioMain.getBoundingClientRect();
@@ -2261,10 +2312,8 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
 
   updateVisualControls(currentPageId);
   clearPageTransition();
-  if (!historySyncPending) commitHistory(room?.path || "/", historyMode);
-  updateDocument(room);
   setLocked(false);
-  if (historyMode === "push") scheduleAdjacentRoomPreload(currentPageId);
+  markNavigationPerformance("complete", performanceId);
   if (room) detail.querySelector(".detail-title")?.focus({ preventScroll: true });
 }
 
@@ -2287,6 +2336,8 @@ function navigateToPage(pageId, direction, source = "top-tab") {
   syncBranding();
   const page = PAGE_NAVIGATION.find((item) => item.id === pageId);
   if (!page) return;
+  if (transitioning || page.id === currentPageId) return;
+  beginNavigationPerformance(page.id);
   if (page.type === "overview") transitionToOverview("push", true);
   else {
     const directFromOverviewArrow = source === "overview-arrow" && currentPageId === "overview";
@@ -2368,6 +2419,7 @@ navLinks.forEach((link) => {
       highlightRoom(id, true);
       warmRoomImage(id);
     });
+    link.addEventListener("pointerdown", () => warmRoomImage(id), { passive: true });
     link.addEventListener("blur", () => highlightRoom(id, false));
   }
 });
@@ -2658,6 +2710,13 @@ function navigateWithArrow(button, direction) {
 
 previousButton.addEventListener("click", () => navigateWithArrow(previousButton, "previous"));
 nextButton.addEventListener("click", () => navigateWithArrow(nextButton, "next"));
+
+[previousButton, nextButton].forEach((button) => {
+  const warmTarget = () => warmRoomImage(button.dataset.pageId);
+  button.addEventListener("pointerenter", warmTarget);
+  button.addEventListener("focus", warmTarget);
+  button.addEventListener("pointerdown", warmTarget, { passive: true });
+});
 
 function syncNavigationToLocation(animate = true) {
   const room = roomFromPath(window.location.pathname);

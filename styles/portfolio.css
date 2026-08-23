@@ -11,8 +11,8 @@
   --header-height: 74px;
   --detail-width: 292px;
   --ease-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --page-exit-duration: 240ms;
-  --page-enter-duration: 360ms;
+  --page-exit-duration: 100ms;
+  --page-enter-duration: 120ms;
   --page-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -347,6 +347,19 @@ button {
 
 .visual-layer-incoming {
   z-index: 4;
+  opacity: 0;
+}
+
+.visual-layer-current,
+.visual-layer-incoming {
+  transition: opacity 180ms ease;
+}
+
+.visual-layer-incoming.is-ready {
+  opacity: 1;
+}
+
+.visual-layer-current.is-swapping {
   opacity: 0;
 }
 
@@ -5562,5 +5575,43 @@ body {
   .portfolio-main[data-page="overview"] .room-directory-list,
   .portfolio-main[data-page="overview-enter"] .room-directory-list {
     padding-bottom: 20px;
+  }
+}
+
+/* A short desktop viewport must grow and scroll with the farewell copy. The
+   previous fixed-height shell hid the final sign-off below the viewport. */
+@media (min-width: 768px) and (max-height: 850px) {
+  html:has(body.is-doorstep-image),
+  body.is-doorstep-image {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .portfolio-main[data-page="doorstep"] {
+    height: auto;
+    min-height: calc(100dvh - var(--header-height) - 34px);
+    padding-bottom: max(34px, env(safe-area-inset-bottom));
+    overflow: visible;
+  }
+
+  .portfolio-main[data-page="doorstep"] .visual-column {
+    height: min(calc(100dvh - var(--header-height) - 34px), 900px);
+    min-height: 0;
+    align-self: start;
+  }
+
+  .portfolio-main[data-page="doorstep"] .visual-frame,
+  .portfolio-main[data-page="doorstep"] .doorstep-house-stage,
+  .portfolio-main[data-page="doorstep"] .visual-stage {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .portfolio-main[data-page="doorstep"] .room-detail {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
 }
