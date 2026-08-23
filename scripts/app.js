@@ -25,7 +25,7 @@ app.innerHTML = `
   <div class="portfolio-shell">
     <header class="site-header" data-locked="false">
       <a class="site-wordmark" href="/" aria-label="${PORTFOLIO.authorName}，返回首页">
-        <img class="wordmark-mark" src="/assets/home-house.png" alt="" width="36" height="36" decoding="async">
+        <img class="brand-house" src="/assets/home-house-cutout.png" alt="" width="40" height="40" decoding="async">
         <span>${PORTFOLIO.authorName}</span>
       </a>
       <nav class="top-navigation" aria-label="主要导航">

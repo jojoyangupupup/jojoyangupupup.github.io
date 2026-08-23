@@ -120,7 +120,7 @@ button {
 .site-wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   justify-self: start;
   min-height: 40px;
   color: var(--ink);
@@ -132,11 +132,13 @@ button {
   transition: color 200ms ease, transform 200ms ease;
 }
 
-.wordmark-mark {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+.brand-house {
+  width: 40px;
+  height: 40px;
+  display: block;
+  flex: 0 0 40px;
   object-fit: contain;
+  background: transparent;
 }
 
 .site-wordmark:hover,
