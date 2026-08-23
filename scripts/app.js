@@ -1,6 +1,7 @@
 import {
   OVERVIEW_IMAGE,
   OVERVIEW_SIZE,
+  OVERVIEW_IMAGE_SRCSET,
   PAGE_NAVIGATION,
   PORTFOLIO,
   ROOM_NAVIGATION,
@@ -8,7 +9,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=129";
+} from "/scripts/rooms-data.js?v=130";
 
 const PAGE_FADE_TIMING = { exit: 240, enter: 360 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -18,17 +19,20 @@ const showHotspots = SHOW_HOTSPOTS || new URLSearchParams(window.location.search
 
 const app = document.querySelector("#app");
 const initialRoom = roomFromPath(window.location.pathname);
-const initialVisualImage = initialRoom?.image || OVERVIEW_IMAGE;
+const initialVisualSrcSet = initialRoom?.imageSrcSet || OVERVIEW_IMAGE_SRCSET;
 const initialVisualAlt = initialRoom?.alt || "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
+const visualImageSizes = "(max-width: 767px) 100vw, 60vw";
+const overviewImageSizes = "100vw";
 
 app.innerHTML = `
   <div class="portfolio-shell">
     <header class="site-header" data-locked="false">
       <a class="site-wordmark" href="/" aria-label="${PORTFOLIO.authorName}，返回首页">
-        <img class="brand-house" src="/assets/home-house-cutout.png" alt="" width="40" height="40" decoding="async">
+        <img class="brand-house" src="/assets/optimized/home-house-cutout-80.webp" srcset="/assets/optimized/home-house-cutout-80.webp 80w, /assets/optimized/home-house-cutout-120.webp 120w" sizes="40px" alt="" width="40" height="40" decoding="async">
         <span>${PORTFOLIO.authorName}</span>
       </a>
-      <nav class="top-navigation" aria-label="主要导航">
+      <nav class="top-navigation" id="portfolio-navigation" aria-label="主要导航" aria-hidden="false">
+        <button class="mobile-nav-close" type="button" aria-label="关闭导航">×</button>
         <ul class="top-navigation-list">
           ${ROOM_NAVIGATION.map((item) => `
               <li>
@@ -39,13 +43,19 @@ app.innerHTML = `
             `).join("")}
         </ul>
       </nav>
+      <button class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="portfolio-navigation" aria-label="打开导航">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </header>
+    <div class="mobile-nav-backdrop" data-mobile-nav-close hidden aria-hidden="true"></div>
 
     <main class="portfolio-main" data-page="${initialRoom?.id || "overview"}">
       <section class="visual-column" aria-label="Room visual">
         <div class="visual-frame">
           <div class="visual-stage${showHotspots ? " show-hotspots" : ""}" data-view="${initialRoom ? "room" : "overview"}"${initialRoom ? ` data-room-id="${initialRoom.id}"` : ""} data-show-hotspots="${showHotspots}">
-            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${initialVisualImage}" alt="${initialVisualAlt}" fetchpriority="high" decoding="async" draggable="false">
+            <img class="visual-layer visual-layer-current" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" srcset="${initialVisualSrcSet}" sizes="${initialRoom ? visualImageSizes : overviewImageSizes}" alt="${initialVisualAlt}" loading="eager" fetchpriority="high" decoding="async" draggable="false">
             <svg class="focus-room-layer" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <clipPath id="selected-room-clip">
@@ -54,7 +64,7 @@ app.innerHTML = `
               </defs>
               <image data-src="${OVERVIEW_IMAGE}" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" clip-path="url(#selected-room-clip)"></image>
             </svg>
-            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" src="${initialVisualImage}" alt="${initialVisualAlt}" aria-hidden="true" decoding="async" draggable="false">
+            <img class="visual-layer visual-layer-incoming" width="${OVERVIEW_SIZE.width}" height="${OVERVIEW_SIZE.height}" sizes="${visualImageSizes}" alt="${initialVisualAlt}" aria-hidden="true" loading="lazy" decoding="async" draggable="false">
             <svg class="hotspot-map" viewBox="0 0 ${OVERVIEW_SIZE.width} ${OVERVIEW_SIZE.height}" preserveAspectRatio="xMidYMid meet" aria-label="Clickable portfolio category areas">
               ${ROOMS.map((room, index) => `
                 <path class="hotspot hotspot-${index + 1}" tabindex="0" role="link" data-room-id="${room.id}" aria-label="Enter ${room.title} portfolio category" d="${room.hotspotPath}"></path>
@@ -328,6 +338,7 @@ app.innerHTML = `
 const header = document.querySelector(".site-header");
 const wordmark = document.querySelector(".site-wordmark");
 const wordmarkName = document.querySelector(".site-wordmark > span:last-child");
+const topNavigation = document.querySelector(".top-navigation");
 const portfolioMain = document.querySelector(".portfolio-main");
 const stage = document.querySelector(".visual-stage");
 const currentImage = document.querySelector(".visual-layer-current");
@@ -337,6 +348,9 @@ const roomSwitchControls = document.querySelector(".room-switch-controls");
 const previousButton = document.querySelector(".room-switch-previous");
 const nextButton = document.querySelector(".room-switch-next");
 const navLinks = [...document.querySelectorAll(".top-navigation-link")];
+const mobileNavToggle = document.querySelector(".mobile-nav-toggle");
+const mobileNavClose = document.querySelector(".mobile-nav-close");
+const mobileNavBackdrop = document.querySelector(".mobile-nav-backdrop");
 const hotspots = [...document.querySelectorAll(".hotspot")];
 const roomObjectHotspots = [...document.querySelectorAll(".room-object-hotspot")];
 const visualControlButtons = [previousButton, nextButton];
@@ -351,6 +365,15 @@ const setupPlanClose = document.querySelector(".setup-plan-close");
 const setupPlanContent = document.querySelector("[data-setup-plan-content]");
 const interactionToast = document.querySelector(".interaction-toast");
 
+// Keep the shell usable even when a visual request fails or stalls. The stage
+// remains mounted so navigation and room details are still available.
+[currentImage, incomingImage].forEach((image) => {
+  image.addEventListener("error", () => {
+    image.dataset.imageError = "true";
+    image.removeAttribute("srcset");
+  });
+});
+
 let currentPageId = "overview";
 let transitioning = false;
 let historySyncPending = false;
@@ -361,6 +384,8 @@ let documentModalHistory = [];
 let workIntroObserver = null;
 let workIntroSetupFrame = 0;
 let setupPlanReturnFocus = null;
+let mobileMenuScrollY = 0;
+let mobileMenuOpen = false;
 const setupPlanCache = new Map();
 let discoveredItems = loadDiscoveredItems();
 
@@ -369,36 +394,129 @@ function syncBranding() {
   wordmark.setAttribute("aria-label", `${PORTFOLIO.authorName}，返回首页`);
 }
 
+function setMobileMenuOpen(open, { focus = true } = {}) {
+  if (!mobileNavToggle || !mobileNavBackdrop) return;
+  const wasOpen = mobileMenuOpen;
+  mobileMenuOpen = Boolean(open);
+  header.dataset.mobileMenuOpen = String(mobileMenuOpen);
+  mobileNavToggle.setAttribute("aria-expanded", String(mobileMenuOpen));
+  mobileNavToggle.setAttribute("aria-label", mobileMenuOpen ? "关闭导航" : "打开导航");
+  topNavigation?.setAttribute("aria-hidden", String(!mobileMenuOpen));
+  mobileNavBackdrop.hidden = !mobileMenuOpen;
+  if (mobileMenuOpen) {
+    mobileMenuScrollY = window.scrollY;
+    document.body.classList.add("is-mobile-menu-open");
+    document.body.style.top = `-${mobileMenuScrollY}px`;
+    if (focus) window.setTimeout(() => mobileNavClose?.focus({ preventScroll: true }), 0);
+  } else {
+    document.body.classList.remove("is-mobile-menu-open");
+    document.body.style.top = "";
+    if (wasOpen) {
+      if (focus) window.setTimeout(() => mobileNavToggle?.focus({ preventScroll: true }), 0);
+      window.scrollTo(0, mobileMenuScrollY);
+    }
+  }
+}
+
+function bindDoorstepMobileContacts() {
+  detail.querySelectorAll("[data-doorstep-contact]").forEach((link) => {
+    const { roomId, objectId } = link.dataset;
+    link.addEventListener("click", () => openRoomObject(roomId, objectId, link));
+    link.addEventListener("focus", () => setDirectoryObjectHighlight(roomId, objectId, true));
+    link.addEventListener("blur", () => setDirectoryObjectHighlight(roomId, objectId, false));
+    link.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") return;
+      setDirectoryObjectHighlight(roomId, objectId, true);
+      window.setTimeout(() => {
+        if (document.activeElement !== link) setDirectoryObjectHighlight(roomId, objectId, false);
+      }, 220);
+    });
+  });
+}
+
 syncBranding();
+if (window.matchMedia("(max-width: 767px)").matches) {
+  header.dataset.mobileMenuOpen = "false";
+  topNavigation?.setAttribute("aria-hidden", "true");
+}
 new MutationObserver(syncBranding).observe(wordmarkName, { childList: true, characterData: true, subtree: true });
 
 function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
 
-function preloadImage(src) {
+function preloadImage(src, { timeout = 1800 } = {}) {
   if (!preloadImage.cache.has(src)) preloadImage.cache.set(src, new Promise((resolve) => {
     const image = new Image();
-    image.onload = () => resolve(true);
-    image.onerror = () => resolve(false);
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      resolve(result);
+    };
+    const timer = window.setTimeout(() => finish(false), timeout);
+    image.onload = () => finish(true);
+    image.onerror = () => finish(false);
     image.src = src;
   }));
   return preloadImage.cache.get(src);
 }
 preloadImage.cache = new Map();
 
-function warmRoomImage(id) {
-  const room = ROOMS.find((item) => item.id === id);
-  if (room) preloadImage(room.image);
+function responsiveRoomImage(room) {
+  if (!room?.imageSrcSet) return room?.image;
+  const targetWidth = window.innerWidth <= 767 ? window.innerWidth : window.innerWidth * 0.6;
+  const candidates = room.imageSrcSet
+    .split(",")
+    .map((candidate) => {
+      const [src, descriptor] = candidate.trim().split(/\s+/);
+      return { src, width: Number.parseInt(descriptor, 10) || 0 };
+    })
+    .filter((candidate) => candidate.src && candidate.width > 0)
+    .sort((a, b) => a.width - b.width);
+  return candidates.find((candidate) => candidate.width >= targetWidth)?.src
+    || candidates.at(-1)?.src
+    || room.image;
 }
 
-function hydrateRoomObjectGlows(roomId) {
+function warmRoomImage(id) {
+  const room = ROOMS.find((item) => item.id === id);
+  if (room) preloadImage(responsiveRoomImage(room));
+}
+
+function hydrateRoomObjectGlow(roomId, objectId) {
   document
-    .querySelectorAll(`.room-object-map .room-object-glow[data-room-id="${roomId}"][data-src], .doorstep-object-map .room-object-glow[data-room-id="${roomId}"][data-src]`)
+    .querySelectorAll(`.room-object-map .room-object-glow[data-room-id="${roomId}"][data-object-id="${objectId}"][data-src], .doorstep-object-map .room-object-glow[data-room-id="${roomId}"][data-object-id="${objectId}"][data-src]`)
     .forEach((glow) => {
       glow.setAttribute("href", glow.dataset.src);
       glow.removeAttribute("data-src");
     });
+}
+
+let gardenDocumentLoad = null;
+
+function ensureRoomDocuments(roomId) {
+  if (roomId !== "garden") return Promise.resolve();
+  if (!gardenDocumentLoad) {
+    gardenDocumentLoad = Promise.all([
+      import("/scripts/model-experience-data.js?v=5"),
+      import("/scripts/search-experience-data.js?v=6"),
+      import("/scripts/bilibili-experience-data.js?v=1"),
+    ]).then(([model, search, bilibili]) => {
+      const garden = ROOMS.find((room) => room.id === "garden");
+      if (!garden) return [];
+      const documents = [
+        model.MODEL_EXPERIENCE_DOCUMENT,
+        search.SEARCH_EXPERIENCE_DOCUMENT,
+        bilibili.BILIBILI_DOCUMENT,
+      ].filter(Boolean);
+      const existingIds = new Set((garden.documents || []).map((documentEntry) => documentEntry.id));
+      garden.documents = [...(garden.documents || []), ...documents.filter((documentEntry) => !existingIds.has(documentEntry.id))];
+      return documents;
+    }).catch(() => []);
+  }
+  return gardenDocumentLoad;
 }
 
 function scheduleAdjacentRoomPreload(pageId = currentPageId) {
@@ -465,9 +583,13 @@ function roomProgress(room) {
 
 function directoryThumbnail(item, size = "room") {
   const image = item.directoryImage;
+  const thumbSrcSet = image?.includes("-thumb-240.webp")
+    ? `${image.replace("-thumb-240.webp", "-thumb-120.webp")} 120w, ${image} 240w`
+    : "";
+  const thumbSizes = size === "object" ? "58px" : "50px";
   return `
     <span class="directory-thumb directory-thumb-${size}" aria-hidden="true">
-      ${image ? `<img src="${image}" alt="" loading="lazy" decoding="async">` : ""}
+      ${image ? `<img src="${image}"${thumbSrcSet ? ` srcset="${thumbSrcSet}" sizes="${thumbSizes}"` : ""} width="240" height="240" alt="" loading="lazy" decoding="async">` : ""}
     </span>
   `;
 }
@@ -571,7 +693,7 @@ function renderDetail(room, { entering = false } = {}) {
     detail.innerHTML = `
       <section class="doorstep-page" aria-labelledby="doorstep-note-title">
         <figure class="doorstep-personal-photo">
-          <img src="/assets/rooms/doorstep-personal-5225.jpg?v=1" alt="JoJo 在室内托脸微笑的照片" width="4284" height="5712" loading="lazy" decoding="async">
+          <img src="/assets/optimized/rooms/doorstep-personal-5225-800.webp" srcset="/assets/optimized/rooms/doorstep-personal-5225-800.webp 800w, /assets/optimized/rooms/doorstep-personal-5225-1200.webp 1200w" sizes="(max-width: 767px) min(100vw, 360px), 360px" alt="JoJo 在室内托脸微笑的照片" width="800" height="1067" loading="lazy" decoding="async">
           <span class="doorstep-frame-decoration doorstep-frame-decoration--top-left" aria-hidden="true">✦</span>
           <span class="doorstep-frame-decoration doorstep-frame-decoration--top-right" aria-hidden="true">❀</span>
           <span class="doorstep-frame-decoration doorstep-frame-decoration--bottom-left" aria-hidden="true">·✦</span>
@@ -588,6 +710,14 @@ function renderDetail(room, { entering = false } = {}) {
           <section class="doorstep-note-block doorstep-goodbye-block">
             <p class="doorstep-thanks">谢谢你逛完这间小屋。14 件作品都在这里了。</p>
           </section>
+          <nav class="doorstep-contact-links" aria-label="联系方式">
+            ${(room.objectHotspots || []).map((object) => `
+              <button class="doorstep-contact-link" type="button" data-doorstep-contact data-room-id="${room.id}" data-object-id="${object.id}" aria-label="${object.ariaLabel || object.label}">
+                <span class="doorstep-contact-link-number">${object.number || ""}</span>
+                <span>${object.label}</span>
+              </button>
+            `).join("")}
+          </nav>
           <section class="doorstep-note-block doorstep-closing-block">
             <p class="doorstep-signoff">小屋还会继续盖，欢迎回来坐坐。</p>
             <span class="doorstep-signature signature" translate="no" lang="en">JoJo</span>
@@ -595,6 +725,7 @@ function renderDetail(room, { entering = false } = {}) {
         </div>
       </section>
     `;
+    bindDoorstepMobileContacts();
     return;
   }
   const rooms = directoryRooms();
@@ -1950,6 +2081,8 @@ async function copyText(value) {
 
 async function openRoomObject(roomId, objectId, trigger) {
   if (transitioning || currentPageId !== roomId) return;
+  hydrateRoomObjectGlow(roomId, objectId);
+  await ensureRoomDocuments(roomId);
   const { room, object, documents } = getRoomObject(roomId, objectId);
   if (!room || !object) return;
   markObjectDiscovered(roomId, objectId);
@@ -2034,26 +2167,25 @@ function clearPageTransition() {
   detail.classList.remove("is-updating");
 }
 
+function setVisualImage(imageElement, room, alt) {
+  imageElement.srcset = room?.imageSrcSet || OVERVIEW_IMAGE_SRCSET;
+  imageElement.sizes = room ? visualImageSizes : overviewImageSizes;
+  imageElement.removeAttribute("src");
+  imageElement.alt = alt;
+  delete imageElement.dataset.imageError;
+}
+
 async function fadeToPage({ room = null, historyMode = "push", animate = true } = {}) {
   const timing = prefersReducedMotion.matches ? REDUCED_PAGE_FADE_TIMING : PAGE_FADE_TIMING;
-  const targetImage = room ? room.image : OVERVIEW_IMAGE;
   const targetAlt = room
     ? room.alt
     : "Isometric overview of four portfolio categories: garden, kitchen, living room, and study";
-  const imageReady = await preloadImage(targetImage);
-  if (!imageReady) {
-    setLocked(false);
-    return;
-  }
 
   if (!animate) {
-    currentImage.src = targetImage;
-    currentImage.alt = targetAlt;
-    incomingImage.src = targetImage;
-    incomingImage.alt = targetAlt;
+    setVisualImage(currentImage, room, targetAlt);
+    setVisualImage(incomingImage, room, targetAlt);
     if (room) {
       renderDetail(room);
-      hydrateRoomObjectGlows(room.id);
       currentPageId = room.id;
       portfolioMain.dataset.page = room.id;
       stage.dataset.view = "room";
@@ -2079,23 +2211,36 @@ async function fadeToPage({ room = null, historyMode = "push", animate = true } 
     return;
   }
 
-  incomingImage.src = targetImage;
-  incomingImage.alt = targetAlt;
+  setVisualImage(incomingImage, room, targetAlt);
   incomingImage.removeAttribute("aria-hidden");
+  const imageReady = incomingImage.complete && incomingImage.naturalWidth > 0
+    ? Promise.resolve(true)
+    : new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        incomingImage.removeEventListener("load", finish);
+        incomingImage.removeEventListener("error", finish);
+        resolve(incomingImage.naturalWidth > 0);
+      };
+      incomingImage.addEventListener("load", finish, { once: true });
+      incomingImage.addEventListener("error", finish, { once: true });
+      window.setTimeout(finish, 650);
+    });
+  await Promise.race([imageReady, wait(650)]);
   setNavigationState(room?.id || "overview");
   portfolioMain.classList.add("is-page-fade", "is-page-exiting");
   portfolioMain.getBoundingClientRect();
   await wait(timing.exit);
 
-  currentImage.src = targetImage;
-  currentImage.alt = targetAlt;
-  incomingImage.src = targetImage;
+  setVisualImage(currentImage, room, targetAlt);
+  setVisualImage(incomingImage, room, targetAlt);
   if (room) {
     portfolioMain.dataset.page = room.id;
     stage.dataset.view = "room";
     stage.dataset.roomId = room.id;
     renderDetail(room);
-    hydrateRoomObjectGlows(room.id);
     currentPageId = room.id;
   } else {
     portfolioMain.dataset.page = "overview";
@@ -2174,6 +2319,7 @@ function setDirectoryRoomHighlight(roomId, highlighted) {
 }
 
 function setDirectoryObjectHighlight(roomId, objectId, highlighted) {
+  if (highlighted) hydrateRoomObjectGlow(roomId, objectId);
   detail.querySelectorAll("[data-directory-object]").forEach((row) => {
     const active = highlighted && row.dataset.roomId === roomId && row.dataset.objectId === objectId;
     row.classList.toggle("is-active", active);
@@ -2186,10 +2332,12 @@ function setDirectoryObjectHighlight(roomId, objectId, highlighted) {
 }
 
 function warmRoomObjectDocuments(roomId, objectId) {
-  const { documents } = getRoomObject(roomId, objectId);
-  documents.forEach((documentEntry) => {
-    if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
-    if (documentEntry.workIntro?.coverImage) preloadImage(documentEntry.workIntro.coverImage);
+  ensureRoomDocuments(roomId).then(() => {
+    const { documents } = getRoomObject(roomId, objectId);
+    documents.forEach((documentEntry) => {
+      if (documentEntry.renderedPages) preloadImage(renderedDocumentPage(documentEntry, 1));
+      if (documentEntry.workIntro?.coverImage) preloadImage(documentEntry.workIntro.coverImage);
+    });
   });
 }
 
@@ -2198,6 +2346,7 @@ navLinks.forEach((link) => {
   const pageId = link.dataset.pageId;
   const activate = () => {
     if (transitioning) return;
+    setMobileMenuOpen(false, { focus: false });
     navigateToPage(pageId, undefined, "top-tab");
   };
   link.addEventListener("click", (event) => {
@@ -2223,6 +2372,13 @@ navLinks.forEach((link) => {
   }
 });
 
+mobileNavToggle?.addEventListener("click", () => setMobileMenuOpen(!mobileMenuOpen));
+mobileNavClose?.addEventListener("click", () => setMobileMenuOpen(false));
+mobileNavBackdrop?.addEventListener("click", () => setMobileMenuOpen(false));
+window.matchMedia("(min-width: 768px)").addEventListener?.("change", (event) => {
+  if (event.matches && mobileMenuOpen) setMobileMenuOpen(false, { focus: false });
+});
+
 hotspots.forEach((hotspot) => {
   const id = hotspot.dataset.roomId;
   hotspot.addEventListener("click", () => navigateToRoom(id, undefined, "overview-hotspot"));
@@ -2238,6 +2394,15 @@ hotspots.forEach((hotspot) => {
     warmRoomImage(id);
   });
   hotspot.addEventListener("blur", () => setDirectoryRoomHighlight(id, false));
+  hotspot.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse") return;
+    hotspot.classList.add("is-touch-active");
+    setDirectoryRoomHighlight(id, true);
+    window.setTimeout(() => {
+      hotspot.classList.remove("is-touch-active");
+      if (document.activeElement !== hotspot) setDirectoryRoomHighlight(id, false);
+    }, 260);
+  });
   hotspot.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -2264,11 +2429,26 @@ roomObjectHotspots.forEach((hotspot) => {
     warmDocument();
   });
   hotspot.addEventListener("blur", () => setDirectoryObjectHighlight(roomId, objectId, false));
+  hotspot.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse") return;
+    hotspot.classList.add("is-touch-active");
+    setDirectoryObjectHighlight(roomId, objectId, true);
+    window.setTimeout(() => {
+      hotspot.classList.remove("is-touch-active");
+      if (document.activeElement !== hotspot) setDirectoryObjectHighlight(roomId, objectId, false);
+    }, 260);
+  });
   hotspot.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
     activate();
   });
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (event.target.closest(".room-object-hotspot, .hotspot, [data-directory-object], [data-doorstep-contact]")) return;
+  document.querySelectorAll(".is-touch-active").forEach((element) => element.classList.remove("is-touch-active"));
+  roomObjectHotspots.forEach((hotspot) => hotspot.classList.remove("is-directory-highlighted"));
 });
 
 function linkedDocument(link) {
@@ -2441,6 +2621,11 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    if (mobileMenuOpen) {
+      event.preventDefault();
+      setMobileMenuOpen(false);
+      return;
+    }
     closeSearchImagePreview();
     closeBloggerBookPreview();
   }

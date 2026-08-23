@@ -38,6 +38,8 @@ assets/rooms/*
 !assets/rooms/doorstep-house-final.png
 !assets/rooms/objects
 !assets/rooms/objects/**
+!assets/optimized
+!assets/optimized/**
 !assets/rooms/overview-motion
 !assets/rooms/overview-motion/**
 !assets/works
