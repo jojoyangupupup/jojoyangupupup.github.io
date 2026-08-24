@@ -1053,7 +1053,7 @@ export const ROOMS = [
         },
         action: {
           type: "download",
-          file: "/assets/works/doorstep-resume.pdf?v=1",
+          file: "/assets/works/doorstep-resume.pdf?v=2",
           filename: "杨昕乔简历.pdf",
           successMessage: "简历下载",
         },
