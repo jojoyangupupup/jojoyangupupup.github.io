@@ -9,7 +9,7 @@ import {
   SHOW_HOTSPOTS,
   adjacentPages,
   roomFromPath,
-} from "/scripts/rooms-data.js?v=132";
+} from "/scripts/rooms-data.js?v=133";
 
 const PAGE_FADE_TIMING = { exit: 100, enter: 120 };
 const REDUCED_PAGE_FADE_TIMING = { exit: 1, enter: 1 };
@@ -1458,6 +1458,24 @@ function renderDocumentPages(documents) {
           <video class="document-video" src="${documentEntry.file}" controls preload="metadata" playsinline>
             当前浏览器不支持视频播放。
           </video>
+        </article>
+      `;
+    }
+    if (documentEntry.contentType === "long-image") {
+      const introduction = documentEntry.introduction;
+      const image = documentEntry.longImage;
+      return `
+        <article class="document-column document-long-image-column" aria-label="${documentEntry.title}">
+          <section class="document-long-image-intro" aria-labelledby="long-image-title-${documentEntry.id}">
+            <p class="document-preface-kicker">作品介绍 / PROJECT INTRODUCTION</p>
+            <h2 id="long-image-title-${documentEntry.id}">${introduction?.heading || documentEntry.title}</h2>
+            <div class="document-long-image-copy">
+              ${(introduction?.paragraphs || []).map((paragraph) => `<p>${paragraph}</p>`).join("")}
+            </div>
+          </section>
+          <figure class="document-long-image-figure">
+            <img src="${image.src}" width="${image.width}" height="${image.height}" alt="${image.alt || documentEntry.title}" loading="eager" fetchpriority="high" decoding="async">
+          </figure>
         </article>
       `;
     }

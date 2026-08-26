@@ -638,6 +638,24 @@ export const ROOMS = [
         contentType: "embed",
         embedUrl: "/assets/works/living-project-space-demo/",
       },
+      {
+        id: "living-demo-prd-review-workflow",
+        title: "Demo + PRD 评审协同 AI 工作流",
+        format: "长图",
+        contentType: "long-image",
+        introduction: {
+          heading: "Demo + PRD 评审协同 AI 工作流",
+          paragraphs: [
+            "面向产品、设计与研发协作的 AI 工作流，覆盖需求澄清、PRD 生成、Demo 生成和评审反馈回写等环节。用户输入初步需求后，AI 通过多轮问答补充功能目标、使用流程、异常状态和验收标准，并将确认后的内容整理为结构化 PRD。在此基础上生成 Demo，通过 Demo 与 PRD 双向联动，帮助团队快速对照页面表现与需求描述，及时发现遗漏和偏差；评审意见还可回写至 PRD，形成从需求提出到协同评审的完整闭环。",
+          ],
+        },
+        longImage: {
+          src: "/assets/works/living-demo-prd-review-workflow/pages/page-1.webp?v=20260826-1",
+          width: 1262,
+          height: 10518,
+          alt: "Demo + PRD 评审协同 AI 工作流长图",
+        },
+      },
     ],
     objectHotspots: [
       {
@@ -665,6 +683,22 @@ export const ROOMS = [
           y: 768,
           width: 361,
           height: 478,
+        },
+      },
+      {
+        id: "living-demo-prd-review",
+        number: "03",
+        label: "Demo + PRD 评审协同 AI 工作流",
+        directoryImage: "/assets/optimized/rooms/objects/living-demo-prd-review-thumb-240.webp",
+        ariaLabel: "打开 Demo + PRD 评审协同 AI 工作流",
+        documentId: "living-demo-prd-review-workflow",
+        path: "M 1120 399 L 1352 528 L 1352 927 L 1120 797 Z",
+        glowImage: {
+          file: "/assets/optimized/rooms/objects/living-demo-prd-review-glow.webp?v=2",
+          x: 1100,
+          y: 390,
+          width: 280,
+          height: 594,
         },
       },
     ],
