@@ -743,7 +743,7 @@ function renderDetail(room, { entering = false } = {}) {
             <p class="doorstep-meta">东北师大 · 新传硕 24 级 <span class="doorstep-meta-divider">·</span> <span class="doorstep-tagline-inline">创意多多，热爱捕捉细碎有趣的表达</span></p>
           </section>
           <section class="doorstep-note-block doorstep-goodbye-block">
-            <p class="doorstep-thanks">谢谢你逛完这间小屋。14 件作品都在这里了。</p>
+            <p class="doorstep-thanks">谢谢你逛完这间小屋。16 件作品都在这里了。</p>
           </section>
           <nav class="doorstep-contact-links" aria-label="联系方式">
             ${(room.objectHotspots || []).map((object) => `
