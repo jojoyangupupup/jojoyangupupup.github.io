@@ -1592,6 +1592,7 @@ button {
 
 .document-modal-scroll {
   display: flex;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
   padding: 78px clamp(28px, 5vw, 84px) 58px;
@@ -1856,6 +1857,7 @@ button {
 }
 
 .document-long-image-column {
+  flex: 0 0 auto;
   width: min(960px, 100%);
   margin: 0 auto;
   overflow: hidden;
@@ -1901,6 +1903,45 @@ button {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.object-directory-row[data-object-id="living-demo-prd-review"] .directory-thumb {
+  position: relative;
+  z-index: 1;
+  width: 50px;
+  height: 54px;
+  padding: 3px 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.object-directory-row[data-object-id="living-demo-prd-review"] .directory-thumb img {
+  position: relative;
+  z-index: 1;
+  width: 42px;
+  height: 48px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 3px rgba(176, 138, 74, 0.24));
+  transform: none;
+}
+
+.object-directory-row[data-object-id="living-demo-prd-review"]:hover .directory-thumb img,
+.object-directory-row[data-object-id="living-demo-prd-review"]:focus-visible .directory-thumb img,
+.object-directory-row[data-object-id="living-demo-prd-review"].is-active .directory-thumb img {
+  filter: drop-shadow(0 0 5px rgba(176, 138, 74, 0.5));
+  transform: none;
+}
+
+.object-directory-row.is-viewed[data-object-id="living-demo-prd-review"] .directory-thumb img {
+  filter: saturate(0.82) drop-shadow(0 0 3px rgba(176, 138, 74, 0.24));
+}
+
+.object-directory-row.is-viewed[data-object-id="living-demo-prd-review"]:hover .directory-thumb img,
+.object-directory-row.is-viewed[data-object-id="living-demo-prd-review"]:focus-visible .directory-thumb img,
+.object-directory-row.is-viewed[data-object-id="living-demo-prd-review"].is-active .directory-thumb img {
+  filter: saturate(0.94) drop-shadow(0 0 5px rgba(176, 138, 74, 0.5));
 }
 
 .document-video {
